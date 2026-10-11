@@ -136,13 +136,18 @@ export function hashAdminPassword(password: string) {
   ].join("$");
 }
 
+function resolvePasswordHashMaxMemory(parsedHash: ParsedPasswordHash) {
+  const minimumRequired = 128 * parsedHash.n * parsedHash.r + 1024 * parsedHash.r * parsedHash.p;
+  return Math.max(parsedHash.maxmem ?? 0, PASSWORD_HASH_MAX_MEMORY, minimumRequired + 1024);
+}
+
 export function verifyAdminPassword(password: string, encodedHash: string) {
   const parsedHash = parseScryptHash(encodedHash);
   const derivedKey = scryptSync(password, parsedHash.salt, parsedHash.derivedKey.length, {
     N: parsedHash.n,
     r: parsedHash.r,
     p: parsedHash.p,
-    ...(parsedHash.maxmem ? { maxmem: parsedHash.maxmem } : {}),
+    maxmem: resolvePasswordHashMaxMemory(parsedHash),
   });
 
   return derivedKey.length === parsedHash.derivedKey.length && timingSafeEqual(derivedKey, parsedHash.derivedKey);

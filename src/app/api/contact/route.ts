@@ -1,10 +1,12 @@
-﻿import { NextResponse } from "next/server";
+import nodemailer from "nodemailer";
+import { NextResponse } from "next/server";
 
 import {
   CONTACT_ERROR_MESSAGE,
   CONTACT_SECURITY_MESSAGE,
   validateContactSubmission,
 } from "@/lib/contact";
+import { getContactOperationalConfigStatus } from "@/lib/managed-config/service";
 
 export const runtime = "nodejs";
 
@@ -13,7 +15,15 @@ type TurnstileVerificationResponse = {
   "error-codes"?: string[];
 };
 
-const RESEND_ENDPOINT = "https://api.resend.com/emails";
+type SmtpConfig = {
+  host: string;
+  port: number;
+  secure: boolean;
+  user: string;
+  password: string;
+  recipient: string;
+};
+
 const TURNSTILE_ENDPOINT = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 const CONTACT_SUBJECT = "WideOrder website inquiry";
 
@@ -50,47 +60,46 @@ async function verifyTurnstile({ token, secretKey, remoteIp }: { token: string; 
 }
 
 async function sendNotification({
-  apiKey,
-  recipient,
-  from,
+  smtp,
   name,
   company,
   email,
   phone,
   message,
 }: {
-  apiKey: string;
-  recipient: string;
-  from: string;
+  smtp: SmtpConfig;
   name: string;
   company: string;
   email: string;
   phone: string;
   message: string;
 }) {
-  return fetch(RESEND_ENDPOINT, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
+  const transporter = nodemailer.createTransport({
+    host: smtp.host,
+    port: smtp.port,
+    secure: smtp.secure,
+    auth: {
+      user: smtp.user,
+      pass: smtp.password,
     },
-    body: JSON.stringify({
-      from,
-      to: [recipient],
-      subject: CONTACT_SUBJECT,
-      reply_to: email,
-      text: [
-        CONTACT_SUBJECT,
-        "",
-        `Name: ${name}`,
-        `Company: ${company || "Not provided"}`,
-        `Email: ${email}`,
-        `Phone: ${phone || "Not provided"}`,
-        "",
-        "Message:",
-        message,
-      ].join("\n"),
-    }),
+  });
+
+  return transporter.sendMail({
+    from: `WideOrder Website <${smtp.user}>`,
+    to: smtp.recipient,
+    replyTo: email,
+    subject: CONTACT_SUBJECT,
+    text: [
+      CONTACT_SUBJECT,
+      "",
+      `Name: ${name}`,
+      `Company: ${company || "Not provided"}`,
+      `Email: ${email}`,
+      `Phone: ${phone || "Not provided"}`,
+      "",
+      "Message:",
+      message,
+    ].join("\n"),
   });
 }
 
@@ -124,19 +133,32 @@ export async function POST(request: Request) {
     return json({ ok: true }, { status: 200 });
   }
 
-  const resendApiKey = process.env.RESEND_API_KEY?.trim() ?? "";
-  const recipientEmail = process.env.CONTACT_RECIPIENT_EMAIL?.trim() ?? "";
-  const fromEmail = process.env.CONTACT_FROM_EMAIL?.trim() ?? "";
-  const turnstileSecretKey = process.env.TURNSTILE_SECRET_KEY?.trim() ?? "";
+  let configStatus;
 
-  if (!turnstileSecretKey || !resendApiKey || !recipientEmail || !fromEmail) {
+  try {
+    configStatus = await getContactOperationalConfigStatus();
+  } catch (error) {
+    console.error("[contact] configuration_error", {
+      requestId,
+      category: "service_unavailable",
+      error: error instanceof Error ? error.message : "unknown",
+    });
+
+    return json({ ok: false, error: "service_unavailable" }, { status: 503 });
+  }
+
+  if (!configStatus.hasRequiredValues || configStatus.config.smtp.port === null || configStatus.config.smtp.secure === null) {
     console.error("[contact] missing_configuration", {
       requestId,
       category: "service_unavailable",
-      hasTurnstileSecret: Boolean(turnstileSecretKey),
-      hasResendApiKey: Boolean(resendApiKey),
-      hasRecipientEmail: Boolean(recipientEmail),
-      hasFromEmail: Boolean(fromEmail),
+      hasTurnstileSecret: Boolean(configStatus.config.turnstileSecretKey),
+      hasTurnstileSiteKey: Boolean(configStatus.config.turnstileSiteKey),
+      hasSmtpHost: Boolean(configStatus.config.smtp.host),
+      hasSmtpPort: configStatus.config.smtp.port !== null,
+      hasSmtpSecure: configStatus.config.smtp.secure !== null,
+      hasSmtpUser: Boolean(configStatus.config.smtp.user),
+      hasSmtpPassword: Boolean(configStatus.config.smtp.password),
+      hasRecipientEmail: Boolean(configStatus.config.smtp.recipient),
     });
 
     return json({ ok: false, error: "service_unavailable" }, { status: 503 });
@@ -156,7 +178,7 @@ export async function POST(request: Request) {
   try {
     const verification = await verifyTurnstile({
       token: data.turnstileToken,
-      secretKey: turnstileSecretKey,
+      secretKey: configStatus.config.turnstileSecretKey,
       remoteIp: getClientIp(request),
     });
 
@@ -194,10 +216,15 @@ export async function POST(request: Request) {
   }
 
   try {
-    const resendResponse = await sendNotification({
-      apiKey: resendApiKey,
-      recipient: recipientEmail,
-      from: fromEmail,
+    const smtpResult = await sendNotification({
+      smtp: {
+        host: configStatus.config.smtp.host,
+        port: configStatus.config.smtp.port,
+        secure: configStatus.config.smtp.secure,
+        user: configStatus.config.smtp.user,
+        password: configStatus.config.smtp.password,
+        recipient: configStatus.config.smtp.recipient,
+      },
       name: data.name,
       company: data.company,
       email: data.email,
@@ -205,32 +232,22 @@ export async function POST(request: Request) {
       message: data.message,
     });
 
-    if (!resendResponse.ok) {
-      console.error("[contact] resend_delivery_failed", {
-        requestId,
-        category: "delivery_failed",
-        status: resendResponse.status,
-      });
-
-      return json({ ok: false, error: "delivery_failed" }, { status: 502 });
-    }
-
-    const providerResult = (await resendResponse.json().catch(() => null)) as { id?: string } | null;
-
     console.info("[contact] submission_sent", {
       requestId,
       category: "success",
-      providerMessageId: providerResult?.id ?? null,
+      provider: "hostinger_smtp",
+      providerMessageId: smtpResult.messageId ?? null,
     });
 
     return json({ ok: true }, { status: 200 });
   } catch (error) {
-    console.error("[contact] unexpected_error", {
+    console.error("[contact] smtp_delivery_failed", {
       requestId,
       category: "delivery_failed",
-      error: error instanceof Error ? error.message : CONTACT_ERROR_MESSAGE,
+      provider: "hostinger_smtp",
+      error: error instanceof Error ? error.message : "unknown",
     });
 
-    return json({ ok: false, error: "delivery_failed" }, { status: 500 });
+    return json({ ok: false, error: "delivery_failed", message: CONTACT_ERROR_MESSAGE }, { status: 502 });
   }
 }

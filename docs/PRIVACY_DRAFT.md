@@ -1,4 +1,4 @@
-﻿# Privacy Draft
+# Privacy Draft
 
 ## Status
 
@@ -10,7 +10,7 @@
 
 - Data submitted through Contact includes name, optional company, email, optional phone, and message content.
 - Purpose: responding to an inquiry submitted through the WideOrder website.
-- Delivery provider: Resend sends the server-side notification email.
+- Delivery provider: Hostinger email infrastructure sends the server-side notification email.
 - Abuse protection: Cloudflare Turnstile is used to help verify that the submission is not automated abuse.
 - Validation: submitted values are validated server-side before delivery is attempted.
 - Storage: there is no intentional public contact-message database in the current implementation.
@@ -27,3 +27,4 @@
 - Do not treat this file as a final public policy.
 - Do not infer statutory compliance commitments from this draft.
 - Do not infer a final data-retention period from this draft.
+

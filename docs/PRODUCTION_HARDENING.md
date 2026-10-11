@@ -1,9 +1,9 @@
-﻿# WideOrder Production Hardening
+# WideOrder Production Hardening
 
 ## Status
 
 - Overall status: `APPROVED AND COMPLETE`
-- Pre-hardening rollback point: `e56a667` — `Phase 1-5: build and approve WideOrder website`
+- Pre-hardening rollback point: `e56a667` â€” `Phase 1-5: build and approve WideOrder website`
 - Phase 6 implementation is approved and complete locally.
 - No hosting, DNS, or deployment changes are part of this phase.
 
@@ -17,7 +17,7 @@
 - A compact `not-found` page is implemented in `src/app/not-found.tsx`.
 - Utility favicon/app-icon assets derived from the approved `W` are integrated.
 - The Contact form now submits to `POST /api/contact`.
-- Server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and Resend delivery wiring are implemented.
+- Server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and Hostinger SMTP delivery wiring are implemented.
 - Safe baseline security headers are implemented in `next.config.mjs`.
 - No analytics or tracking scripts were added.
 
@@ -46,24 +46,27 @@
 - Validation covers name, company, email, phone, message, malformed JSON, and empty/whitespace message content.
 - The honeypot field silently discards obvious automated fills.
 - Cloudflare Turnstile is verified server-side and is not trusted client-side on its own.
-- Resend is wired server-side with a fixed subject and reply-to set from the validated visitor email.
+- Hostinger SMTP is wired server-side with a fixed subject and reply-to set from the validated visitor email.
 - Missing required runtime configuration returns a controlled `service_unavailable` response instead of false success.
 - Browser-visible responses use stable categories only and never expose provider stack traces or secrets.
 
 ## Environment variables
 
 - `SITE_INDEXABLE=false`
-- `RESEND_API_KEY=`
-- `CONTACT_RECIPIENT_EMAIL=`
-- `CONTACT_FROM_EMAIL=`
+- `SMTP_HOST=smtp.hostinger.com`
+- `SMTP_PORT=465`
+- `SMTP_SECURE=true`
+- `SMTP_USER=info@wideorder.net`
+- `SMTP_PASSWORD=`
+- `CONTACT_RECIPIENT_EMAIL=info@wideorder.net`
 - `NEXT_PUBLIC_TURNSTILE_SITE_KEY=`
 - `TURNSTILE_SECRET_KEY=`
 
 ## Intended production values
 
 - `SITE_INDEXABLE=true`
-- `CONTACT_RECIPIENT_EMAIL=hello@wideorder.net`
-- `CONTACT_FROM_EMAIL=` approved verified `@wideorder.net` sender identity
+- `CONTACT_RECIPIENT_EMAIL=info@wideorder.net`
+- `SMTP_USER=info@wideorder.net`
 
 ## Security headers
 
@@ -81,14 +84,15 @@
   - `https://fonts.googleapis.com`
   - `https://fonts.gstatic.com`
   - `https://challenges.cloudflare.com`
-  - `https://api.resend.com`
+
+
 - Draft policy outline:
   - `default-src 'self'`
   - `script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com`
   - `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`
   - `font-src 'self' https://fonts.gstatic.com`
   - `img-src 'self' data:`
-  - `connect-src 'self' https://challenges.cloudflare.com https://api.resend.com`
+  - `connect-src 'self' https://challenges.cloudflare.com`
   - `frame-src https://challenges.cloudflare.com`
   - `form-action 'self'`
   - `base-uri 'self'`
@@ -117,10 +121,10 @@
 ## Explicit Phase 7 dependencies
 
 - hosting provider selection/configuration
-- `hello@wideorder.net` mailbox creation
-- Resend account/key
-- Resend `wideorder.net` domain verification
-- final `CONTACT_FROM_EMAIL` value
+- `info@wideorder.net` SMTP mailbox access
+- Hostinger SMTP credentials for `info@wideorder.net`
+- `info@wideorder.net` inbox readiness
+- production SMTP environment-variable configuration for launch
 - Cloudflare Turnstile production keys
 - platform-level rate limiting
 - final CSP testing/enforcement
@@ -130,3 +134,24 @@
 - preview deployment QA
 - production smoke testing
 - legal-owner/copyright confirmation
+
+
+## Phase 7B3 managed settings implementation
+
+- A private `/admin/settings` route and supporting admin authentication flow are implemented for operational configuration review.
+- The public homepage remains visually unchanged and the admin surface is not linked from public navigation or included in the sitemap.
+- The contact form now obtains the Turnstile site key from `GET /api/contact-config` at runtime rather than assuming a permanent build-time public key.
+- `POST /api/contact` now resolves SMTP and Turnstile configuration from managed storage first, then falls back to bootstrap environment defaults.
+- SMTP sender identity remains derived from `SMTP_USER`, producing `WideOrder Website <info@wideorder.net>` for the approved launch mailbox.
+- Secret settings are encrypted before persistence and audit entries record only the key/category, timestamp, and administrator identity.
+- Final deployment, production indexing, `www` redirect, CSP, and HSTS remain intentionally deferred.
+
+## Phase 7B4 managed admin credential review
+
+- Administrator password management now supports first-run bootstrap followed by persistent server-side password rotation.
+- The managed administrator credential is stored only as a one-way `scrypt` hash and is not recoverable from application storage.
+- `WIDEORDER_ADMIN_PASSWORD_HASH` remains a bootstrap and break-glass recovery input only; once a managed password exists, normal login uses the managed hash.
+- Administrator sessions remain server-side, durable, and hashed-at-rest in the configured SQLite/MySQL store rather than process memory.
+- Password changes invalidate active sessions and force a fresh login.
+- The runtime-managed SMTP and Turnstile settings remain unchanged in scope and continue to avoid rebuild/redeploy requirements for routine credential rotation.
+- `SITE_INDEXABLE` remains deferred at `false`, and deployment, `www` redirect, CSP, and HSTS remain intentionally deferred.

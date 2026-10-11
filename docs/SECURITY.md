@@ -1,4 +1,4 @@
-﻿# Security Baseline
+# Security Baseline
 
 ## Audit checkpoint
 
@@ -30,7 +30,7 @@
 
 ## Phase 6 hardening implementation
 
-- Contact form protection now consists of server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and controlled server-side Resend delivery wiring.
+- Contact form protection now consists of server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and controlled server-side Hostinger SMTP delivery wiring.
 - Missing contact-provider or Turnstile configuration returns a controlled runtime error instead of false success.
 - Minimal operational logging avoids full message content, Turnstile tokens, and secret values.
 
@@ -53,3 +53,24 @@
 
 - `npm audit --omit=dev` must remain `0` runtime/production vulnerabilities.
 - Full `npm audit` may still show the previously accepted development-only ESLint-tooling findings until upstream packages are updated.
+
+
+## Phase 7B3 managed settings controls
+
+- `/admin/settings` is protected by a single-administrator login boundary tied to `info@wideorder.net`.
+- Authentication uses a server-side session, an HTTP-only cookie, `SameSite=Strict`, secure cookies in production, session expiry, explicit logout, and conservative persistent login throttling.
+- Admin POST handlers verify same-origin `Origin`/`Referer` headers before mutating state.
+- Admin pages and admin API routes are marked `no-store` and `noindex`.
+- Secret operational settings are encrypted at rest with AES-256-GCM using `WIDEORDER_CONFIG_ENCRYPTION_KEY`.
+- Secret values are never returned to the browser after they are stored.
+- Routine runtime configuration now resolves with precedence `managed storage` -> `bootstrap environment`.
+
+## Phase 7B4 administrator credential boundary
+
+- `WIDEORDER_ADMIN_PASSWORD_HASH` is no longer the normal long-term login source; it is the bootstrap and break-glass recovery credential only.
+- If no managed administrator password exists, login may use the bootstrap hash and the administrator can initialize the persistent managed password through `/admin/settings`.
+- Once a managed administrator password exists, normal login authenticates only against the managed hash stored in persistent server-side storage.
+- The managed administrator password is stored only as a one-way `scrypt` hash and is never encrypted reversibly.
+- Changing the administrator password invalidates active admin sessions and requires a fresh sign-in.
+- Admin session records store only hashed session identifiers plus minimal timing and identity metadata in persistent SQLite/MySQL storage.
+- Recovery is explicit and documented: use root-of-trust database access to clear/reset the managed admin credential, then sign in with the bootstrap hash and create a new managed password.

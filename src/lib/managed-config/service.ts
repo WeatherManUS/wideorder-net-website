@@ -1,0 +1,312 @@
+import type { ManagedSettingDefinition, ManagedSettingKey } from "@/lib/managed-config/definitions";
+import {
+  MANAGED_SETTING_DEFINITIONS,
+  PUBLIC_MANAGED_SETTING_KEYS,
+  getManagedSettingDefinition,
+} from "@/lib/managed-config/definitions";
+import { decryptSecretValue, encryptSecretValue } from "@/lib/managed-config/crypto";
+import { getManagedConfigStore, type PersistenceSummary, type StoredAuditRecord, type StoredSettingRecord } from "@/lib/managed-config/storage";
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export type SettingValueSource = "managed" | "bootstrap" | "unset";
+
+export type AdminSettingView = {
+  key: ManagedSettingKey;
+  label: string;
+  description: string;
+  category: ManagedSettingDefinition["category"];
+  inputKind: ManagedSettingDefinition["inputKind"];
+  required: boolean;
+  configured: boolean;
+  source: SettingValueSource;
+  value: string | null;
+  updatedAt: string | null;
+  updatedBy: string | null;
+};
+
+export type AuditView = {
+  id: string;
+  settingKey: ManagedSettingKey | "ADMIN_PASSWORD_HASH";
+  category: "public" | "secret" | "auth";
+  changedAt: string;
+  adminIdentity: string;
+};
+
+export type ContactOperationalConfig = {
+  smtp: {
+    host: string;
+    port: number | null;
+    secure: boolean | null;
+    user: string;
+    password: string;
+    recipient: string;
+  };
+  turnstileSiteKey: string;
+  turnstileSecretKey: string;
+};
+
+export type ContactOperationalConfigStatus = {
+  config: ContactOperationalConfig;
+  hasRequiredValues: boolean;
+};
+
+type ResolvedSettingValue = {
+  definition: ManagedSettingDefinition;
+  value: string;
+  source: SettingValueSource;
+  storedRecord: StoredSettingRecord | null;
+};
+
+type SettingsUpdateInput = Partial<Record<ManagedSettingKey, string>>;
+
+function getBootstrapSettingValue(key: ManagedSettingKey) {
+  return process.env[getManagedSettingDefinition(key).envName]?.trim() ?? "";
+}
+
+function parseSmtpPort(value: string) {
+  const parsed = Number.parseInt(value, 10);
+
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    return null;
+  }
+
+  return parsed;
+}
+
+function parseSmtpSecure(value: string) {
+  if (value === "true") {
+    return true;
+  }
+
+  if (value === "false") {
+    return false;
+  }
+
+  return null;
+}
+
+async function getStoredSettingsMap() {
+  const store = await getManagedConfigStore();
+  const storedSettings = await store.listSettings();
+  return new Map(storedSettings.map((record) => [record.key, record]));
+}
+
+async function resolveSettingValue(key: ManagedSettingKey, storedSettingsMap?: Map<ManagedSettingKey, StoredSettingRecord>) {
+  const definition = getManagedSettingDefinition(key);
+  const storedSettings = storedSettingsMap ?? (await getStoredSettingsMap());
+  const storedRecord = storedSettings.get(key) ?? null;
+
+  if (storedRecord) {
+    return {
+      definition,
+      value: definition.category === "secret" ? decryptSecretValue(storedRecord.storedValue) : storedRecord.storedValue,
+      source: "managed",
+      storedRecord,
+    } satisfies ResolvedSettingValue;
+  }
+
+  const bootstrapValue = getBootstrapSettingValue(key);
+
+  if (bootstrapValue) {
+    return {
+      definition,
+      value: bootstrapValue,
+      source: "bootstrap",
+      storedRecord: null,
+    } satisfies ResolvedSettingValue;
+  }
+
+  return {
+    definition,
+    value: "",
+    source: "unset",
+    storedRecord: null,
+  } satisfies ResolvedSettingValue;
+}
+
+function normalizeManagedSettingInput(definition: ManagedSettingDefinition, value: string) {
+  const normalizedValue = value.trim();
+
+  switch (definition.inputKind) {
+    case "email": {
+      if (!normalizedValue || normalizedValue.length > 254 || !EMAIL_PATTERN.test(normalizedValue)) {
+        throw new Error(`${definition.key.toLowerCase()}_invalid`);
+      }
+
+      return normalizedValue;
+    }
+    case "number": {
+      const parsed = Number.parseInt(normalizedValue, 10);
+
+      if (!Number.isInteger(parsed) || parsed <= 0 || parsed > 65535) {
+        throw new Error(`${definition.key.toLowerCase()}_invalid`);
+      }
+
+      return String(parsed);
+    }
+    case "boolean": {
+      const loweredValue = normalizedValue.toLowerCase();
+
+      if (["true", "1", "yes", "on"].includes(loweredValue)) {
+        return "true";
+      }
+
+      if (["false", "0", "no", "off"].includes(loweredValue)) {
+        return "false";
+      }
+
+      throw new Error(`${definition.key.toLowerCase()}_invalid`);
+    }
+    case "password": {
+      if (!normalizedValue) {
+        throw new Error(`${definition.key.toLowerCase()}_invalid`);
+      }
+
+      return normalizedValue;
+    }
+    case "text":
+    default: {
+      if (!normalizedValue || normalizedValue.length > 512) {
+        throw new Error(`${definition.key.toLowerCase()}_invalid`);
+      }
+
+      return normalizedValue;
+    }
+  }
+}
+
+export async function getPersistenceSummary(): Promise<PersistenceSummary> {
+  const store = await getManagedConfigStore();
+  return store.summary;
+}
+
+export async function getAdminSettingViews() {
+  const storedSettings = await getStoredSettingsMap();
+
+  return Promise.all(
+    MANAGED_SETTING_DEFINITIONS.map(async (definition) => {
+      const resolved = await resolveSettingValue(definition.key, storedSettings);
+
+      return {
+        key: definition.key,
+        label: definition.label,
+        description: definition.description,
+        category: definition.category,
+        inputKind: definition.inputKind,
+        required: definition.required,
+        configured: Boolean(resolved.value),
+        source: resolved.source,
+        value: definition.category === "public" ? resolved.value : null,
+        updatedAt: resolved.storedRecord?.updatedAt ?? null,
+        updatedBy: resolved.storedRecord?.updatedBy ?? null,
+      } satisfies AdminSettingView;
+    }),
+  );
+}
+
+export async function getRecentAuditViews(limit = 10) {
+  const store = await getManagedConfigStore();
+  const entries = await store.listAuditEntries(limit);
+
+  return entries.map((entry) => ({
+    id: entry.id,
+    settingKey: entry.settingKey,
+    category: entry.category,
+    changedAt: entry.changedAt,
+    adminIdentity: entry.adminIdentity,
+  })) satisfies AuditView[];
+}
+
+export async function updateManagedSettings(inputs: SettingsUpdateInput, adminIdentity: string) {
+  const store = await getManagedConfigStore();
+  const nowIso = new Date().toISOString();
+  const touchedKeys: ManagedSettingKey[] = [];
+
+  for (const definition of MANAGED_SETTING_DEFINITIONS) {
+    if (!(definition.key in inputs)) {
+      continue;
+    }
+
+    const rawValue = inputs[definition.key] ?? "";
+
+    if (definition.category === "secret" && !rawValue.trim()) {
+      continue;
+    }
+
+    const normalizedValue = normalizeManagedSettingInput(definition, rawValue);
+
+    await store.upsertSetting({
+      key: definition.key,
+      category: definition.category,
+      storedValue: definition.category === "secret" ? encryptSecretValue(normalizedValue) : normalizedValue,
+      updatedAt: nowIso,
+      updatedBy: adminIdentity,
+    });
+
+    await store.appendAudit({
+      id: crypto.randomUUID(),
+      settingKey: definition.key,
+      category: definition.category,
+      changedAt: nowIso,
+      adminIdentity,
+    } satisfies StoredAuditRecord);
+
+    touchedKeys.push(definition.key);
+  }
+
+  return touchedKeys;
+}
+
+export async function getRuntimeContactConfig() {
+  const resolved = await resolveSettingValue("NEXT_PUBLIC_TURNSTILE_SITE_KEY");
+
+  return {
+    turnstileSiteKey: resolved.value,
+  };
+}
+
+export async function getContactOperationalConfigStatus(): Promise<ContactOperationalConfigStatus> {
+  const storedSettings = await getStoredSettingsMap();
+  const smtpHost = await resolveSettingValue("SMTP_HOST", storedSettings);
+  const smtpPort = await resolveSettingValue("SMTP_PORT", storedSettings);
+  const smtpSecure = await resolveSettingValue("SMTP_SECURE", storedSettings);
+  const smtpUser = await resolveSettingValue("SMTP_USER", storedSettings);
+  const smtpPassword = await resolveSettingValue("SMTP_PASSWORD", storedSettings);
+  const recipientEmail = await resolveSettingValue("CONTACT_RECIPIENT_EMAIL", storedSettings);
+  const turnstileSiteKey = await resolveSettingValue("NEXT_PUBLIC_TURNSTILE_SITE_KEY", storedSettings);
+  const turnstileSecretKey = await resolveSettingValue("TURNSTILE_SECRET_KEY", storedSettings);
+
+  const config = {
+    smtp: {
+      host: smtpHost.value,
+      port: parseSmtpPort(smtpPort.value),
+      secure: parseSmtpSecure(smtpSecure.value.toLowerCase()),
+      user: smtpUser.value,
+      password: smtpPassword.value,
+      recipient: recipientEmail.value,
+    },
+    turnstileSiteKey: turnstileSiteKey.value,
+    turnstileSecretKey: turnstileSecretKey.value,
+  } satisfies ContactOperationalConfig;
+
+  const hasRequiredValues =
+    Boolean(config.turnstileSecretKey) &&
+    Boolean(config.turnstileSiteKey) &&
+    Boolean(config.smtp.host) &&
+    config.smtp.port !== null &&
+    config.smtp.secure !== null &&
+    Boolean(config.smtp.user) &&
+    Boolean(config.smtp.password) &&
+    Boolean(config.smtp.recipient);
+
+  return {
+    config,
+    hasRequiredValues,
+  };
+}
+
+export async function getPublicSettingViews() {
+  const allViews = await getAdminSettingViews();
+  return allViews.filter((view) => PUBLIC_MANAGED_SETTING_KEYS.includes(view.key));
+}

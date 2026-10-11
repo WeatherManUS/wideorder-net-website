@@ -1,4 +1,4 @@
-﻿import { homeContent, type ContactField, type ProcessStage, type ProofStory } from "@/content/home";
+import { homeContent, type ContactField, type ProcessStage, type ProofStory } from "@/content/home";
 
 import { BrandMark } from "@/components/brand-mark";
 import { ContactForm } from "@/components/contact-form";
@@ -283,7 +283,6 @@ function ContactSection() {
           exampleText={homeContent.contact.exampleText}
           privacyText={homeContent.contact.privacyText}
           submitLabel={homeContent.contact.submitLabel}
-          turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ""}
         />
       </div>
     </section>
@@ -337,4 +336,5 @@ export function HomePage() {
     </div>
   );
 }
+
 

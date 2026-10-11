@@ -1,9 +1,9 @@
-﻿export const siteConfig = {
+export const siteConfig = {
   name: "WideOrder",
   serviceName: "WideOrder Resolve",
   domain: "https://wideorder.net",
   repositoryPath: "C:/GitHub/wideorder-net-website",
-  phase: "Phase 6 production hardening",
+  phase: "Phase 7 managed settings review",
   title: "WideOrder Resolve | Stop losing time to busy work.",
   description:
     "WideOrder Resolve looks at the work consuming your team's time, understands why it happens, and finds a practical way to make it better.",
@@ -16,8 +16,9 @@
   },
   contact: {
     endpoint: "/api/contact",
-    publicMailbox: "hello@wideorder.net",
+    publicMailbox: "info@wideorder.net",
   },
 } as const;
 
 export const isSiteIndexable = process.env.SITE_INDEXABLE === "true";
+

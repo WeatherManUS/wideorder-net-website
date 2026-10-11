@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -18,7 +18,6 @@ type ContactFormProps = {
   exampleText: string;
   privacyText: string;
   submitLabel: string;
-  turnstileSiteKey: string;
 };
 
 type SubmissionState = "idle" | "submitting" | "success" | "error";
@@ -39,6 +38,10 @@ type ContactApiResponse =
       error: ContactApiErrorCode;
       fieldErrors?: ContactFieldErrors;
     };
+
+type ContactConfigResponse = {
+  turnstileSiteKey: string;
+};
 
 type TurnstileInstanceId = string | number;
 
@@ -76,19 +79,12 @@ const getResolvedTheme = (): ThemeMode => {
   return window.matchMedia(MEDIA_QUERY).matches ? "dark" : "light";
 };
 
-export function ContactForm({
-  fields,
-  messageLabel,
-  helperText,
-  exampleText,
-  privacyText,
-  submitLabel,
-  turnstileSiteKey,
-}: ContactFormProps) {
+export function ContactForm({ fields, messageLabel, helperText, exampleText, privacyText, submitLabel }: ContactFormProps) {
   const [submissionState, setSubmissionState] = useState<SubmissionState>("idle");
   const [statusMessage, setStatusMessage] = useState("");
   const [fieldErrors, setFieldErrors] = useState<ContactFieldErrors>({});
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
   const [theme, setTheme] = useState<ThemeMode>("light");
   const formRef = useRef<HTMLFormElement>(null);
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
@@ -120,6 +116,31 @@ export function ContactForm({
     return () => {
       observer.disconnect();
       mediaQuery.removeEventListener("change", handleSystemThemeChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadConfig = async () => {
+      try {
+        const response = await fetch("/api/contact-config", { cache: "no-store" });
+        const result = (await response.json()) as ContactConfigResponse;
+
+        if (!cancelled) {
+          setTurnstileSiteKey(result.turnstileSiteKey ?? "");
+        }
+      } catch {
+        if (!cancelled) {
+          setTurnstileSiteKey("");
+        }
+      }
+    };
+
+    void loadConfig();
+
+    return () => {
+      cancelled = true;
     };
   }, []);
 
@@ -364,4 +385,3 @@ export function ContactForm({
     </>
   );
 }
-

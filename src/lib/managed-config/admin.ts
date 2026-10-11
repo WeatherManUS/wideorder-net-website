@@ -10,7 +10,7 @@ import {
   SESSION_COOKIE_NAME,
   SESSION_TTL_MS,
 } from "@/lib/managed-config/definitions";
-import { hashAdminPassword, hashToken, verifyAdminPassword } from "@/lib/managed-config/crypto";
+import { hashAdminPassword, hashToken, isSupportedAdminPasswordHash, verifyAdminPassword } from "@/lib/managed-config/crypto";
 import { buildTrustedPublicUrl, isTrustedBrowserOrigin, isTrustedBrowserReferer } from "@/lib/managed-config/origin";
 import { getManagedConfigStore } from "@/lib/managed-config/storage";
 
@@ -91,15 +91,17 @@ async function getAdminPasswordState() {
   const bootstrapHash = getBootstrapAdminPasswordHash();
   const managedCredential = await store.getAdminCredential(ADMIN_EMAIL);
   const managedHash = managedCredential?.passwordHash.trim() ?? "";
+  const usableBootstrapHash = isSupportedAdminPasswordHash(bootstrapHash) ? bootstrapHash : "";
+  const usableManagedHash = isSupportedAdminPasswordHash(managedHash) ? managedHash : "";
 
   return {
     store,
-    bootstrapHash,
-    bootstrapConfigured: Boolean(bootstrapHash),
+    bootstrapHash: usableBootstrapHash,
+    bootstrapConfigured: Boolean(usableBootstrapHash),
     managedCredential,
-    managedHash,
-    activeHash: managedHash || bootstrapHash,
-    effectiveSource: managedHash ? ("managed" as const) : bootstrapHash ? ("bootstrap" as const) : ("missing" as const),
+    managedHash: usableManagedHash,
+    activeHash: usableManagedHash || usableBootstrapHash,
+    effectiveSource: usableManagedHash ? ("managed" as const) : usableBootstrapHash ? ("bootstrap" as const) : ("missing" as const),
   };
 }
 

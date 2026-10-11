@@ -141,6 +141,15 @@ function resolvePasswordHashMaxMemory(parsedHash: ParsedPasswordHash) {
   return Math.max(parsedHash.maxmem ?? 0, PASSWORD_HASH_MAX_MEMORY, minimumRequired + 1024);
 }
 
+export function isSupportedAdminPasswordHash(encodedHash: string) {
+  try {
+    resolvePasswordHashMaxMemory(parseScryptHash(encodedHash));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function verifyAdminPassword(password: string, encodedHash: string) {
   const parsedHash = parseScryptHash(encodedHash);
   const derivedKey = scryptSync(password, parsedHash.salt, parsedHash.derivedKey.length, {

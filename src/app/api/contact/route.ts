@@ -103,6 +103,25 @@ async function sendNotification({
   });
 }
 
+function getCollectionCount(value: unknown) {
+  return Array.isArray(value) ? value.length : 0;
+}
+
+function getSmtpDeliveryMetadata(requestId: string, smtpResult: Awaited<ReturnType<typeof sendNotification>>) {
+  return {
+    requestId,
+    provider: "hostinger_smtp",
+    providerMessageId: smtpResult.messageId ?? null,
+    acceptedCount: getCollectionCount(smtpResult.accepted),
+    rejectedCount: getCollectionCount(smtpResult.rejected),
+    pendingCount: getCollectionCount("pending" in smtpResult ? smtpResult.pending : undefined),
+    smtpResponse: smtpResult.response ?? null,
+    envelopeTime: typeof smtpResult.envelopeTime === "number" ? smtpResult.envelopeTime : null,
+    messageTime: typeof smtpResult.messageTime === "number" ? smtpResult.messageTime : null,
+    messageSize: typeof smtpResult.messageSize === "number" ? smtpResult.messageSize : null,
+  };
+}
+
 export function GET() {
   return json({ ok: false, error: "method_not_allowed" }, { status: 405, headers: { Allow: "POST" } });
 }
@@ -231,12 +250,20 @@ export async function POST(request: Request) {
       phone: data.phone,
       message: data.message,
     });
+    const smtpDelivery = getSmtpDeliveryMetadata(requestId, smtpResult);
+
+    if (smtpDelivery.acceptedCount === 0) {
+      console.error("[contact] smtp_delivery_unaccepted", {
+        ...smtpDelivery,
+        category: "delivery_failed",
+      });
+
+      return json({ ok: false, error: "delivery_failed", message: CONTACT_ERROR_MESSAGE }, { status: 502 });
+    }
 
     console.info("[contact] submission_sent", {
-      requestId,
+      ...smtpDelivery,
       category: "success",
-      provider: "hostinger_smtp",
-      providerMessageId: smtpResult.messageId ?? null,
     });
 
     return json({ ok: true }, { status: 200 });

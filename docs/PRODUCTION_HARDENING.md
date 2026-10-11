@@ -18,7 +18,7 @@
 - Utility favicon/app-icon assets derived from the approved `W` are integrated.
 - The Contact form now submits to `POST /api/contact`.
 - Server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and Resend delivery wiring are implemented.
-- Safe baseline security headers are implemented in `next.config.ts`.
+- Safe baseline security headers are implemented in `next.config.mjs`.
 - No analytics or tracking scripts were added.
 
 ## Approved metadata

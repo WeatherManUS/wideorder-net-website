@@ -3,6 +3,7 @@
 import {
   ADMIN_NO_STORE_HEADERS,
   buildClearedSessionCookie,
+  buildTrustedAdminUrl,
   changeAdminPassword,
   getAuthenticatedAdminFromRequest,
   isTrustedAdminOrigin,
@@ -15,7 +16,7 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   if (!isTrustedAdminOrigin(request)) {
-    return NextResponse.redirect(new URL("/admin/settings?error=csrf", request.url), {
+    return NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/settings?error=csrf"), {
       status: 303,
       headers: ADMIN_NO_STORE_HEADERS,
     });
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
   const admin = await getAuthenticatedAdminFromRequest(request);
 
   if (!admin) {
-    return NextResponse.redirect(new URL("/admin/login?error=unauthenticated", request.url), {
+    return NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/login?error=unauthenticated"), {
       status: 303,
       headers: ADMIN_NO_STORE_HEADERS,
     });
@@ -42,14 +43,14 @@ export async function POST(request: Request) {
     });
 
     if (!result.ok) {
-      return NextResponse.redirect(new URL(`/admin/settings?error=${result.error}`, request.url), {
+      return NextResponse.redirect(buildTrustedAdminUrl(request, `/admin/settings?error=${result.error}`), {
         status: 303,
         headers: ADMIN_NO_STORE_HEADERS,
       });
     }
 
     const status = result.credentialSourceBeforeChange === "bootstrap" ? "password_initialized" : "password_changed";
-    const response = NextResponse.redirect(new URL(`/admin/login?status=${status}`, request.url), {
+    const response = NextResponse.redirect(buildTrustedAdminUrl(request, `/admin/login?status=${status}`), {
       status: 303,
       headers: ADMIN_NO_STORE_HEADERS,
     });
@@ -63,12 +64,12 @@ export async function POST(request: Request) {
 
   try {
     await updateManagedSettings(inputs, admin.email);
-    return NextResponse.redirect(new URL("/admin/settings?status=saved", request.url), {
+    return NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/settings?status=saved"), {
       status: 303,
       headers: ADMIN_NO_STORE_HEADERS,
     });
   } catch {
-    return NextResponse.redirect(new URL("/admin/settings?error=invalid_setting", request.url), {
+    return NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/settings?error=invalid_setting"), {
       status: 303,
       headers: ADMIN_NO_STORE_HEADERS,
     });

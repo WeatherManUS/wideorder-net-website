@@ -11,6 +11,7 @@ import {
   SESSION_TTL_MS,
 } from "@/lib/managed-config/definitions";
 import { hashAdminPassword, hashToken, verifyAdminPassword } from "@/lib/managed-config/crypto";
+import { buildTrustedPublicUrl, isTrustedBrowserOrigin, isTrustedBrowserReferer } from "@/lib/managed-config/origin";
 import { getManagedConfigStore } from "@/lib/managed-config/storage";
 
 const ADMIN_PASSWORD_MIN_LENGTH = 12;
@@ -133,16 +134,19 @@ function validateNewAdminPassword(currentPassword: string, newPassword: string, 
 }
 
 export function isTrustedAdminOrigin(request: Request) {
-  const requestOrigin = new URL(request.url).origin;
   const originHeader = request.headers.get("origin");
 
   if (originHeader) {
-    return originHeader === requestOrigin;
+    return isTrustedBrowserOrigin(originHeader);
   }
 
   const refererHeader = request.headers.get("referer");
 
-  return Boolean(refererHeader && refererHeader.startsWith(`${requestOrigin}/`));
+  return Boolean(refererHeader && isTrustedBrowserReferer(refererHeader));
+}
+
+export function buildTrustedAdminUrl(request: Request, path: string) {
+  return buildTrustedPublicUrl(request, path);
 }
 
 async function createSession(adminEmail: string) {

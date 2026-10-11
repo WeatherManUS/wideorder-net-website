@@ -1,6 +1,8 @@
-# WideOrder
+ï»¿# WideOrder
 
 Public-facing WideOrder website built with Next.js, React and TypeScript.
+
+Phase 6 production hardening is implemented locally and awaiting user review.
 
 ## Prerequisites
 
@@ -17,6 +19,14 @@ Public-facing WideOrder website built with Next.js, React and TypeScript.
 ```bash
 npm install
 ```
+
+## Environment
+
+- Copy `.env.example` to `.env.local` for local contact-form testing.
+- Keep `SITE_INDEXABLE=false` by default for local and preview environments.
+- Set `SITE_INDEXABLE=true` only for the intended production build/runtime.
+- Contact delivery requires server-only `RESEND_API_KEY`, `CONTACT_RECIPIENT_EMAIL`, `CONTACT_FROM_EMAIL`, and `TURNSTILE_SECRET_KEY`.
+- The browser Turnstile widget requires `NEXT_PUBLIC_TURNSTILE_SITE_KEY`.
 
 ## Development
 
@@ -50,18 +60,21 @@ npm run start
 
 ## Important locations
 
-- `public/brand/` — approved production logos
-- `docs/references/` — approved visual/layout references
-- `docs/CONTENT.md` — approved website content source
-- `docs/BRAND.md` — brand source of truth
-- `docs/DESIGN_SYSTEM.md` — design-system source of truth
-- `docs/REFERENCE_USAGE.md` — reference-image interpretation rules
-- `docs/SECURITY.md` — dependency and security notes
-- `docs/IMPLEMENTATION_PLAN.md` — project phases
-- `docs/DEPLOYMENT.md` — deployment planning
-- `src/theme/tokens.ts` — active design-token source
+- `public/brand/` â€” approved production logos
+- `public/icons/` â€” generated utility favicon/app-icon assets derived from the approved `W`
+- `docs/references/` â€” approved visual/layout references
+- `docs/CONTENT.md` â€” approved website content source
+- `docs/BRAND.md` â€” brand source of truth
+- `docs/DESIGN_SYSTEM.md` â€” design-system source of truth
+- `docs/REFERENCE_USAGE.md` â€” reference-image interpretation rules
+- `docs/SECURITY.md` â€” dependency and security notes
+- `docs/PRODUCTION_HARDENING.md` â€” Phase 6 production-hardening record
+- `docs/PRIVACY_DRAFT.md` â€” internal draft only, not publicly published
+- `docs/IMPLEMENTATION_PLAN.md` â€” project phases
+- `docs/DEPLOYMENT.md` â€” deployment planning
+- `src/theme/tokens.ts` â€” active design-token source
 
 ## Notes
 
 - The legacy static prototype and prior GitHub Pages workflow remain archived in `docs/archive/`.
-- Deployment has intentionally not been configured yet.
+- Deployment, hosting, DNS, HSTS and final CSP remain intentionally deferred.

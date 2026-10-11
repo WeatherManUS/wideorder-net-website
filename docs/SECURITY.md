@@ -1,4 +1,4 @@
-# Security Baseline
+﻿# Security Baseline
 
 ## Audit checkpoint
 
@@ -27,3 +27,29 @@
 - Never commit credentials or secrets.
 - Environment secrets must be supplied through environment configuration rather than source control.
 - Review this document before making dependency or security-tooling changes.
+
+## Phase 6 hardening implementation
+
+- Contact form protection now consists of server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and controlled server-side Resend delivery wiring.
+- Missing contact-provider or Turnstile configuration returns a controlled runtime error instead of false success.
+- Minimal operational logging avoids full message content, Turnstile tokens, and secret values.
+
+## Baseline headers implemented
+
+- `Referrer-Policy: strict-origin-when-cross-origin`
+- `X-Content-Type-Options: nosniff`
+- `X-Frame-Options: DENY`
+- `Permissions-Policy: camera=(), microphone=(), geolocation=()`
+- `Cross-Origin-Opener-Policy: same-origin`
+
+## Explicitly deferred items
+
+- Final restrictive `Content-Security-Policy`
+- `Strict-Transport-Security`
+- Platform-level rate limiting for `POST /api/contact`
+- Hosting/WAF-specific production hardening
+
+## Current audit posture
+
+- `npm audit --omit=dev` must remain `0` runtime/production vulnerabilities.
+- Full `npm audit` may still show the previously accepted development-only ESLint-tooling findings until upstream packages are updated.

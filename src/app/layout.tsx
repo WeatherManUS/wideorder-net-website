@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 
-import { siteConfig } from "@/config/site";
+import { isSiteIndexable, siteConfig } from "@/config/site";
 import { themeStylesheet } from "@/theme/tokens";
 
 import "./globals.css";
@@ -34,10 +34,29 @@ const themeInitializer = `(() => {
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.domain),
-  title: siteConfig.name,
+  title: siteConfig.title,
+  description: siteConfig.description,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    title: siteConfig.openGraph.title,
+    description: siteConfig.openGraph.description,
+    url: siteConfig.openGraph.url,
+    siteName: siteConfig.openGraph.siteName,
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/icons/wideorder-w-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icons/wideorder-w-512.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: [{ url: "/icons/wideorder-w-180.png", sizes: "180x180", type: "image/png" }],
+  },
   robots: {
-    index: false,
-    follow: false,
+    index: isSiteIndexable,
+    follow: isSiteIndexable,
   },
 };
 

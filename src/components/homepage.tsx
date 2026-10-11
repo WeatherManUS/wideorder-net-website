@@ -1,6 +1,7 @@
-import { homeContent, type ContactField, type ProcessStage, type ProofStory } from "@/content/home";
+﻿import { homeContent, type ContactField, type ProcessStage, type ProofStory } from "@/content/home";
 
 import { BrandMark } from "@/components/brand-mark";
+import { ContactForm } from "@/components/contact-form";
 import { ProofResultAnimator } from "@/components/proof-result-animator";
 import { SiteHeader } from "@/components/site-header";
 
@@ -275,50 +276,15 @@ function ContactSection() {
           <h2 className="section-title">{homeContent.contact.statement}</h2>
           <p className="section-copy">{homeContent.contact.body}</p>
         </div>
-        <form className="contact-form">
-          <div className="contact-form__grid">
-            {(homeContent.contact.fields as readonly ContactField[]).map((field) => (
-              <div key={field.name} className="form-field">
-                <label className="form-label" htmlFor={field.name}>
-                  {field.label}
-                </label>
-                <input
-                  className="form-input"
-                  id={field.name}
-                  name={field.name}
-                  type={field.type ?? "text"}
-                  autoComplete={field.autoComplete}
-                  required={field.required}
-                />
-              </div>
-            ))}
-            <div className="form-field form-field--full">
-              <label className="form-label" htmlFor="message">
-                {homeContent.contact.messageLabel}
-              </label>
-              <p id="message-helper" className="form-helper">
-                {homeContent.contact.helperText}
-              </p>
-              <textarea
-                className="form-input form-input--textarea"
-                id="message"
-                name="message"
-                required
-                rows={6}
-                placeholder={homeContent.contact.exampleText}
-                aria-describedby="message-helper contact-privacy"
-              />
-            </div>
-          </div>
-          <div className="form-actions">
-            <p id="contact-privacy" className="form-privacy">
-              {homeContent.contact.privacyText}
-            </p>
-            <button className="button button--primary form-submit" type="button">
-              {homeContent.contact.submitLabel}
-            </button>
-          </div>
-        </form>
+        <ContactForm
+          fields={homeContent.contact.fields as readonly ContactField[]}
+          messageLabel={homeContent.contact.messageLabel}
+          helperText={homeContent.contact.helperText}
+          exampleText={homeContent.contact.exampleText}
+          privacyText={homeContent.contact.privacyText}
+          submitLabel={homeContent.contact.submitLabel}
+          turnstileSiteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY ?? ""}
+        />
       </div>
     </section>
   );
@@ -371,3 +337,4 @@ export function HomePage() {
     </div>
   );
 }
+

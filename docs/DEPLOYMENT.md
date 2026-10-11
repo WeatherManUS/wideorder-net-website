@@ -9,11 +9,24 @@
 
 ## Current status
 
-- Hosting provider: pending decision
-- Production DNS: pending Phase 7
-- Preview deployment: required before first production release
+- Hosting provider: `Hostinger Cloud Startup`
+- Live domain state: `https://wideorder.net` is attached earlier than originally planned
+- Current deployment mode: live-domain preview / pre-production audit
+- `SITE_INDEXABLE=false` remains mandatory until explicit production activation approval
+- Production activation: has NOT occurred
 - Production release: must use a build that has passed lint, typecheck, and production build checks
 - Rollback: must be documented before initial production launch
+
+## Hostinger deployment method
+
+- Deployment source: GitHub repository `WeatherManUS/wideorder-net-website`
+- Active branch: `main`
+- Application type: Next.js Node.js web app
+- Preview-first intent remains in effect even though the apex domain was attached early
+- The site must remain crawl-blocked and non-indexed until Phase 7 activation is explicitly approved
+- Environment variables are supplied through Hostinger and must never be committed to Git
+- `SITE_INDEXABLE` must remain `false` during the current live-domain preview state
+- The production domain remains in pre-activation audit status despite being publicly reachable
 
 ## Security and configuration
 

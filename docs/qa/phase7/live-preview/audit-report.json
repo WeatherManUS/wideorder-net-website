@@ -1,0 +1,288 @@
+﻿{
+    "general":  {
+                    "fieldLabels":  [
+                                        "Name *",
+                                        "Company (optional)",
+                                        "Email *",
+                                        "Phone (optional)",
+                                        "What\u0027s taking your time? *"
+                                    ],
+                    "helperText":  "A short description is completely fine.",
+                    "privacyText":  "We use the details you submit to respond to your message.",
+                    "turnstileIframePresent":  false,
+                    "turnstileIframeSrc":  null,
+                    "sections":  [
+                                     "Every business develops work that takes longer than it should.",
+                                     "Sometimes you need another set of eyes.",
+                                     "A straightforward progression.",
+                                     "The tool isn\u0027t the product.",
+                                     "We find it inSITU.",
+                                     "We start by understanding what is already in place.",
+                                     "The proof is in the outcome.",
+                                     "After Discovery, two engagement models.",
+                                     "Tell us about the task, process or workaround that\u0027s taking longer than it should."
+                                 ],
+                    "turnstileScriptPresent":  true,
+                    "turnstileRenderedWithoutIframe":  true
+                },
+    "header":  {
+                   "390":  {
+                               "overflow":  false,
+                               "desktopNavVisible":  false,
+                               "desktopCtaVisible":  false,
+                               "mobileToggleVisible":  true,
+                               "headerHeight":  82.25,
+                               "singleRow":  true,
+                               "navWrapped":  false,
+                               "ctaWidth":  0,
+                               "mobileMenuOpen":  "open",
+                               "mobileLinks":  [
+                                                   "The Challenge",
+                                                   "How We Work",
+                                                   "Philosophy",
+                                                   "Proof",
+                                                   "Engagement"
+                                               ],
+                               "mobileMenuClosed":  "closed"
+                           },
+                   "768":  {
+                               "overflow":  false,
+                               "desktopNavVisible":  false,
+                               "desktopCtaVisible":  false,
+                               "mobileToggleVisible":  true,
+                               "headerHeight":  89.265625,
+                               "singleRow":  true,
+                               "navWrapped":  false,
+                               "ctaWidth":  0,
+                               "mobileMenuOpen":  "open",
+                               "mobileLinks":  [
+                                                   "The Challenge",
+                                                   "How We Work",
+                                                   "Philosophy",
+                                                   "Proof",
+                                                   "Engagement"
+                                               ],
+                               "mobileMenuClosed":  "closed"
+                           },
+                   "900":  {
+                               "overflow":  false,
+                               "desktopNavVisible":  false,
+                               "desktopCtaVisible":  false,
+                               "mobileToggleVisible":  true,
+                               "headerHeight":  89.265625,
+                               "singleRow":  true,
+                               "navWrapped":  false,
+                               "ctaWidth":  0,
+                               "mobileMenuOpen":  "open",
+                               "mobileLinks":  [
+                                                   "The Challenge",
+                                                   "How We Work",
+                                                   "Philosophy",
+                                                   "Proof",
+                                                   "Engagement"
+                                               ],
+                               "mobileMenuClosed":  "closed"
+                           },
+                   "1024":  {
+                                "overflow":  false,
+                                "desktopNavVisible":  false,
+                                "desktopCtaVisible":  false,
+                                "mobileToggleVisible":  true,
+                                "headerHeight":  89.265625,
+                                "singleRow":  true,
+                                "navWrapped":  false,
+                                "ctaWidth":  0,
+                                "mobileMenuOpen":  "open",
+                                "mobileLinks":  [
+                                                    "The Challenge",
+                                                    "How We Work",
+                                                    "Philosophy",
+                                                    "Proof",
+                                                    "Engagement"
+                                                ],
+                                "mobileMenuClosed":  "closed"
+                            },
+                   "1120":  {
+                                "overflow":  false,
+                                "desktopNavVisible":  false,
+                                "desktopCtaVisible":  false,
+                                "mobileToggleVisible":  true,
+                                "headerHeight":  89.265625,
+                                "singleRow":  true,
+                                "navWrapped":  false,
+                                "ctaWidth":  0,
+                                "mobileMenuOpen":  "open",
+                                "mobileLinks":  [
+                                                    "The Challenge",
+                                                    "How We Work",
+                                                    "Philosophy",
+                                                    "Proof",
+                                                    "Engagement"
+                                                ],
+                                "mobileMenuClosed":  "closed"
+                            },
+                   "1160":  {
+                                "overflow":  false,
+                                "desktopNavVisible":  true,
+                                "desktopCtaVisible":  true,
+                                "mobileToggleVisible":  false,
+                                "headerHeight":  91.1875,
+                                "singleRow":  true,
+                                "navWrapped":  false,
+                                "ctaWidth":  250.203125
+                            },
+                   "1440":  {
+                                "overflow":  false,
+                                "desktopNavVisible":  true,
+                                "desktopCtaVisible":  true,
+                                "mobileToggleVisible":  false,
+                                "headerHeight":  91.1875,
+                                "singleRow":  true,
+                                "navWrapped":  false,
+                                "ctaWidth":  250.203125
+                            }
+               },
+    "firstVisitDark":  {
+                           "themeAttr":  null,
+                           "logoBackground":  "url(\"https://wideorder.net/brand/wideorder-logo-dark.png\")"
+                       },
+    "firstVisitLight":  {
+                            "themeAttr":  null,
+                            "logoBackground":  "url(\"https://wideorder.net/brand/wideorder-logo-light.png\")"
+                        },
+    "afterToggle":  {
+                        "themeAttr":  "dark",
+                        "storedTheme":  "dark",
+                        "logoBackground":  "url(\"https://wideorder.net/brand/wideorder-logo-dark.png\")"
+                    },
+    "afterReload":  {
+                        "themeAttr":  "dark",
+                        "storedTheme":  "dark",
+                        "logoBackground":  "url(\"https://wideorder.net/brand/wideorder-logo-dark.png\")"
+                    },
+    "proof":  {
+                  "before":  [
+                                 "Retail PricingThe resultApproximately 20 minutes.~20 minutes",
+                                 "Technology DeploymentThe resultUp to 16 machines simultaneously.up to 1 machines simultaneously",
+                                 "Remote Infrastructure \u0026 PrintingThe resultApproximately 30 minutes to zero downtime.~30 minutes -\u003e 30 downtime",
+                                 "Month-End ReportingThe resultApproximately 1,200 minutes to approximately 10 minutes.~1,200 minutes -\u003e ~1,200 minutes"
+                             ],
+                  "after":  [
+                                "Retail PricingThe resultApproximately 20 minutes.~20 minutes",
+                                "Technology DeploymentThe resultUp to 16 machines simultaneously.up to 16 machines simultaneously",
+                                "Remote Infrastructure \u0026 PrintingThe resultApproximately 30 minutes to zero downtime.~30 minutes -\u003e 0 downtime",
+                                "Month-End ReportingThe resultApproximately 1,200 minutes to approximately 10 minutes.~1,200 minutes -\u003e ~1,200 minutes"
+                            ],
+                  "settled":  [
+                                  "Retail PricingThe resultApproximately 20 minutes.~20 minutes",
+                                  "Technology DeploymentThe resultUp to 16 machines simultaneously.up to 16 machines simultaneously",
+                                  "Remote Infrastructure \u0026 PrintingThe resultApproximately 30 minutes to zero downtime.~30 minutes -\u003e 0 downtime",
+                                  "Month-End ReportingThe resultApproximately 1,200 minutes to approximately 10 minutes.~1,200 minutes -\u003e ~1,200 minutes"
+                              ],
+                  "replay":  [
+                                 "Retail PricingThe resultApproximately 20 minutes.~20 minutes",
+                                 "Technology DeploymentThe resultUp to 16 machines simultaneously.up to 16 machines simultaneously",
+                                 "Remote Infrastructure \u0026 PrintingThe resultApproximately 30 minutes to zero downtime.~30 minutes -\u003e 0 downtime",
+                                 "Month-End ReportingThe resultApproximately 1,200 minutes to approximately 10 minutes.~1,200 minutes -\u003e ~1,200 minutes"
+                             ]
+              },
+    "proofReduced":  [
+                         "Retail PricingThe resultApproximately 20 minutes.~20 minutes",
+                         "Technology DeploymentThe resultUp to 16 machines simultaneously.up to 16 machines simultaneously",
+                         "Remote Infrastructure \u0026 PrintingThe resultApproximately 30 minutes to zero downtime.~30 minutes -\u003e 0 downtime",
+                         "Month-End ReportingThe resultApproximately 1,200 minutes to approximately 10 minutes.~1,200 minutes -\u003e ~10 minutes"
+                     ],
+    "contact":  {
+                    "initial":  {
+                                    "buttonText":  "Tell us what\u0027s taking your time",
+                                    "buttonDisabled":  false,
+                                    "turnstileIframes":  0
+                                },
+                    "turnstileIframeSrc":  null,
+                    "sitekeyConfigured":  true,
+                    "sitekeyKind":  "cloudflare-test",
+                    "tabOrder":  [
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "Skip to main content"
+                                     },
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "WideOrder"
+                                     },
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "The Challenge"
+                                     },
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "How We Work"
+                                     },
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "Philosophy"
+                                     },
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "Proof"
+                                     },
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "Engagement"
+                                     },
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "Tell us what\u0027s taking your time"
+                                     },
+                                     {
+                                         "tag":  "BUTTON",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  "Switch to dark theme",
+                                         "text":  "Switch to dark theme"
+                                     },
+                                     {
+                                         "tag":  "A",
+                                         "id":  "",
+                                         "name":  null,
+                                         "ariaLabel":  null,
+                                         "text":  "Tell us what\u0027s taking your time"
+                                     }
+                                 ],
+                    "afterSubmit":  {
+                                        "statusText":  "We couldn\u0027t send your message. Please try again.",
+                                        "errorTexts":  [
+
+                                                       ],
+                                        "hasStackTrace":  false,
+                                        "hasResendKeyWord":  false,
+                                        "hasTurnstileSecretWord":  false
+                                    },
+                    "turnstileRenderedWithoutIframe":  true,
+                    "hiddenTurnstileToken":  "XXXX.DUMMY.TOKEN.XXXX"
+                }
+}

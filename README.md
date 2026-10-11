@@ -2,7 +2,7 @@
 
 Public-facing WideOrder website built with Next.js, React and TypeScript.
 
-Managed operational settings and admin credential controls are implemented locally; deployment and live service verification remain pending.
+Managed operational settings are deployed, while final live contact-mail verification remains pending.
 
 ## Prerequisites
 
@@ -23,16 +23,18 @@ npm install
 ## Environment
 
 - Copy `.env.example` to `.env.local` for local contact-form testing.
-- Keep `SITE_INDEXABLE=false` by default for local and preview environments.
-- Set `SITE_INDEXABLE=true` only for the intended production build/runtime.
+- Keep `SITE_INDEXABLE=false` by default for local, preview, and the current live pre-activation environment.
+- Set `SITE_INDEXABLE=true` only after explicit production-activation approval.
 - Production bootstrap configuration now consists of `WIDEORDER_ADMIN_PASSWORD_HASH`, `WIDEORDER_CONFIG_ENCRYPTION_KEY`, and a MySQL connection supplied through `WIDEORDER_DATABASE_URL` or `MYSQL_*` / `DB_*` variables.
 - Local review may still use a persistent SQLite file via `WIDEORDER_LOCAL_CONFIG_DB_PATH` or the default `.data/wideorder-managed-config.sqlite` path.
 - The approved live recipient mailbox is `info@wideorder.net`.
 - The authenticated SMTP sender mailbox for launch is `info@wideorder.net`.
-- SMTP delivery and inbox receipt remain unverified until live Hostinger SMTP credentials and production Turnstile values are deployed and tested.
+- The live contact flow now uses production Turnstile plus managed SMTP settings, but final two-message inbox verification remains pending.
 - Routine contact settings are managed at runtime through `/admin/settings`, including the runtime-delivered Turnstile site key.
 - The administrator password becomes a persistent managed credential after initialization; the bootstrap hash remains a recovery-only input.
+- Contact mail uses two separate messages: the internal enquiry is primary, and a plain-text visitor copy is secondary.
 - A dedicated transactional sender mailbox may be introduced later, but it is not required for launch.
+- A branded HTML visitor acknowledgement remains a future refinement and must stay separate from the internal operational enquiry.
 
 ## Development
 

@@ -1,6 +1,6 @@
 # Implementation Plan
 
-## Phase 1 Ã¢â‚¬â€ Foundation
+## Phase 1 — Foundation
 
 **Status:** Approved and complete
 
@@ -23,7 +23,7 @@
 
 No final website design.
 
-## Phase 2 Ã¢â‚¬â€ Content Recovery and Approval
+## Phase 2 — Content Recovery and Approval
 
 **Status:** Approved and complete
 
@@ -41,7 +41,7 @@ No final website design.
   build the complete approved `docs/CONTENT.md`
   no substantial visual implementation until content is approved
 
-## Phase 3 Ã¢â‚¬â€ Page and Component Architecture
+## Phase 3 — Page and Component Architecture
 
 **Status:** Approved and complete
 
@@ -78,7 +78,7 @@ No final website design.
   Use `Fraunces` and `Inter` as the approved Phase 4 font families.
   Preserve approved content exactly; do not rewrite it for layout convenience.
 
-## Phase 4 Ã¢â‚¬â€ Website Implementation
+## Phase 4 — Website Implementation
 
 **Status:** IMPLEMENTATION COMPLETE
 
@@ -106,7 +106,7 @@ No final website design.
   responsive behavior
   Next.js optimized `Fraunces` + `Inter` loading
 
-## Phase 5 Ã¢â‚¬â€ Visual / Interaction QA
+## Phase 5 — Visual / Interaction QA
 
 **Status:** APPROVED AND COMPLETE
 
@@ -129,7 +129,7 @@ No final website design.
   proof animation
   final interaction polish
 
-## Phase 6 Ã¢â‚¬â€ Production Hardening
+## Phase 6 — Production Hardening
 
 **Status:** APPROVED AND COMPLETE
 
@@ -169,18 +169,43 @@ No final website design.
 
 - Live-domain preview is working and remains intentionally crawl-blocked.
 - Production contact services are still not verified end-to-end.
-- Hostinger SMTP migration is implemented locally and awaiting deployment plus live verification.
-- The live site still exposes the Cloudflare Turnstile test site key rather than a production widget key, and the browser currently receives a Turnstile dummy test token.
-- Server-side Turnstile verification success, SMTP authentication success, inbox arrival at `info@wideorder.net`, and Reply-To behavior could not be confirmed from this session because the SMTP migration has not been deployed and no authenticated mailbox access is available here.
-- Live API validation for missing required fields and invalid email format is working, and honeypot silent discard is still working.
-- `info@wideorder.net` SMTP mailbox status and inbox receipt could not be confirmed from this Codex session.
+- Managed settings and `/admin/settings` are deployed, and the contact route uses managed Hostinger SMTP settings rather than hard-coded credentials.
+- Production Turnstile is live; the browser fetches the runtime site key through `GET /api/contact-config`.
+- The contact route now treats the internal enquiry as the primary SMTP delivery and a separate visitor copy as the secondary SMTP delivery.
+- SMTP success now requires accepted primary delivery; secondary visitor-copy failure is logged separately and does not invalidate an accepted enquiry.
+- Safe SMTP diagnostics and correlation headers now distinguish the two messages without exposing addresses, secrets, or message content.
+- Live API validation for missing required fields and invalid email format remains in place, and honeypot silent discard remains in place.
+- Direct inbox receipt for the internal enquiry and the visitor copy still requires a manual administrator-controlled live test.
 - `www` redirect remains a later Phase 7 cutover item.
 
-Phase 7 must not be advanced to `PRODUCTION SERVICES VERIFIED — FINAL CUTOVER PENDING` until the Hostinger SMTP migration is deployed, the live site uses a production Turnstile key, and the live contact flow returns success end-to-end.
-
+Phase 7 must not be advanced to `PRODUCTION SERVICES VERIFIED — FINAL CUTOVER PENDING` until the administrator verifies the two-message live inbox test end-to-end.
 Do not begin any later phase automatically.
 
 Each phase requires explicit approval.
+
+### Phase 7C2 contact mail flow correction and visitor copy
+
+**Status:** IMPLEMENTED FOR REVIEW
+
+### Objectives
+
+- preserve the internal enquiry as the operational contact message
+- send a separate visitor acknowledgement/copy after accepted internal SMTP delivery
+- treat internal delivery as primary and visitor copy as secondary
+- reuse one SMTP transporter per request
+- retain non-secret SMTP diagnostics and request correlation
+- keep crawl blocking and deferred launch controls unchanged
+
+### Current result
+
+- `POST /api/contact` now creates one SMTP transporter per request and reuses it for both contact messages.
+- The primary internal enquiry sends from the configured SMTP identity to the configured contact recipient with `Reply-To` set to the validated visitor email.
+- The secondary visitor copy sends as a separate plain-text message to the validated visitor email with `Reply-To` set to the configured contact recipient.
+- Both messages include non-secret correlation headers using the existing request id and a delivery-role marker.
+- If primary delivery throws or resolves with `acceptedCount === 0`, the API returns `delivery_failed` and the browser does not show the success message.
+- If the visitor copy throws or resolves with `acceptedCount === 0`, the lead remains successful and the acknowledgement failure is logged separately.
+- A branded HTML visitor acknowledgement remains a future refinement and is not required for launch.
+
 ### Phase 7B3 managed settings layer
 
 **Status:** IMPLEMENTED FOR REVIEW

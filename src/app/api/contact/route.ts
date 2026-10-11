@@ -1,4 +1,3 @@
-import nodemailer from "nodemailer";
 import { NextResponse } from "next/server";
 
 import {
@@ -6,6 +5,13 @@ import {
   CONTACT_SECURITY_MESSAGE,
   validateContactSubmission,
 } from "@/lib/contact";
+import {
+  createSmtpTransport,
+  getSanitizedMailErrorMetadata,
+  isAcceptedSmtpDelivery,
+  sendContactMails,
+  type SmtpConfig,
+} from "@/lib/contact-mail";
 import { getContactOperationalConfigStatus } from "@/lib/managed-config/service";
 
 export const runtime = "nodejs";
@@ -15,17 +21,7 @@ type TurnstileVerificationResponse = {
   "error-codes"?: string[];
 };
 
-type SmtpConfig = {
-  host: string;
-  port: number;
-  secure: boolean;
-  user: string;
-  password: string;
-  recipient: string;
-};
-
 const TURNSTILE_ENDPOINT = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
-const CONTACT_SUBJECT = "WideOrder website inquiry";
 
 const json = (body: Record<string, unknown>, init?: ResponseInit) => NextResponse.json(body, init);
 
@@ -57,69 +53,6 @@ async function verifyTurnstile({ token, secretKey, remoteIp }: { token: string; 
   }
 
   return (await response.json()) as TurnstileVerificationResponse;
-}
-
-async function sendNotification({
-  smtp,
-  name,
-  company,
-  email,
-  phone,
-  message,
-}: {
-  smtp: SmtpConfig;
-  name: string;
-  company: string;
-  email: string;
-  phone: string;
-  message: string;
-}) {
-  const transporter = nodemailer.createTransport({
-    host: smtp.host,
-    port: smtp.port,
-    secure: smtp.secure,
-    auth: {
-      user: smtp.user,
-      pass: smtp.password,
-    },
-  });
-
-  return transporter.sendMail({
-    from: `WideOrder Website <${smtp.user}>`,
-    to: smtp.recipient,
-    replyTo: email,
-    subject: CONTACT_SUBJECT,
-    text: [
-      CONTACT_SUBJECT,
-      "",
-      `Name: ${name}`,
-      `Company: ${company || "Not provided"}`,
-      `Email: ${email}`,
-      `Phone: ${phone || "Not provided"}`,
-      "",
-      "Message:",
-      message,
-    ].join("\n"),
-  });
-}
-
-function getCollectionCount(value: unknown) {
-  return Array.isArray(value) ? value.length : 0;
-}
-
-function getSmtpDeliveryMetadata(requestId: string, smtpResult: Awaited<ReturnType<typeof sendNotification>>) {
-  return {
-    requestId,
-    provider: "hostinger_smtp",
-    providerMessageId: smtpResult.messageId ?? null,
-    acceptedCount: getCollectionCount(smtpResult.accepted),
-    rejectedCount: getCollectionCount(smtpResult.rejected),
-    pendingCount: getCollectionCount("pending" in smtpResult ? smtpResult.pending : undefined),
-    smtpResponse: smtpResult.response ?? null,
-    envelopeTime: typeof smtpResult.envelopeTime === "number" ? smtpResult.envelopeTime : null,
-    messageTime: typeof smtpResult.messageTime === "number" ? smtpResult.messageTime : null,
-    messageSize: typeof smtpResult.messageSize === "number" ? smtpResult.messageSize : null,
-  };
 }
 
 export function GET() {
@@ -235,36 +168,30 @@ export async function POST(request: Request) {
   }
 
   try {
-    const smtpResult = await sendNotification({
-      smtp: {
-        host: configStatus.config.smtp.host,
-        port: configStatus.config.smtp.port,
-        secure: configStatus.config.smtp.secure,
-        user: configStatus.config.smtp.user,
-        password: configStatus.config.smtp.password,
-        recipient: configStatus.config.smtp.recipient,
-      },
-      name: data.name,
-      company: data.company,
-      email: data.email,
-      phone: data.phone,
-      message: data.message,
+    const smtpConfig: SmtpConfig = {
+      host: configStatus.config.smtp.host,
+      port: configStatus.config.smtp.port,
+      secure: configStatus.config.smtp.secure,
+      user: configStatus.config.smtp.user,
+      password: configStatus.config.smtp.password,
+      recipient: configStatus.config.smtp.recipient,
+    };
+    const transporter = createSmtpTransport(smtpConfig);
+    const mailResult = await sendContactMails({
+      smtp: smtpConfig,
+      submission: data,
+      requestId,
+      transporter,
     });
-    const smtpDelivery = getSmtpDeliveryMetadata(requestId, smtpResult);
 
-    if (smtpDelivery.acceptedCount === 0) {
+    if (!isAcceptedSmtpDelivery(mailResult.internalDelivery)) {
       console.error("[contact] smtp_delivery_unaccepted", {
-        ...smtpDelivery,
+        ...mailResult.internalDelivery,
         category: "delivery_failed",
       });
 
       return json({ ok: false, error: "delivery_failed", message: CONTACT_ERROR_MESSAGE }, { status: 502 });
     }
-
-    console.info("[contact] submission_sent", {
-      ...smtpDelivery,
-      category: "success",
-    });
 
     return json({ ok: true }, { status: 200 });
   } catch (error) {
@@ -272,7 +199,7 @@ export async function POST(request: Request) {
       requestId,
       category: "delivery_failed",
       provider: "hostinger_smtp",
-      error: error instanceof Error ? error.message : "unknown",
+      ...getSanitizedMailErrorMetadata(error),
     });
 
     return json({ ok: false, error: "delivery_failed", message: CONTACT_ERROR_MESSAGE }, { status: 502 });

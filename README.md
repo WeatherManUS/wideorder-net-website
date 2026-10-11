@@ -1,41 +1,67 @@
-# Wideorder.net Website
+# WideOrder
 
-Starter marketing site for `wideorder.net`, designed to deploy on GitHub Pages.
+Public-facing WideOrder website built with Next.js, React and TypeScript.
 
-## What's included
+## Prerequisites
 
-- Responsive one-page website
-- Plain HTML, CSS, and JavaScript
-- GitHub Pages deployment workflow
-- Custom domain support via `CNAME`
+- Node.js `24.12.0` validated in the current environment
+- npm `11.6.2` validated in the current environment
+- A currently supported Node.js release compatible with the active Next.js foundation
 
-## Local preview
+## Package manager
 
-Because this is a static site, you can open `index.html` directly in a browser or serve it locally with any static server.
+- Use `npm` for all package management in this repository.
 
-Example with Python:
+## Installation
 
 ```bash
-python -m http.server 8080
+npm install
 ```
 
-Then open `http://localhost:8080`.
+## Development
 
-## Publish on GitHub Pages
+```bash
+npm run dev
+```
 
-1. Create a GitHub repository named `wideorder-net-website`.
-2. Push this project to the `main` branch.
-3. In GitHub, open `Settings` -> `Pages`.
-4. Set the source to `GitHub Actions`.
-5. Confirm your DNS for `wideorder.net` points to GitHub Pages.
+## Lint
 
-The repo already includes:
+```bash
+npm run lint
+```
 
-- `.github/workflows/deploy.yml`
-- `CNAME`
+## Typecheck
 
-## Suggested next edits
+```bash
+npm run typecheck
+```
 
-- Replace placeholder marketing copy with final Wideorder messaging
-- Add real contact links, booking flow, or lead form
-- Add analytics and SEO metadata after launch
+## Production build
+
+```bash
+npm run build
+```
+
+## Production start
+
+```bash
+npm run start
+```
+
+## Important locations
+
+- `public/brand/` — approved production logos
+- `docs/references/` — approved visual/layout references
+- `docs/CONTENT.md` — approved website content source
+- `docs/BRAND.md` — brand source of truth
+- `docs/DESIGN_SYSTEM.md` — design-system source of truth
+- `docs/REFERENCE_USAGE.md` — reference-image interpretation rules
+- `docs/SECURITY.md` — dependency and security notes
+- `docs/IMPLEMENTATION_PLAN.md` — project phases
+- `docs/DEPLOYMENT.md` — deployment planning
+- `src/theme/tokens.ts` — active design-token source
+
+## Notes
+
+- The legacy static prototype and prior GitHub Pages workflow remain archived in `docs/archive/`.
+- Deployment has intentionally not been configured yet.

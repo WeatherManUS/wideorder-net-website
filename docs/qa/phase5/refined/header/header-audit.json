@@ -1,0 +1,587 @@
+{
+  "breakpoint": 1140,
+  "light": [
+    {
+      "width": 768,
+      "headerHeight": 90.1875,
+      "bar": {
+        "x": 32,
+        "y": 0,
+        "width": 704,
+        "height": 89.1875,
+        "right": 736,
+        "bottom": 89.1875
+      },
+      "nav": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "mobile": {
+        "x": 690,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 736,
+        "bottom": 67.59375
+      },
+      "cta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "themeToggle": {
+        "x": 632,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 678,
+        "bottom": 67.59375
+      },
+      "navDisplay": "none",
+      "mobileDisplay": "block",
+      "ctaDisplay": "none",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 768,
+      "windowInnerWidth": 768,
+      "theme": "light",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    },
+    {
+      "width": 840,
+      "headerHeight": 90.1875,
+      "bar": {
+        "x": 32,
+        "y": 0,
+        "width": 776,
+        "height": 89.1875,
+        "right": 808,
+        "bottom": 89.1875
+      },
+      "nav": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "mobile": {
+        "x": 762,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 808,
+        "bottom": 67.59375
+      },
+      "cta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "themeToggle": {
+        "x": 704,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 750,
+        "bottom": 67.59375
+      },
+      "navDisplay": "none",
+      "mobileDisplay": "block",
+      "ctaDisplay": "none",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 840,
+      "windowInnerWidth": 840,
+      "theme": "light",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    },
+    {
+      "width": 900,
+      "headerHeight": 90.1875,
+      "bar": {
+        "x": 32,
+        "y": 0,
+        "width": 836,
+        "height": 89.1875,
+        "right": 868,
+        "bottom": 89.1875
+      },
+      "nav": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "mobile": {
+        "x": 822,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 868,
+        "bottom": 67.59375
+      },
+      "cta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "themeToggle": {
+        "x": 764,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 810,
+        "bottom": 67.59375
+      },
+      "navDisplay": "none",
+      "mobileDisplay": "block",
+      "ctaDisplay": "none",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 900,
+      "windowInnerWidth": 900,
+      "theme": "light",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    },
+    {
+      "width": 960,
+      "headerHeight": 90.1875,
+      "bar": {
+        "x": 32,
+        "y": 0,
+        "width": 896,
+        "height": 89.1875,
+        "right": 928,
+        "bottom": 89.1875
+      },
+      "nav": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "mobile": {
+        "x": 882,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 928,
+        "bottom": 67.59375
+      },
+      "cta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "themeToggle": {
+        "x": 824,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 870,
+        "bottom": 67.59375
+      },
+      "navDisplay": "none",
+      "mobileDisplay": "block",
+      "ctaDisplay": "none",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 960,
+      "windowInnerWidth": 960,
+      "theme": "light",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    },
+    {
+      "width": 1024,
+      "headerHeight": 90.1875,
+      "bar": {
+        "x": 48,
+        "y": 0,
+        "width": 928,
+        "height": 89.1875,
+        "right": 976,
+        "bottom": 89.1875
+      },
+      "nav": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "mobile": {
+        "x": 930,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 976,
+        "bottom": 67.59375
+      },
+      "cta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "themeToggle": {
+        "x": 872,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 918,
+        "bottom": 67.59375
+      },
+      "navDisplay": "none",
+      "mobileDisplay": "block",
+      "ctaDisplay": "none",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 1024,
+      "windowInnerWidth": 1024,
+      "theme": "light",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    },
+    {
+      "width": 1100,
+      "headerHeight": 90.1875,
+      "bar": {
+        "x": 48,
+        "y": 0,
+        "width": 1004,
+        "height": 89.1875,
+        "right": 1052,
+        "bottom": 89.1875
+      },
+      "nav": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "mobile": {
+        "x": 1006,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 1052,
+        "bottom": 67.59375
+      },
+      "cta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "themeToggle": {
+        "x": 948,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 994,
+        "bottom": 67.59375
+      },
+      "navDisplay": "none",
+      "mobileDisplay": "block",
+      "ctaDisplay": "none",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 1100,
+      "windowInnerWidth": 1100,
+      "theme": "light",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    },
+    {
+      "width": 1120,
+      "headerHeight": 90.1875,
+      "bar": {
+        "x": 48,
+        "y": 0,
+        "width": 1024,
+        "height": 89.1875,
+        "right": 1072,
+        "bottom": 89.1875
+      },
+      "nav": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "mobile": {
+        "x": 1026,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 1072,
+        "bottom": 67.59375
+      },
+      "cta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "themeToggle": {
+        "x": 968,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 1014,
+        "bottom": 67.59375
+      },
+      "navDisplay": "none",
+      "mobileDisplay": "block",
+      "ctaDisplay": "none",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 1120,
+      "windowInnerWidth": 1120,
+      "theme": "light",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    },
+    {
+      "width": 1160,
+      "headerHeight": 92.09375,
+      "bar": {
+        "x": 48,
+        "y": 0,
+        "width": 1064,
+        "height": 91.09375,
+        "right": 1112,
+        "bottom": 91.09375
+      },
+      "nav": {
+        "x": 316,
+        "y": 23.546875,
+        "width": 448.4375,
+        "height": 44,
+        "right": 764.4375,
+        "bottom": 67.546875
+      },
+      "mobile": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "cta": {
+        "x": 803.796875,
+        "y": 21.546875,
+        "width": 250.203125,
+        "height": 48,
+        "right": 1054,
+        "bottom": 69.546875
+      },
+      "themeToggle": {
+        "x": 1066,
+        "y": 22.546875,
+        "width": 46,
+        "height": 46,
+        "right": 1112,
+        "bottom": 68.546875
+      },
+      "navDisplay": "flex",
+      "mobileDisplay": "none",
+      "ctaDisplay": "flex",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 1160,
+      "windowInnerWidth": 1160,
+      "theme": "light",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    }
+  ],
+  "dark": [
+    {
+      "width": 1120,
+      "headerHeight": 90.1875,
+      "bar": {
+        "x": 48,
+        "y": 0,
+        "width": 1024,
+        "height": 89.1875,
+        "right": 1072,
+        "bottom": 89.1875
+      },
+      "nav": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "mobile": {
+        "x": 1026,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 1072,
+        "bottom": 67.59375
+      },
+      "cta": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "themeToggle": {
+        "x": 968,
+        "y": 21.59375,
+        "width": 46,
+        "height": 46,
+        "right": 1014,
+        "bottom": 67.59375
+      },
+      "navDisplay": "none",
+      "mobileDisplay": "block",
+      "ctaDisplay": "none",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 1120,
+      "windowInnerWidth": 1120,
+      "theme": "dark",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    },
+    {
+      "width": 1160,
+      "headerHeight": 92.09375,
+      "bar": {
+        "x": 48,
+        "y": 0,
+        "width": 1064,
+        "height": 91.09375,
+        "right": 1112,
+        "bottom": 91.09375
+      },
+      "nav": {
+        "x": 316,
+        "y": 23.546875,
+        "width": 448.4375,
+        "height": 44,
+        "right": 764.4375,
+        "bottom": 67.546875
+      },
+      "mobile": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0,
+        "right": 0,
+        "bottom": 0
+      },
+      "cta": {
+        "x": 803.796875,
+        "y": 21.546875,
+        "width": 250.203125,
+        "height": 48,
+        "right": 1054,
+        "bottom": 69.546875
+      },
+      "themeToggle": {
+        "x": 1066,
+        "y": 22.546875,
+        "width": 46,
+        "height": 46,
+        "right": 1112,
+        "bottom": 68.546875
+      },
+      "navDisplay": "flex",
+      "mobileDisplay": "none",
+      "ctaDisplay": "flex",
+      "flexWrap": "nowrap",
+      "bodyScrollWidth": 1160,
+      "windowInnerWidth": 1160,
+      "theme": "dark",
+      "navLinks": [
+        "The Challenge",
+        "How We Work",
+        "Philosophy",
+        "Proof",
+        "Engagement"
+      ]
+    }
+  ]
+}

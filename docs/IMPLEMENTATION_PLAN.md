@@ -165,10 +165,20 @@ No final website design.
 - post-launch validation
 - rollback documentation
 
+### Current blocker
+
+- Live-domain preview is working and remains intentionally crawl-blocked.
+- Production contact services are still not verified end-to-end.
+- A controlled browser submission on `2026-10-11` still returned `503 service_unavailable` from `POST /api/contact`.
+- The live site still exposes the Cloudflare Turnstile test site key rather than a production widget key, and the browser currently receives a Turnstile dummy test token.
+- Server-side Turnstile verification success, Resend delivery success, inbox arrival at `hello@wideorder.net`, and Reply-To behavior could not be confirmed because the live contact request still does not complete successfully.
+- Live API validation for missing required fields and invalid email format is working, and honeypot silent discard is still working.
+- `hello@wideorder.net` mailbox status could not be confirmed from this Codex session.
+- `www` redirect remains a later Phase 7 cutover item.
+
+Phase 7 must not be advanced to `PRODUCTION SERVICES VERIFIED — FINAL CUTOVER PENDING` until the live site uses a production Turnstile key and the live contact flow returns success end-to-end.
+
 Do not begin any later phase automatically.
 
 Each phase requires explicit approval.
-
-
-
 

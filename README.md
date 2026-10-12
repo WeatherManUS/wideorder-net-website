@@ -2,7 +2,7 @@
 
 Public-facing WideOrder website built with Next.js, React and TypeScript.
 
-Managed operational settings are deployed, while final live contact-mail verification remains pending.
+Managed operational settings are deployed, while Resend domain verification and final live contact-mail verification remain pending.
 
 ## Prerequisites
 
@@ -28,12 +28,14 @@ npm install
 - Production bootstrap configuration now consists of `WIDEORDER_ADMIN_PASSWORD_HASH`, `WIDEORDER_CONFIG_ENCRYPTION_KEY`, and a MySQL connection supplied through `WIDEORDER_DATABASE_URL` or `MYSQL_*` / `DB_*` variables.
 - Local review may still use a persistent SQLite file via `WIDEORDER_LOCAL_CONFIG_DB_PATH` or the default `.data/wideorder-managed-config.sqlite` path.
 - The approved live recipient mailbox is `info@wideorder.net`.
-- The authenticated SMTP sender mailbox for launch is `info@wideorder.net`.
-- The live contact flow now uses production Turnstile plus managed SMTP settings, but final two-message inbox verification remains pending.
+- Hostinger Mail remains the monitored business mailbox service for `info@wideorder.net`.
+- Resend is the intended transactional delivery provider for website-generated contact mail.
+- The intended transactional sender identity is `website@wideorder.net`.
+- The live contact flow now uses production Turnstile plus managed contact settings, but final two-message inbox verification remains pending.
 - Routine contact settings are managed at runtime through `/admin/settings`, including the runtime-delivered Turnstile site key.
 - The administrator password becomes a persistent managed credential after initialization; the bootstrap hash remains a recovery-only input.
 - Contact mail uses two separate messages: the internal enquiry is primary, and a plain-text visitor copy is secondary.
-- A dedicated transactional sender mailbox may be introduced later, but it is not required for launch.
+- A dedicated transactional subdomain or sender profile may still be introduced later, but it is not required for launch.
 - A branded HTML visitor acknowledgement remains a future refinement and must stay separate from the internal operational enquiry.
 
 ## Development
@@ -90,11 +92,11 @@ npm run start
 ## Managed operational settings
 
 - `/admin/settings` is a private operational route and is not linked from the public site.
-- Managed public settings: `CONTACT_RECIPIENT_EMAIL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `NEXT_PUBLIC_TURNSTILE_SITE_KEY`.
-- Managed secret settings: `SMTP_PASSWORD` and `TURNSTILE_SECRET_KEY`.
+- Managed public settings: `CONTACT_RECIPIENT_EMAIL`, `TRANSACTIONAL_FROM_EMAIL`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, and `NEXT_PUBLIC_TURNSTILE_SITE_KEY`.
+- Managed secret settings: `RESEND_API_KEY`, `SMTP_PASSWORD`, and `TURNSTILE_SECRET_KEY`.
 - Managed values take precedence over bootstrap environment defaults.
 - Secret values are encrypted at rest with `WIDEORDER_CONFIG_ENCRYPTION_KEY` and are never returned to the browser after storage.
 - The managed admin password is stored only as a one-way `scrypt` hash and can be rotated from `/admin/settings`.
 - Password rotation invalidates active admin sessions and requires a fresh sign-in.
 - Recovery is explicit: if managed admin access is lost, reset the managed admin credential using root-of-trust access to the persistent store, then sign in with the bootstrap hash and initialize a new managed password.
-- A dedicated transactional sender mailbox may still be introduced later, but `info@wideorder.net` remains sufficient for launch.
+- Hostinger SMTP settings remain in managed storage temporarily for rollback/reference, but automatic production delivery now targets Resend rather than Hostinger mailbox SMTP.

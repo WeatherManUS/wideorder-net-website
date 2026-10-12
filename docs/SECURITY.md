@@ -30,7 +30,7 @@
 
 ## Phase 6 hardening implementation
 
-- Contact form protection now consists of server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and controlled server-side Hostinger SMTP delivery wiring.
+- Contact form protection now consists of server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and controlled server-side Resend transactional delivery wiring.
 - Missing contact-provider or Turnstile configuration returns a controlled runtime error instead of false success.
 - Minimal operational logging avoids full message content, Turnstile tokens, and secret values.
 
@@ -64,6 +64,8 @@
 - Secret operational settings are encrypted at rest with AES-256-GCM using `WIDEORDER_CONFIG_ENCRYPTION_KEY`.
 - Secret values are never returned to the browser after they are stored.
 - Routine runtime configuration now resolves with precedence `managed storage` -> `bootstrap environment`.
+- The managed Resend API key follows the same encrypted-at-rest secret-storage path and is never exposed through public config endpoints.
+- Hostinger SMTP settings may remain stored temporarily for rollback/reference, but production contact delivery must fail closed rather than silently falling back from Resend.
 
 ## Phase 7B4 administrator credential boundary
 

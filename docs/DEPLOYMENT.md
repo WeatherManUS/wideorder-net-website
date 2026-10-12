@@ -35,19 +35,20 @@
 - Production activation must explicitly set `SITE_INDEXABLE=true`.
 - Preview and local environments should remain `SITE_INDEXABLE=false` unless intentionally testing indexing behavior.
 - Bootstrap deployment now requires `WIDEORDER_ADMIN_PASSWORD_HASH`, `WIDEORDER_CONFIG_ENCRYPTION_KEY`, and either `WIDEORDER_DATABASE_URL` or local fallback storage configuration.
-- `CONTACT_RECIPIENT_EMAIL` is approved as `info@wideorder.net`.
-- `SMTP_USER` should authenticate as `info@wideorder.net` for launch.
+- `CONTACT_RECIPIENT_EMAIL` remains approved as `info@wideorder.net`.
+- `TRANSACTIONAL_FROM_EMAIL` should be set to `website@wideorder.net` for live website mail.
 
 ## Phase 6 hardening status
 
 - SEO metadata, `robots.txt`, `sitemap.xml`, utility favicon assets, a branded `not-found` page, and baseline security headers are implemented locally.
-- The Contact form now posts to `POST /api/contact` through a Next.js Route Handler using server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and Hostinger SMTP delivery wiring.
+- The Contact form now posts to `POST /api/contact` through a Next.js Route Handler using server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and Resend transactional delivery wiring.
 - Missing credentials/configuration produce controlled runtime errors rather than false success.
 
 ## Phase 7 deployment dependencies
 
-- The existing `info@wideorder.net` mailbox is approved for SMTP authentication, From identity, and contact receipt at launch.
-- A dedicated transactional sender mailbox may be introduced later, but it is not required for launch.
+- Hostinger Mail remains the business mailbox provider for `info@wideorder.net`.
+- Resend is the production transactional delivery provider for website-generated contact mail.
+- `website@wideorder.net` is the intended transactional From identity.
 - Supply production Turnstile site/secret keys.
 - Configure platform or WAF rate limiting for `POST /api/contact`.
 - Finalize and test a restrictive CSP against the selected host.
@@ -60,19 +61,19 @@
 - Verified on `2026-10-11` from this Codex session against the repository state and the live deployment where observable.
 - The live site is deployed, remains intentionally crawl-blocked, and continues to require explicit activation before indexing is enabled.
 - Production Turnstile is now treated as deployed and the contact form remains wired to fetch the public site key at runtime.
-- Managed operational settings are deployed at `/admin/settings`; SMTP delivery settings remain managed there rather than hard-coded in source.
-- The approved launch mailbox remains `info@wideorder.net` for SMTP authentication, From identity, and contact receipt.
-- The approved contact-mail architecture now uses two independent SMTP messages:
-  - primary internal enquiry: `From` the configured SMTP sender identity, `To` the configured WideOrder contact recipient, `Reply-To` the validated visitor email
-  - secondary visitor copy: `From` the configured SMTP sender identity, `To` the validated visitor email, `Reply-To` the configured WideOrder contact recipient
+- Managed operational settings are deployed at `/admin/settings`; Resend delivery settings remain managed there rather than hard-coded in source.
+- `info@wideorder.net` remains the monitored contact inbox.
+- The approved contact-mail architecture now uses two separate transactional messages:
+  - primary internal enquiry: `From` `WideOrder Website <website@wideorder.net>`, `To` the configured WideOrder contact recipient, `Reply-To` the validated visitor email
+  - secondary visitor acknowledgement: `From` `WideOrder Website <website@wideorder.net>`, `To` the validated visitor email, `Reply-To` the configured WideOrder contact recipient
 - The visitor copy is plain text for this phase, and a branded HTML acknowledgement remains a future refinement.
-- The API now treats contact submission success as dependent on primary SMTP acceptance only; a visitor-copy failure is logged separately and does not invalidate an accepted lead.
-- SMTP diagnostic logging now records only safe metadata such as request correlation, accepted/rejected/pending counts, provider message id, response text, and timing values.
+- The API now treats contact submission success as dependent on accepted primary transactional delivery only; a visitor-acknowledgement failure is logged separately and does not invalidate an accepted lead.
+- Transactional delivery logging now records only safe metadata such as request correlation, provider message id, and provider status.
 - Direct inbox-delivery verification for both messages remains pending manual confirmation by the administrator because this Codex session does not have mailbox access.
 - `https://www.wideorder.net` redirect configuration remains a later Phase 7C cutover item and must not be changed yet.
 - CSP, HSTS, and production indexing remain deferred and must not be changed yet.
 - Final Phase 7C2 approval still depends on a manual live test that confirms:
-  - website success only after accepted primary SMTP delivery
+  - website success only after accepted primary Resend delivery
   - internal enquiry arrival in the WideOrder inbox
   - separate visitor acknowledgement arrival in the external visitor mailbox
   - internal message `Reply-To` set to the visitor
@@ -94,7 +95,7 @@
 - Routine operational values can be updated later through `/admin/settings` without source edits or rebuilds.
 - The Turnstile site key is now delivered at runtime through `GET /api/contact-config`, so key rotation does not require a new build.
 - `SITE_INDEXABLE` must remain `false` until separate production activation approval.
-- `/admin/settings` is deployed; continue using it for routine SMTP and Turnstile updates without enabling indexing.
+- `/admin/settings` is deployed; continue using it for routine Resend, SMTP rollback-reference, and Turnstile updates without enabling indexing.
 
 ## Phase 7B4 managed admin credential review
 
@@ -103,7 +104,7 @@
 - `WIDEORDER_ADMIN_PASSWORD_HASH` remains required as a bootstrap and break-glass recovery control, not as the routine login credential.
 - Password rotation invalidates active administrator sessions and requires a fresh login.
 - Recovery remains an explicit root-of-trust procedure: clear/reset the managed admin credential in the persistent store using Hostinger-controlled database access, then bootstrap a new managed password.
-- Deployment remains blocked until the bootstrap secrets, production SMTP password, production Turnstile keys, and persistent production database configuration are in place and reviewed.
+- Deployment remains blocked until the bootstrap secrets, production Turnstile keys, persistent production database configuration, Resend domain verification, and managed Resend API key configuration are in place and reviewed.
 
 ## Phase 7B5 managed settings corrections
 
@@ -111,4 +112,4 @@
 - Local review and development may still use `.data/wideorder-managed-config.sqlite` or `WIDEORDER_LOCAL_CONFIG_DB_PATH` when MySQL is intentionally absent.
 - New persistent admin password hashes use stronger `scrypt` work factors plus an explicit memory limit, while older previously encoded hashes remain verifiable.
 - `GET /api/contact-config` now exposes only `{ turnstileSiteKey }` to the browser.
-- `SITE_INDEXABLE` remains `false`, and SMTP delivery/inbox behavior remains unverified until live credentials are deployed and tested.
+- `SITE_INDEXABLE` remains `false`, and Resend transactional delivery remains pending live verification after domain setup and managed API-key configuration.

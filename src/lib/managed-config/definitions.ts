@@ -4,6 +4,8 @@ export type ManagedSettingInputKind = "text" | "email" | "number" | "boolean" | 
 
 export type ManagedSettingKey =
   | "CONTACT_RECIPIENT_EMAIL"
+  | "TRANSACTIONAL_FROM_EMAIL"
+  | "RESEND_API_KEY"
   | "SMTP_HOST"
   | "SMTP_PORT"
   | "SMTP_SECURE"
@@ -37,6 +39,15 @@ export const MANAGED_SETTING_DEFINITIONS: readonly ManagedSettingDefinition[] = 
     inputKind: "email",
     label: "Contact recipient email",
     description: "Internal mailbox that receives website contact submissions.",
+    required: true,
+  },
+  {
+    key: "TRANSACTIONAL_FROM_EMAIL",
+    envName: "TRANSACTIONAL_FROM_EMAIL",
+    category: "public",
+    inputKind: "email",
+    label: "Transactional sender email",
+    description: "Approved From mailbox used for website-generated transactional delivery.",
     required: true,
   },
   {
@@ -82,6 +93,15 @@ export const MANAGED_SETTING_DEFINITIONS: readonly ManagedSettingDefinition[] = 
     inputKind: "text",
     label: "Turnstile site key",
     description: "Browser-safe Cloudflare Turnstile public site key delivered at runtime.",
+    required: true,
+  },
+  {
+    key: "RESEND_API_KEY",
+    envName: "RESEND_API_KEY",
+    category: "secret",
+    inputKind: "password",
+    label: "Resend API key",
+    description: "Transactional email API key encrypted before database storage.",
     required: true,
   },
   {

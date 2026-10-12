@@ -34,12 +34,9 @@ export type AuditView = {
 };
 
 export type ContactOperationalConfig = {
-  smtp: {
-    host: string;
-    port: number | null;
-    secure: boolean | null;
-    user: string;
-    password: string;
+  transactional: {
+    apiKey: string;
+    fromEmail: string;
     recipient: string;
   };
   turnstileSiteKey: string;
@@ -62,28 +59,6 @@ type SettingsUpdateInput = Partial<Record<ManagedSettingKey, string>>;
 
 function getBootstrapSettingValue(key: ManagedSettingKey) {
   return process.env[getManagedSettingDefinition(key).envName]?.trim() ?? "";
-}
-
-function parseSmtpPort(value: string) {
-  const parsed = Number.parseInt(value, 10);
-
-  if (!Number.isInteger(parsed) || parsed <= 0) {
-    return null;
-  }
-
-  return parsed;
-}
-
-function parseSmtpSecure(value: string) {
-  if (value === "true") {
-    return true;
-  }
-
-  if (value === "false") {
-    return false;
-  }
-
-  return null;
 }
 
 async function getStoredSettingsMap() {
@@ -268,22 +243,16 @@ export async function getRuntimeContactConfig() {
 
 export async function getContactOperationalConfigStatus(): Promise<ContactOperationalConfigStatus> {
   const storedSettings = await getStoredSettingsMap();
-  const smtpHost = await resolveSettingValue("SMTP_HOST", storedSettings);
-  const smtpPort = await resolveSettingValue("SMTP_PORT", storedSettings);
-  const smtpSecure = await resolveSettingValue("SMTP_SECURE", storedSettings);
-  const smtpUser = await resolveSettingValue("SMTP_USER", storedSettings);
-  const smtpPassword = await resolveSettingValue("SMTP_PASSWORD", storedSettings);
+  const resendApiKey = await resolveSettingValue("RESEND_API_KEY", storedSettings);
+  const transactionalFromEmail = await resolveSettingValue("TRANSACTIONAL_FROM_EMAIL", storedSettings);
   const recipientEmail = await resolveSettingValue("CONTACT_RECIPIENT_EMAIL", storedSettings);
   const turnstileSiteKey = await resolveSettingValue("NEXT_PUBLIC_TURNSTILE_SITE_KEY", storedSettings);
   const turnstileSecretKey = await resolveSettingValue("TURNSTILE_SECRET_KEY", storedSettings);
 
   const config = {
-    smtp: {
-      host: smtpHost.value,
-      port: parseSmtpPort(smtpPort.value),
-      secure: parseSmtpSecure(smtpSecure.value.toLowerCase()),
-      user: smtpUser.value,
-      password: smtpPassword.value,
+    transactional: {
+      apiKey: resendApiKey.value,
+      fromEmail: transactionalFromEmail.value,
       recipient: recipientEmail.value,
     },
     turnstileSiteKey: turnstileSiteKey.value,
@@ -293,12 +262,9 @@ export async function getContactOperationalConfigStatus(): Promise<ContactOperat
   const hasRequiredValues =
     Boolean(config.turnstileSecretKey) &&
     Boolean(config.turnstileSiteKey) &&
-    Boolean(config.smtp.host) &&
-    config.smtp.port !== null &&
-    config.smtp.secure !== null &&
-    Boolean(config.smtp.user) &&
-    Boolean(config.smtp.password) &&
-    Boolean(config.smtp.recipient);
+    Boolean(config.transactional.apiKey) &&
+    Boolean(config.transactional.fromEmail) &&
+    Boolean(config.transactional.recipient);
 
   return {
     config,

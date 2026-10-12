@@ -5,17 +5,14 @@ import {
   buildCorrelationHeaders,
   buildInternalMailOptions,
   buildVisitorCopyMailOptions,
-  getSmtpDeliveryMetadata,
-  isAcceptedSmtpDelivery,
+  getTransactionalDeliveryMetadata,
+  isAcceptedTransactionalDelivery,
   sendContactMails,
 } from "./contact-mail.ts";
 
-const smtp = {
-  host: "smtp.example.test",
-  port: 465,
-  secure: true,
-  user: "info@example.test",
-  password: "not-used-in-tests",
+const transactional = {
+  apiKey: "re_test_key",
+  fromEmail: "website@example.test",
   recipient: "contact@example.test",
 };
 
@@ -29,20 +26,10 @@ const submission = {
   turnstileToken: "token",
 };
 
-function createResult({ accepted = [], rejected = [], pending = [], messageId = "provider-message-id", response = "250 2.0.0 Ok" } = {}) {
+function createResult({ providerMessageId = "provider-message-id", providerStatus = "accepted" } = {}) {
   return {
-    accepted,
-    rejected,
-    pending,
-    envelope: {
-      from: "info@example.test",
-      to: [],
-    },
-    messageId,
-    response,
-    envelopeTime: 10,
-    messageTime: 20,
-    messageSize: 30,
+    providerMessageId,
+    providerStatus,
   };
 }
 
@@ -68,31 +55,30 @@ test("build helpers set correlation headers and safe mail identities", () => {
     "X-WideOrder-Delivery-Role": "internal",
   });
 
-  const internalMail = buildInternalMailOptions({ smtp, submission, requestId: "request-123" });
-  assert.equal(internalMail.from, "WideOrder Website <info@example.test>");
+  const internalMail = buildInternalMailOptions({ transactional, submission, requestId: "request-123" });
+  assert.equal(internalMail.from, "WideOrder Website <website@example.test>");
   assert.equal(internalMail.to, "contact@example.test");
   assert.equal(internalMail.replyTo, "visitor@example.test");
 
-  const visitorCopyMail = buildVisitorCopyMailOptions({ smtp, submission, requestId: "request-123" });
-  assert.equal(visitorCopyMail.from, "WideOrder Website <info@example.test>");
+  const visitorCopyMail = buildVisitorCopyMailOptions({ transactional, submission, requestId: "request-123" });
+  assert.equal(visitorCopyMail.from, "WideOrder Website <website@example.test>");
   assert.equal(visitorCopyMail.to, "visitor@example.test");
   assert.equal(visitorCopyMail.replyTo, "contact@example.test");
 });
 
-test("metadata extraction captures accepted, rejected, and pending counts safely", () => {
-  const metadata = getSmtpDeliveryMetadata({
+test("metadata extraction captures provider-neutral acceptance safely", () => {
+  const metadata = getTransactionalDeliveryMetadata({
     requestId: "request-123",
     deliveryRole: "internal",
-    smtpResult: createResult({ accepted: ["ok"], rejected: ["nope"], pending: ["later"] }),
+    sendResult: createResult({ providerMessageId: "email_123", providerStatus: "accepted" }),
   });
 
   assert.equal(metadata.requestId, "request-123");
   assert.equal(metadata.deliveryRole, "internal");
-  assert.equal(metadata.provider, "hostinger_smtp");
-  assert.equal(metadata.acceptedCount, 1);
-  assert.equal(metadata.rejectedCount, 1);
-  assert.equal(metadata.pendingCount, 1);
-  assert.equal(isAcceptedSmtpDelivery(metadata), true);
+  assert.equal(metadata.provider, "resend_api");
+  assert.equal(metadata.providerMessageId, "email_123");
+  assert.equal(metadata.providerStatus, "accepted");
+  assert.equal(isAcceptedTransactionalDelivery(metadata), true);
 });
 
 test("case A: accepted internal and accepted visitor copy return success metadata", async () => {
@@ -100,15 +86,15 @@ test("case A: accepted internal and accepted visitor copy return success metadat
   const transporter = {
     async sendMail(options) {
       sendMailCalls.push(options);
-      return createResult({ accepted: ["ok"] });
+      return createResult();
     },
   };
   const { entries, logger } = createLogger();
 
-  const result = await sendContactMails({ smtp, submission, requestId: "request-123", transporter, logger });
+  const result = await sendContactMails({ transactional, submission, requestId: "request-123", transport: transporter, logger });
 
-  assert.equal(result.internalDelivery.acceptedCount, 1);
-  assert.equal(result.visitorCopyDelivery?.acceptedCount, 1);
+  assert.equal(result.internalDelivery.providerStatus, "accepted");
+  assert.equal(result.visitorCopyDelivery?.providerStatus, "accepted");
   assert.equal(sendMailCalls.length, 2);
   assert.equal(entries.filter((entry) => entry.level === "info").length, 2);
 });
@@ -118,14 +104,14 @@ test("case B: unaccepted internal delivery returns failure metadata and skips vi
   const transporter = {
     async sendMail(options) {
       sendMailCalls.push(options);
-      return createResult({ accepted: [], rejected: ["rejected"] });
+      return createResult({ providerMessageId: null, providerStatus: "rejected" });
     },
   };
   const { entries, logger } = createLogger();
 
-  const result = await sendContactMails({ smtp, submission, requestId: "request-123", transporter, logger });
+  const result = await sendContactMails({ transactional, submission, requestId: "request-123", transport: transporter, logger });
 
-  assert.equal(result.internalDelivery.acceptedCount, 0);
+  assert.equal(result.internalDelivery.providerStatus, "rejected");
   assert.equal(result.visitorCopyDelivery, null);
   assert.equal(sendMailCalls.length, 1);
   assert.equal(entries.length, 0);
@@ -140,23 +126,23 @@ test("case C: internal SMTP throw bubbles and skips visitor copy", async () => {
     },
   };
 
-  await assert.rejects(sendContactMails({ smtp, submission, requestId: "request-123", transporter }), /smtp unavailable/);
+  await assert.rejects(sendContactMails({ transactional, submission, requestId: "request-123", transport: transporter }), /smtp unavailable/);
   assert.equal(sendMailCalls, 1);
 });
 
 test("case D: visitor copy unaccepted still returns success and logs failure", async () => {
-  const results = [createResult({ accepted: ["ok"] }), createResult({ accepted: [], rejected: ["rejected"] })];
+  const results = [createResult(), createResult({ providerMessageId: null, providerStatus: "rejected" })];
   const transporter = {
     async sendMail() {
-      return results.shift() ?? createResult({ accepted: [] });
+      return results.shift() ?? createResult({ providerMessageId: null, providerStatus: "unaccepted" });
     },
   };
   const { entries, logger } = createLogger();
 
-  const result = await sendContactMails({ smtp, submission, requestId: "request-123", transporter, logger });
+  const result = await sendContactMails({ transactional, submission, requestId: "request-123", transport: transporter, logger });
 
-  assert.equal(result.internalDelivery.acceptedCount, 1);
-  assert.equal(result.visitorCopyDelivery?.acceptedCount, 0);
+  assert.equal(result.internalDelivery.providerStatus, "accepted");
+  assert.equal(result.visitorCopyDelivery?.providerStatus, "rejected");
   assert.equal(entries.some((entry) => entry.message === "[contact] visitor_copy_unaccepted"), true);
 });
 
@@ -167,7 +153,7 @@ test("case E: visitor copy throw still returns success and logs failure", async 
       callCount += 1;
 
       if (callCount === 1) {
-        return createResult({ accepted: ["ok"] });
+        return createResult();
       }
 
       throw new Error("mailbox busy");
@@ -175,9 +161,9 @@ test("case E: visitor copy throw still returns success and logs failure", async 
   };
   const { entries, logger } = createLogger();
 
-  const result = await sendContactMails({ smtp, submission, requestId: "request-123", transporter, logger });
+  const result = await sendContactMails({ transactional, submission, requestId: "request-123", transport: transporter, logger });
 
-  assert.equal(result.internalDelivery.acceptedCount, 1);
+  assert.equal(result.internalDelivery.providerStatus, "accepted");
   assert.equal(result.visitorCopyDelivery, null);
   assert.equal(entries.some((entry) => entry.message === "[contact] visitor_copy_failed"), true);
 });

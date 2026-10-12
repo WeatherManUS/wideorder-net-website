@@ -169,11 +169,11 @@ No final website design.
 
 - Live-domain preview is working and remains intentionally crawl-blocked.
 - Production contact services are still not verified end-to-end.
-- Managed settings and `/admin/settings` are deployed, and the contact route uses managed Hostinger SMTP settings rather than hard-coded credentials.
+- Managed settings and `/admin/settings` are deployed, and the contact route now targets managed Resend transactional delivery rather than hard-coded credentials.
 - Production Turnstile is live; the browser fetches the runtime site key through `GET /api/contact-config`.
-- The contact route now treats the internal enquiry as the primary SMTP delivery and a separate visitor copy as the secondary SMTP delivery.
-- SMTP success now requires accepted primary delivery; secondary visitor-copy failure is logged separately and does not invalidate an accepted enquiry.
-- Safe SMTP diagnostics and correlation headers now distinguish the two messages without exposing addresses, secrets, or message content.
+- The contact route treats the internal enquiry as the primary transactional delivery and a separate visitor acknowledgement as the secondary delivery.
+- Success now requires accepted primary transactional delivery; secondary visitor-copy failure is logged separately and does not invalidate an accepted enquiry.
+- Safe transactional diagnostics and correlation headers distinguish the two messages without exposing addresses, secrets, or message content.
 - Live API validation for missing required fields and invalid email format remains in place, and honeypot silent discard remains in place.
 - Direct inbox receipt for the internal enquiry and the visitor copy still requires a manual administrator-controlled live test.
 - `www` redirect remains a later Phase 7 cutover item.
@@ -193,7 +193,7 @@ Each phase requires explicit approval.
 - send a separate visitor acknowledgement/copy after accepted internal SMTP delivery
 - treat internal delivery as primary and visitor copy as secondary
 - reuse one SMTP transporter per request
-- retain non-secret SMTP diagnostics and request correlation
+- retain non-secret delivery diagnostics and request correlation
 - keep crawl blocking and deferred launch controls unchanged
 
 ### Current result
@@ -202,9 +202,31 @@ Each phase requires explicit approval.
 - The primary internal enquiry sends from the configured SMTP identity to the configured contact recipient with `Reply-To` set to the validated visitor email.
 - The secondary visitor copy sends as a separate plain-text message to the validated visitor email with `Reply-To` set to the configured contact recipient.
 - Both messages include non-secret correlation headers using the existing request id and a delivery-role marker.
-- If primary delivery throws or resolves with `acceptedCount === 0`, the API returns `delivery_failed` and the browser does not show the success message.
-- If the visitor copy throws or resolves with `acceptedCount === 0`, the lead remains successful and the acknowledgement failure is logged separately.
+- If primary delivery throws or is not accepted by the provider, the API returns `delivery_failed` and the browser does not show the success message.
+- If the visitor copy throws or is not accepted by the provider, the lead remains successful and the acknowledgement failure is logged separately.
 - A branded HTML visitor acknowledgement remains a future refinement and is not required for launch.
+
+### Phase 7C2 transactional delivery migration
+
+**Status:** IMPLEMENTED FOR REVIEW
+
+### Objectives
+
+- replace Hostinger mailbox SMTP with Resend for website-generated transactional mail
+- preserve the internal enquiry as the primary accepted delivery
+- preserve the plain-text visitor acknowledgement as a secondary best-effort delivery
+- keep Resend credentials in managed settings rather than source code
+- keep Hostinger Mail as the business mailbox provider for `info@wideorder.net`
+- retain Hostinger SMTP settings temporarily for rollback/reference without auto-fallback
+
+### Current result
+
+- `POST /api/contact` now sends website-generated mail through Resend using the official Node SDK.
+- The primary internal enquiry sends from `WideOrder Website <website@wideorder.net>` to the configured `CONTACT_RECIPIENT_EMAIL` with `Reply-To` set to the validated visitor email.
+- The secondary visitor acknowledgement sends from `WideOrder Website <website@wideorder.net>` to the validated visitor email with `Reply-To` set to the configured contact recipient.
+- Managed settings now include `TRANSACTIONAL_FROM_EMAIL` and secret `RESEND_API_KEY`; public config exposure remains limited to `turnstileSiteKey`.
+- Hostinger SMTP settings remain in managed storage temporarily for rollback/reference only and are no longer used automatically by the production contact route.
+- Production approval remains pending Resend domain verification, managed API-key entry, and successful live two-message delivery testing.
 
 ### Phase 7B3 managed settings layer
 
@@ -223,7 +245,7 @@ Each phase requires explicit approval.
 
 - Runtime configuration now resolves with precedence `managed storage` -> `bootstrap environment`.
 - Preferred production persistence is Hostinger-managed MySQL; local review falls back to a persistent SQLite file.
-- SMTP credentials, Turnstile secrets, and related operational values can be rotated later without editing repository source.
+- Resend credentials, legacy SMTP rollback settings, Turnstile secrets, and related operational values can be rotated later without editing repository source.
 - Phase 7 remains pre-deployment because live bootstrap secrets, managed database credentials, and production Turnstile keys are still pending configuration and review.
 
 ### Phase 7B4 managed settings security review and admin credential management
@@ -233,7 +255,7 @@ Each phase requires explicit approval.
 ### Objectives
 
 - keep root-of-trust secrets isolated to Hostinger bootstrap configuration
-- keep routine SMTP and Turnstile settings in managed persistent storage
+- keep routine transactional-provider and Turnstile settings in managed persistent storage
 - convert `WIDEORDER_ADMIN_PASSWORD_HASH` into bootstrap/recovery-only usage
 - add persistent managed administrator password storage and rotation
 - invalidate active sessions after password changes
@@ -268,4 +290,4 @@ Each phase requires explicit approval.
 - New managed admin password hashes include explicit work-factor parameters and an explicit memory bound.
 - Existing older `scrypt` hashes without the newer encoded `maxmem` segment remain verifiable.
 - `GET /api/contact-config` now returns only the runtime Turnstile site key.
-- `SITE_INDEXABLE` remains `false`, SMTP delivery remains unverified from this repository session, and deployment/cutover controls remain deferred.
+- `SITE_INDEXABLE` remains `false`, Resend transactional delivery remains unverified from this repository session, and deployment/cutover controls remain deferred.

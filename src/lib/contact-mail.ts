@@ -1,14 +1,10 @@
-import nodemailer from "nodemailer";
-import type Mail from "nodemailer/lib/mailer";
+import { Resend } from "resend";
 
 import { type ContactSubmission } from "./contact.ts";
 
-export type SmtpConfig = {
-  host: string;
-  port: number;
-  secure: boolean;
-  user: string;
-  password: string;
+export type TransactionalMailConfig = {
+  apiKey: string;
+  fromEmail: string;
   recipient: string;
 };
 
@@ -16,29 +12,26 @@ export type MailDeliveryRole = "internal" | "visitor_copy";
 
 type CorrelationRole = "internal" | "visitor-copy";
 
-type SmtpSendResult = {
-  accepted?: unknown[];
-  rejected?: unknown[];
-  pending?: unknown[];
-  messageId?: string;
-  response?: string;
-  envelopeTime?: number;
-  messageTime?: number;
-  messageSize?: number;
+export type TransactionalMailOptions = {
+  from: string;
+  to: string;
+  replyTo: string;
+  subject: string;
+  headers: Record<string, string>;
+  text: string;
 };
 
-export type SmtpDeliveryMetadata = {
+type TransactionalSendResult = {
+  providerMessageId: string | null;
+  providerStatus: string;
+};
+
+export type TransactionalDeliveryMetadata = {
   requestId: string;
   deliveryRole: MailDeliveryRole;
-  provider: "hostinger_smtp";
+  provider: "resend_api";
   providerMessageId: string | null;
-  acceptedCount: number;
-  rejectedCount: number;
-  pendingCount: number;
-  smtpResponse: string | null;
-  envelopeTime: number | null;
-  messageTime: number | null;
-  messageSize: number | null;
+  providerStatus: string;
 };
 
 export type ContactMailLogger = {
@@ -47,8 +40,8 @@ export type ContactMailLogger = {
 };
 
 export type ContactMailResult = {
-  internalDelivery: SmtpDeliveryMetadata;
-  visitorCopyDelivery: SmtpDeliveryMetadata | null;
+  internalDelivery: TransactionalDeliveryMetadata;
+  visitorCopyDelivery: TransactionalDeliveryMetadata | null;
 };
 
 export const CONTACT_SUBJECT = "WideOrder website inquiry";
@@ -61,12 +54,12 @@ const DEFAULT_LOGGER: ContactMailLogger = {
 
 const EMAIL_PATTERN = /[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi;
 
-function getCollectionCount(value: unknown) {
-  return Array.isArray(value) ? value.length : 0;
-}
+export type TransactionalMailTransport = {
+  sendMail: (options: TransactionalMailOptions) => Promise<TransactionalSendResult>;
+};
 
-function getConfiguredSenderIdentity(smtp: SmtpConfig) {
-  return `WideOrder Website <${smtp.user}>`;
+function getConfiguredSenderIdentity(transactional: TransactionalMailConfig) {
+  return `WideOrder Website <${transactional.fromEmail}>`;
 }
 
 function sanitizeMailText(value: unknown) {
@@ -79,43 +72,71 @@ export function getSanitizedMailErrorMetadata(error: unknown) {
   return {
     errorName: typeof candidate.name === "string" ? candidate.name : "unknown",
     errorCode:
-      typeof candidate.code === "string" || typeof candidate.code === "number" ? String(candidate.code) : null,
-    responseCode: typeof candidate.responseCode === "number" ? candidate.responseCode : null,
-    smtpResponse: sanitizeMailText(candidate.response),
+      typeof candidate.code === "string" || typeof candidate.code === "number"
+        ? String(candidate.code)
+        : typeof candidate.name === "string"
+          ? candidate.name
+          : null,
+    responseCode:
+      typeof candidate.statusCode === "number"
+        ? candidate.statusCode
+        : typeof candidate.responseCode === "number"
+          ? candidate.responseCode
+          : null,
+    providerStatus: typeof candidate.name === "string" ? candidate.name : "error",
+    errorMessage: sanitizeMailText(candidate.message),
   };
 }
 
-export function createSmtpTransport(smtp: SmtpConfig) {
-  return nodemailer.createTransport({
-    host: smtp.host,
-    port: smtp.port,
-    secure: smtp.secure,
-    auth: {
-      user: smtp.user,
-      pass: smtp.password,
+export function createResendTransport(transactional: TransactionalMailConfig): TransactionalMailTransport {
+  const resend = new Resend(transactional.apiKey);
+
+  return {
+    async sendMail(options) {
+      const result = await resend.emails.send({
+        from: options.from,
+        to: options.to,
+        replyTo: options.replyTo,
+        subject: options.subject,
+        text: options.text,
+        headers: options.headers,
+      });
+
+      if (result.error) {
+        throw Object.assign(new Error(result.error.message), {
+          name: result.error.name,
+          statusCode: result.error.statusCode,
+          provider: "resend_api",
+        });
+      }
+
+      return {
+        providerMessageId: result.data?.id ?? null,
+        providerStatus: result.data?.id ? "accepted" : "unaccepted",
+      } satisfies TransactionalSendResult;
     },
-  });
+  } satisfies TransactionalMailTransport;
 }
 
 export function buildCorrelationHeaders(requestId: string, role: CorrelationRole) {
   return {
     "X-WideOrder-Request-Id": requestId,
     "X-WideOrder-Delivery-Role": role,
-  } satisfies NonNullable<Mail.Options["headers"]>;
+  } satisfies Record<string, string>;
 }
 
 export function buildInternalMailOptions({
-  smtp,
+  transactional,
   submission,
   requestId,
 }: {
-  smtp: SmtpConfig;
+  transactional: TransactionalMailConfig;
   submission: ContactSubmission;
   requestId: string;
 }) {
   return {
-    from: getConfiguredSenderIdentity(smtp),
-    to: smtp.recipient,
+    from: getConfiguredSenderIdentity(transactional),
+    to: transactional.recipient,
     replyTo: submission.email,
     subject: CONTACT_SUBJECT,
     headers: buildCorrelationHeaders(requestId, "internal"),
@@ -130,22 +151,22 @@ export function buildInternalMailOptions({
       "Message:",
       submission.message,
     ].join("\n"),
-  } satisfies Mail.Options;
+  } satisfies TransactionalMailOptions;
 }
 
 export function buildVisitorCopyMailOptions({
-  smtp,
+  transactional,
   submission,
   requestId,
 }: {
-  smtp: SmtpConfig;
+  transactional: TransactionalMailConfig;
   submission: ContactSubmission;
   requestId: string;
 }) {
   return {
-    from: getConfiguredSenderIdentity(smtp),
+    from: getConfiguredSenderIdentity(transactional),
     to: submission.email,
-    replyTo: smtp.recipient,
+    replyTo: transactional.recipient,
     subject: VISITOR_COPY_SUBJECT,
     headers: buildCorrelationHeaders(requestId, "visitor-copy"),
     text: [
@@ -164,58 +185,52 @@ export function buildVisitorCopyMailOptions({
       "WideOrder",
       "There is a better way.",
     ].join("\n"),
-  } satisfies Mail.Options;
+  } satisfies TransactionalMailOptions;
 }
 
-export function getSmtpDeliveryMetadata({
+export function getTransactionalDeliveryMetadata({
   requestId,
   deliveryRole,
-  smtpResult,
+  sendResult,
 }: {
   requestId: string;
   deliveryRole: MailDeliveryRole;
-  smtpResult: SmtpSendResult;
+  sendResult: TransactionalSendResult;
 }) {
   return {
     requestId,
     deliveryRole,
-    provider: "hostinger_smtp",
-    providerMessageId: smtpResult.messageId ?? null,
-    acceptedCount: getCollectionCount(smtpResult.accepted),
-    rejectedCount: getCollectionCount(smtpResult.rejected),
-    pendingCount: getCollectionCount(smtpResult.pending),
-    smtpResponse: sanitizeMailText(smtpResult.response),
-    envelopeTime: typeof smtpResult.envelopeTime === "number" ? smtpResult.envelopeTime : null,
-    messageTime: typeof smtpResult.messageTime === "number" ? smtpResult.messageTime : null,
-    messageSize: typeof smtpResult.messageSize === "number" ? smtpResult.messageSize : null,
-  } satisfies SmtpDeliveryMetadata;
+    provider: "resend_api",
+    providerMessageId: sendResult.providerMessageId,
+    providerStatus: sendResult.providerStatus,
+  } satisfies TransactionalDeliveryMetadata;
 }
 
-export function isAcceptedSmtpDelivery(delivery: SmtpDeliveryMetadata) {
-  return delivery.acceptedCount > 0;
+export function isAcceptedTransactionalDelivery(delivery: TransactionalDeliveryMetadata) {
+  return delivery.providerStatus === "accepted" && Boolean(delivery.providerMessageId);
 }
 
 export async function sendContactMails({
-  smtp,
+  transactional,
   submission,
   requestId,
-  transporter = createSmtpTransport(smtp),
+  transport = createResendTransport(transactional),
   logger = DEFAULT_LOGGER,
 }: {
-  smtp: SmtpConfig;
+  transactional: TransactionalMailConfig;
   submission: ContactSubmission;
   requestId: string;
-  transporter?: Pick<ReturnType<typeof createSmtpTransport>, "sendMail">;
+  transport?: TransactionalMailTransport;
   logger?: ContactMailLogger;
 }) {
-  const internalResult = await transporter.sendMail(buildInternalMailOptions({ smtp, submission, requestId }));
-  const internalDelivery = getSmtpDeliveryMetadata({
+  const internalResult = await transport.sendMail(buildInternalMailOptions({ transactional, submission, requestId }));
+  const internalDelivery = getTransactionalDeliveryMetadata({
     requestId,
     deliveryRole: "internal",
-    smtpResult: internalResult,
+    sendResult: internalResult,
   });
 
-  if (!isAcceptedSmtpDelivery(internalDelivery)) {
+  if (!isAcceptedTransactionalDelivery(internalDelivery)) {
     return {
       internalDelivery,
       visitorCopyDelivery: null,
@@ -228,14 +243,14 @@ export async function sendContactMails({
   });
 
   try {
-    const visitorCopyResult = await transporter.sendMail(buildVisitorCopyMailOptions({ smtp, submission, requestId }));
-    const visitorCopyDelivery = getSmtpDeliveryMetadata({
+    const visitorCopyResult = await transport.sendMail(buildVisitorCopyMailOptions({ transactional, submission, requestId }));
+    const visitorCopyDelivery = getTransactionalDeliveryMetadata({
       requestId,
       deliveryRole: "visitor_copy",
-      smtpResult: visitorCopyResult,
+      sendResult: visitorCopyResult,
     });
 
-    if (!isAcceptedSmtpDelivery(visitorCopyDelivery)) {
+    if (!isAcceptedTransactionalDelivery(visitorCopyDelivery)) {
       logger.error("[contact] visitor_copy_unaccepted", {
         ...visitorCopyDelivery,
         category: "visitor_copy_failed",
@@ -256,7 +271,7 @@ export async function sendContactMails({
       requestId,
       deliveryRole: "visitor_copy",
       category: "visitor_copy_failed",
-      provider: "hostinger_smtp",
+      provider: "resend_api",
       ...getSanitizedMailErrorMetadata(error),
     });
 

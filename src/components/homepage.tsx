@@ -1,15 +1,14 @@
-import { homeContent, type ContactField, type ProcessStage, type ProofStory } from "@/content/home";
+import { siteConfig } from "@/config/site";
+import { homeContent, type DeliveryMode, type ProcessStage } from "@/content/home";
 
 import { BrandMark } from "@/components/brand-mark";
-import { ContactForm } from "@/components/contact-form";
-import { ProofResultAnimator } from "@/components/proof-result-animator";
 import { SiteHeader } from "@/components/site-header";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="section-label">{children}</p>;
 }
 
-function HeroSection() {
+function HeroSection({ emailHref }: { emailHref: string }) {
   return (
     <section className="hero anchor-section">
       <div className="container container--wide hero__grid">
@@ -21,7 +20,7 @@ function HeroSection() {
           </h1>
           <p className="hero__copy">{homeContent.hero.supportingCopy}</p>
           <div className="hero__actions">
-            <a className="button button--primary" href={homeContent.primaryCta.href}>
+            <a className="button button--primary" href={emailHref}>
               {homeContent.primaryCta.label}
             </a>
           </div>
@@ -61,17 +60,15 @@ function ChallengeSection() {
   );
 }
 
-function AnotherSetOfEyesSection() {
+function PositioningSection() {
   return (
     <section className="anchor-section site-section site-section--muted">
       <div className="container container--narrow positioning__wrap">
-        <SectionLabel>Another Set of Eyes</SectionLabel>
-        <h2 className="section-title">{homeContent.anotherSetOfEyes.statement}</h2>
-        <p className="section-copy">{homeContent.anotherSetOfEyes.body}</p>
-        <p className="positioning__statement">{homeContent.anotherSetOfEyes.lineOne}</p>
-        <p className="positioning__statement positioning__statement--strong">
-          {homeContent.anotherSetOfEyes.lineTwo}
-        </p>
+        <SectionLabel>Positioning</SectionLabel>
+        <h2 className="section-title">{homeContent.positioning.statement}</h2>
+        <p className="section-copy">{homeContent.positioning.body}</p>
+        <p className="positioning__statement">{homeContent.positioning.lineOne}</p>
+        <p className="positioning__statement positioning__statement--strong">{homeContent.positioning.lineTwo}</p>
       </div>
     </section>
   );
@@ -120,120 +117,38 @@ function HowWeWorkSection() {
   );
 }
 
-function CorePrincipleSection() {
+function PrincipleSection() {
   return (
     <section className="anchor-section site-section site-section--contrast principle-band">
       <div className="container container--wide principle-band__inner">
         <SectionLabel>Core Principle</SectionLabel>
-        <h2 className="principle-band__line">{homeContent.corePrinciple.lineOne}</h2>
-        <p className="principle-band__line principle-band__line--second">{homeContent.corePrinciple.lineTwo}</p>
-        <p className="principle-band__body">{homeContent.corePrinciple.body}</p>
+        <h2 className="principle-band__line">{homeContent.principle.lineOne}</h2>
+        <p className="principle-band__line principle-band__line--second">{homeContent.principle.lineTwo}</p>
+        <p className="principle-band__body">{homeContent.principle.body}</p>
       </div>
     </section>
   );
 }
 
-function InSituSection() {
+function DeliveryCard({ mode }: { mode: DeliveryMode }) {
   return (
-    <section id="philosophy" className="anchor-section site-section site-section--surface">
-      <div className="container container--wide insitu__grid">
-        <div>
-          <SectionLabel>Philosophy</SectionLabel>
-          <h2 className="section-title">{homeContent.insitu.statement}</h2>
-          {homeContent.insitu.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="section-copy">
-              {paragraph}
-            </p>
-          ))}
-        </div>
-        <div className="insitu__cards">
-          {homeContent.insitu.principles.map((principle) => (
-            <article key={principle.title} className="insitu__card">
-              <h3>{principle.title}</h3>
-              <p>{principle.body}</p>
-            </article>
-          ))}
-        </div>
-      </div>
-      <div className="container container--wide">
-        <div className="insitu__callout">
-          <h3>{homeContent.insitu.callout}</h3>
-          <p>{homeContent.insitu.calloutBody}</p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ExistingEnvironmentSection() {
-  return (
-    <section className="anchor-section site-section">
-      <div className="container container--wide environment__grid">
-        <div className="environment__intro">
-          <SectionLabel>Existing Environment</SectionLabel>
-          <h2 className="section-title">{homeContent.existingEnvironment.statement}</h2>
-          {homeContent.existingEnvironment.paragraphs.map((paragraph) => (
-            <p key={paragraph} className="section-copy">
-              {paragraph}
-            </p>
-          ))}
-        </div>
-        <div className="environment__model">
-          <div className="environment__assessment">{homeContent.existingEnvironment.assess}</div>
-          <div className="environment__options">
-            {homeContent.existingEnvironment.decisions.map((decision) => (
-              <div key={decision} className="environment__option">
-                {decision}
-              </div>
-            ))}
-          </div>
-          <div className="environment__outcome">
-            <p>{homeContent.existingEnvironment.conclusionOne}</p>
-            <p>{homeContent.existingEnvironment.conclusionTwo}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function ProofStoryArticle({ story, reverse }: { story: ProofStory; reverse: boolean }) {
-  return (
-    <article className={["proof-story", reverse ? "proof-story--reverse" : ""].filter(Boolean).join(" ")}>
-      <div className="proof-story__result">
-        <p className="proof-story__kicker">{story.title}</p>
-        <p className="proof-story__label">The result</p>
-        <ProofResultAnimator title={story.title} result={story.result} />
-      </div>
-      <div className="proof-story__body">
-        <h3>{story.title}</h3>
-        <div className="proof-story__narrative-block">
-          <p className="proof-story__label">The challenge</p>
-          <p>{story.challenge}</p>
-        </div>
-        <div className="proof-story__narrative-block">
-          <p className="proof-story__label">The better way</p>
-          <p>{story.betterWay}</p>
-        </div>
-        <div className="proof-story__narrative-block">
-          <p className="proof-story__label">The result</p>
-          <p className="proof-story__summary">{story.interpretation}</p>
-        </div>
-      </div>
+    <article className="engagement__model">
+      <h3>{mode.title}</h3>
+      <p>{mode.body}</p>
     </article>
   );
 }
 
-function ProofSection() {
+function DeliverySection() {
   return (
-    <section id="proof" className="anchor-section site-section site-section--surface">
+    <section id="delivery" className="anchor-section site-section site-section--surface">
       <div className="container container--wide">
-        <SectionLabel>Proof</SectionLabel>
-        <h2 className="section-title">{homeContent.proof.statement}</h2>
-        <p className="section-copy proof__intro">{homeContent.proof.introduction}</p>
-        <div className="proof__stories">
-          {homeContent.proof.stories.map((story, index) => (
-            <ProofStoryArticle key={story.title} story={story} reverse={index % 2 === 1} />
+        <SectionLabel>Delivery</SectionLabel>
+        <h2 className="section-title">{homeContent.delivery.statement}</h2>
+        <p className="section-copy engagement__intro">{homeContent.delivery.introduction}</p>
+        <div className="engagement__models engagement__models--triple">
+          {homeContent.delivery.modes.map((mode) => (
+            <DeliveryCard key={mode.title} mode={mode} />
           ))}
         </div>
       </div>
@@ -241,49 +156,67 @@ function ProofSection() {
   );
 }
 
-function EngagementSection() {
+function ValueSection() {
   return (
-    <section id="engagement" className="anchor-section site-section">
-      <div className="container container--wide">
-        <SectionLabel>Engagement</SectionLabel>
-        <h2 className="section-title">{homeContent.engagement.statement}</h2>
-        <p className="section-copy engagement__intro">{homeContent.engagement.introduction}</p>
-        <div className="engagement__models">
-          {homeContent.engagement.models.map((model) => (
-            <article key={model.title} className="engagement__model">
-              <h3>{model.title}</h3>
-              <p>{model.body}</p>
-            </article>
-          ))}
+    <section id="value" className="anchor-section site-section">
+      <div className="container container--wide challenge__layout">
+        <div>
+          <SectionLabel>Value</SectionLabel>
+          <h2 className="section-title">{homeContent.value.statement}</h2>
+          <p className="section-copy">{homeContent.value.introduction}</p>
         </div>
-        <div className="engagement__support">
-          <p className="engagement__support-lead">{homeContent.engagement.supportLead}</p>
-          <h3>{homeContent.engagement.supportHeading}</h3>
-          <p>{homeContent.engagement.supportBody}</p>
-          <p>{homeContent.engagement.supportConclusion}</p>
+        <ul className="challenge__list">
+          {homeContent.value.points.map((point) => (
+            <li key={point} className="challenge__item">
+              {point}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function BoundariesSection() {
+  return (
+    <section className="anchor-section site-section site-section--muted">
+      <div className="container container--wide">
+        <SectionLabel>Specialist Boundaries</SectionLabel>
+        <div className="engagement__support boundary-card">
+          <h2>{homeContent.boundaries.statement}</h2>
+          <p>{homeContent.boundaries.body}</p>
+          <p>{homeContent.boundaries.note}</p>
         </div>
       </div>
     </section>
   );
 }
 
-function ContactSection() {
+function ContactSection({ emailHref }: { emailHref: string }) {
   return (
-    <section id="contact" className="anchor-section site-section site-section--muted">
+    <section id="contact" className="anchor-section site-section">
       <div className="container container--wide contact__grid">
         <div className="contact__intro">
           <SectionLabel>Contact</SectionLabel>
           <h2 className="section-title">{homeContent.contact.statement}</h2>
           <p className="section-copy">{homeContent.contact.body}</p>
         </div>
-        <ContactForm
-          fields={homeContent.contact.fields as readonly ContactField[]}
-          messageLabel={homeContent.contact.messageLabel}
-          helperText={homeContent.contact.helperText}
-          exampleText={homeContent.contact.exampleText}
-          privacyText={homeContent.contact.privacyText}
-          submitLabel={homeContent.contact.submitLabel}
-        />
+        <div className="engagement__support contact-card">
+          <p className="engagement__support-lead">{homeContent.contact.emailLabel}</p>
+          <p className="contact-card__email">
+            <a href={emailHref}>{siteConfig.contact.publicMailbox}</a>
+          </p>
+          <div className="contact-card__actions">
+            <a className="button button--primary" href={emailHref}>
+              {homeContent.contact.buttonLabel}
+            </a>
+          </div>
+          <ul className="contact-card__questions">
+            {homeContent.contact.prompts.map((prompt) => (
+              <li key={prompt}>{prompt}</li>
+            ))}
+          </ul>
+        </div>
       </div>
     </section>
   );
@@ -314,27 +247,27 @@ function SiteFooter() {
 }
 
 export function HomePage() {
+  const emailHref = `mailto:${siteConfig.contact.publicMailbox}?subject=${encodeURIComponent("WideOrder enquiry")}`;
+  const headerCta = { ...homeContent.primaryCta, href: emailHref };
+
   return (
     <div id="top" className="site-shell">
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
-      <SiteHeader navItems={homeContent.navItems} cta={homeContent.primaryCta} />
+      <SiteHeader navItems={homeContent.navItems} cta={headerCta} />
       <main id="main-content" className="site-main" tabIndex={-1}>
-        <HeroSection />
+        <HeroSection emailHref={emailHref} />
         <ChallengeSection />
-        <AnotherSetOfEyesSection />
+        <PositioningSection />
         <HowWeWorkSection />
-        <CorePrincipleSection />
-        <InSituSection />
-        <ExistingEnvironmentSection />
-        <ProofSection />
-        <EngagementSection />
-        <ContactSection />
+        <PrincipleSection />
+        <DeliverySection />
+        <ValueSection />
+        <BoundariesSection />
+        <ContactSection emailHref={emailHref} />
       </main>
       <SiteFooter />
     </div>
   );
 }
-
-

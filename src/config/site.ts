@@ -1,16 +1,16 @@
 export const siteConfig = {
   name: "WideOrder",
-  serviceName: "WideOrder Resolve",
+  serviceName: "WideOrder",
   domain: "https://wideorder.net",
   repositoryPath: "C:/GitHub/wideorder-net-website",
-  phase: "Phase 7 managed settings review",
-  title: "WideOrder Resolve | Stop losing time to busy work.",
+  phase: "Phase 8 homepage simplification",
+  title: "WideOrder | WideOrder fixes problems for businesses.",
   description:
-    "WideOrder Resolve looks at the work consuming your team's time, understands why it happens, and finds a practical way to make it better.",
+    "WideOrder helps businesses define operational problems, find practical solutions, and get the right work delivered.",
   openGraph: {
-    title: "WideOrder Resolve | Stop losing time to busy work.",
+    title: "WideOrder | WideOrder fixes problems for businesses.",
     description:
-      "WideOrder Resolve looks at the work consuming your team's time, understands why it happens, and finds a practical way to make it better.",
+      "WideOrder helps businesses define operational problems, find practical solutions, and get the right work delivered.",
     url: "https://wideorder.net",
     siteName: "WideOrder",
   },

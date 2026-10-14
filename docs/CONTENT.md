@@ -2,307 +2,154 @@
 
 ## Content status
 
-- `PHASE 2 CONTENT APPROVED`
-- This file is now the authoritative customer-facing content source for Phase 3 page and component architecture.
-- Future wording changes must be deliberate and must not be made simply to make a layout easier to implement.
-- This document is the reconciled Phase 2 content source of truth for the future WideOrder website implementation.
-- Content has been reconciled against `docs/source/greenlangton-current/GreenLangton-current-site-2026-10-06.pdf` and `docs/source/greenlangton-current/screenshots/01.png` through `docs/source/greenlangton-current/screenshots/13.png`.
-- The earlier prototype under `docs/archive/legacy-static-site/` is not the GreenLangton Resolve wording source and is no longer the basis for this document.
-- Explicitly approved WideOrder strategy remains the highest-priority source where older GreenLangton wording was later superseded.
-- The current Next.js placeholder page remains unchanged in this phase.
+- `PHASE 8 CONTENT APPROVED`
+- This file is now the authoritative customer-facing content source for the simplified homepage implementation.
+- Source inputs for this revision are the existing repository guidance and the WideOrder working business brief dated `2026-10-13`.
+- This revision intentionally simplifies and reorganizes the site instead of expanding it.
+- Do not use the term `10x` in WideOrder branding, website copy, documentation, or marketing.
+- The approved homepage CTA is a simple email action, not the earlier web form.
 
 ## Brand hierarchy
 
 - `WideOrder` - company
-- `WideOrder Resolve` - flagship service
-- `inSITU` - philosophy / solution discipline
-- `There is a better way.` - brand promise
-- `GreenLangton` - parent company
+- Core concept - `WideOrder fixes problems for businesses.`
+- Supporting positioning - practical business problem solving
+- Parent company - `GreenLangton`
 
 ## Navigation
 
 - Primary navigation:
   - `The Challenge`
   - `How We Work`
-  - `Philosophy`
-  - `Proof`
-  - `Engagement`
-- Primary CTA: `Tell us what's taking your time`
+  - `Delivery`
+  - `Value`
+- Primary CTA: `Email WideOrder`
 
-## Hero
+## Homepage structure
 
-- Service name: `WideOrder Resolve`
-- Brand promise: `There is a better way.`
-- Primary statement: `Stop losing time to busy work.`
-- Supporting copy: `WideOrder Resolve looks at the work consuming your team's time, understands why it happens, and finds a practical way to make it better.`
+### Hero
+
+- Service name: `WideOrder`
+- Brand promise: `Practical business problem solving`
+- Primary statement: `WideOrder fixes problems for businesses.`
+- Supporting copy: `When something in the business causes pain, wastes time, creates unnecessary work, keeps going wrong, or simply needs to get done properly, WideOrder helps define the real problem and get the right solution delivered.`
 - Supporting examples:
-  - `Margin report`
-  - `Re-enter data`
-  - `Weekly rebuild`
-  - `Almost connected`
-  - `Only Dave knows how`
-  - `Copy / paste`
-  - `Reconcile`
-  - `Export -> import`
-  - `Status update`
-  - `Reply-all thread`
-
-## The Challenge
-
-`Every business develops work that takes longer than it should.`
-
-- `A report that takes hours to prepare.`
-- `Information that has to be entered twice.`
-- `A spreadsheet somebody has to rebuild every week.`
-- `Systems that almost work together - but don't.`
-- `A process that depends on one person knowing how to do it.`
-- `A task everyone hates doing, but nobody has had the time to fix.`
-
-`These are not examples of businesses doing things incorrectly. They are natural operational challenges that develop as companies grow and change.`
-
-## Another Set of Eyes
-
-`Sometimes you need another set of eyes.`
-
-`WideOrder Resolve looks at the work consuming your team's time, understands why it happens, and finds a practical way to make it better.`
-
-`We don't arrive with a predetermined answer.`
-
-`We start with the challenge.`
-
-## How We Work
-
-`A straightforward progression.`
-
-### Show us the challenge
-
-`Tell us what takes too long, keeps coming back, consumes attention or simply feels harder than it should.`
-
-### Discovery
-
-`Before recommending a solution, we do the work required to understand the challenge properly. We look at the process, the systems, the people, the workarounds and the existing environment.`
-
-`Discovery is a paid professional engagement.`
-
-`You are paying for the expertise and time required to properly understand the challenge - not for a guaranteed solution. The outcome is clarity: what is happening, what is creating the constraint, what it is costing the business, whether it is worth addressing, and what practical options exist.`
-
-`Discovery does not guarantee that a new system, software product or implementation will be recommended.`
-
-- `the current process is acceptable`
-- `improvement is not economically justified`
-- `something small should change`
-- `an existing capability should be used differently`
-- `a commercial product is appropriate`
-- `a custom solution is appropriate`
-- `or no further work is justified`
-
-### Measure it
-
-`Understand the time, effort, cost and business impact involved so we can determine whether addressing the challenge makes commercial sense.`
-
-### Find a better way
-
-`There is no predetermined answer.`
-
-`The answer depends on the challenge. It may mean changing a workflow, connecting existing systems, improving reporting, retaining and improving an existing system, building something new, replacing something that no longer serves the business, automation, training, staffing changes, a specialist implementation partner, or something much simpler.`
-
-### Put it to work
-
-`Design, implement, test and establish the solution in the real business environment.`
-
-## Core Principle
-
-`The tool isn't the product.`
-
-`The better outcome is.`
-
-`WideOrder Resolve does not have a product to sell. It begins with a challenge to understand and solve.`
-
-## Philosophy - inSITU
-
-`We find it inSITU.`
-
-`A play on in situ - working with something where it already exists, in its real environment. Better does not always mean replacing what you already have. Often, the right answer is already somewhere inside the business - in the systems, tools, knowledge and processes that are already working.`
-
-`We understand what is there, identify what is getting in the way, and decide what to keep, change, replace or build - without unnecessarily reinventing the wheel, and without preserving something that should be replaced.`
-
-### Simple
-
-- `Simple`
-- `Make the work simpler, not more complicated.`
-
-### Integrated
-
-- `Integrated`
-- `Work intelligently with existing systems, information, infrastructure and processes where that makes sense.`
-
-### Trusted
-
-- `Trusted`
-- `People need confidence in the outcome and need to understand that it works consistently.`
-
-### Used
-
-- `Used`
-- `A technically excellent solution has no value if the people it was designed for do not actually use it.`
-
-`Simple and Used are non-negotiable.`
-
-`If the solution is too complicated to use, or people do not adopt it, it has failed regardless of how technically sophisticated it may be.`
-
-## Existing Environment
-
-`We start by understanding what is already in place.`
-
-`A business may already have many of the right systems, tools, processes and knowledge. They may simply not be working together - or working the way the business needs them to.`
-
-`We start by understanding what is already in place, what works, what doesn't, and what is getting in the way.`
-
-- `Understand what is already there.`
-- `Keep what makes sense.`
-- `Change what needs changing.`
-- `Replace what needs replacing.`
-- `Build what is missing.`
-
-`The objective is neither preservation nor replacement.`
-
-`The objective is the better outcome.`
-
-## Proof
-
-`The proof is in the outcome.`
-
-`Four very different operational challenges. One consistent way of thinking. These are not products - they are proof that the same philosophy resolves very different challenges.`
-
-### Retail Pricing
-
-`The challenge`
-
-`A large South African hardware retailer effectively required a full-time employee to manage complex pricing across its inventory. Different products, margins, customer categories and commercial rules created significant complexity and opportunities for error.`
-
-`The better way`
-
-`A dynamic pricing solution was developed inside the company's existing ERP environment rather than replacing the ERP. Business rules, margin protection, customer-specific pricing, exceptions, validation and variance reporting were incorporated into the process.`
-
-`The result`
-
-`~20 minutes`
-
-`A pricing process that had effectively consumed a full-time role could be completed across the business in approximately 20 minutes, with greater consistency, control and margin protection.`
-
-### Technology Deployment
-
-`The challenge`
-
-`A global consumer-goods company experienced long-running help-desk tickets because preparing replacement computers was slow, inconsistent and technician-intensive. The backlog also affected the team's ability to demonstrate service efficiency to international management.`
-
-`The better way`
-
-`Using infrastructure and equipment already available to the business, a standardized deployment environment was created that could prepare up to 16 machines simultaneously.`
-
-`The result`
-
-`up to 16 machines simultaneously`
-
-`Technician involvement was dramatically reduced, deployment became more consistent, machines could be prepared in a fraction of the previous time, and the help desk could focus its resources on other challenges.`
-
-### Remote Infrastructure & Printing
-
-`The challenge`
-
-`The previous remote working environment was vulnerable to connectivity interruptions. When connectivity was interrupted, users could experience up to approximately 30 minutes of downtime before they could return to productive work.`
-
-`The better way`
-
-`The solution did not require throwing everything away and starting again. Existing technologies and infrastructure were combined and configured differently to create a more resilient remote working environment while also solving the associated printing requirements.`
-
-`The result`
-
-`~30 minutes -> 0 downtime`
-
-`The technology already existed. The better outcome came from using it differently.`
-
-### Month-End Reporting
-
-`The challenge`
-
-`The existing month-end process required significant skilled human effort because of the volume and repetitive preparation involved. The previous process could require approximately two additional skilled people for two and a half to three days each month.`
-
-`The better way`
-
-`A purpose-built solution now performs the repetitive preparation and processing, reducing the human involvement to approximately 10 minutes.`
-
-`The result`
-
-`~1,200 minutes -> ~10 minutes`
-
-`Skilled people no longer need to spend days performing repetitive work that can be handled more effectively another way.`
-
-## Engagement
-
-`After Discovery, two engagement models.`
-
-`If Discovery identifies a worthwhile way forward, the work can be taken on in either of two ways. Both are completely legitimate outcomes - neither is the better commercial choice.`
-
-### Project Engagement
-
-`A defined solution is designed, implemented, tested and delivered within an agreed scope. Once the engagement is complete, the customer has the solution. Additional work can be undertaken later if required.`
-
-### Continuous Improvement
-
-`The solution is still properly designed and implemented. The difference is that WideOrder Resolve remains engaged where an ongoing relationship can continue creating genuine value as the business changes and the effect of the solution becomes visible.`
-
-`This is not primarily technical support or maintenance.`
-
-`Sometimes you can't see the next constraint until the current one is removed.`
-
-`A team may have spent so long working around one challenge that it has never had the capacity or visibility to see what lies beyond it. Once that constraint is removed, the business begins operating differently - and something previously hidden may become visible. That is not a failure of the original solution, and it is not WideOrder looking for another engagement to sell. It means removing one constraint can create enough clarity to see an opportunity that could not reasonably be seen before.`
-
-`The objective is not to force every customer into an ongoing agreement. The objective is to structure the engagement in the way that makes the most sense for the customer, the challenge and the value being created.`
-
-## Contact
-
-`Tell us about the task, process or workaround that's taking longer than it should.`
-
-`We'll start there.`
-
-- `Name *`
-- `Company (optional)`
-- `Email *`
-- `Phone (optional)`
-- `What's taking your time? *`
-- Helper text: `A short description is completely fine.`
-- Example text: `e.g. Someone rebuilds the same pricing report by hand every week.`
-- Privacy/helper statement: `We use the details you submit to respond to your message.`
-- Submit label: `Tell us what's taking your time`
+  - `A report that takes hours`
+  - `Data entered twice`
+  - `A weekly rebuild`
+  - `A recurring workaround`
+  - `Errors and rework`
+  - `Only one person knows how`
+  - `Systems that almost connect`
+  - `A task nobody fixes`
+
+### The Challenge
+
+- Statement: `Businesses accumulate work that should not be this hard.`
+- Qualification: `Sometimes the issue is obvious. Sometimes all you know is that time keeps disappearing into work that should not need this much effort.`
+- Supporting examples:
+  - `A process that keeps creating unnecessary work.`
+  - `A recurring task that consumes attention every week.`
+  - `A workflow that breaks whenever a particular person is away.`
+  - `A system that almost solves the problem but still leaves gaps.`
+  - `A piece of work that keeps going wrong, slowly, or both.`
+  - `A job everyone knows should be easier, but nobody has had time to solve properly.`
+
+### Positioning
+
+- Statement: `Not a traditional consultancy.`
+- Body: `WideOrder works more like a practical business fixer: understand what is really happening, determine what will create meaningful value, and make sure the right solution gets delivered.`
+- Supporting lines:
+  - `No predetermined answer.`
+  - `Start with the problem.`
+
+### How We Work
+
+- Statement: `Discovery first. Then the right path.`
+
+#### Start with what is not working
+
+- `A client may know exactly what the problem is, or may only know that something keeps taking too long, going wrong, or creating unnecessary effort.`
+
+#### Discovery
+
+- `WideOrder looks at what is happening on the ground. That can include mapping the process step by step, understanding how much time the work consumes, where errors or repetition show up, and where the business depends on particular people, systems, or knowledge.`
+- Discovery answers:
+  - `What is actually causing the problem?`
+  - `Can WideOrder create meaningful value by addressing it?`
+
+#### Decide what is worth doing
+
+- `The solution is not predetermined. WideOrder does not begin by trying to sell software, automation, AI, outsourcing, or consulting hours. The right answer may be process change, better use of an existing capability, a specialist implementation, ongoing support, or something much simpler.`
+
+#### Get it delivered
+
+- `Once the right path is clear, WideOrder helps make sure the work is implemented properly and actually works in the real business environment.`
+
+### Core Principle
+
+- Line one: `The solution is not predetermined.`
+- Line two: `The value should materially outweigh the cost.`
+- Body: `The point is not to sell a tool. The point is to leave the client materially better off.`
+
+### Delivery
+
+- Statement: `Delivery depends on what will actually work.`
+- Introduction: `WideOrder does not need to personally perform every component of a solution. The responsibility is making sure the problem is understood and the right response gets delivered well.`
+- Delivery modes:
+  - `Direct execution` - `WideOrder can implement or perform the work directly where that is the most practical solution.`
+  - `Managed implementation` - `WideOrder can identify the right specialist or provider, define what needs to be achieved, and manage the process through completion.`
+  - `Ongoing service` - `Where the underlying need is recurring rather than removable, WideOrder can remain involved with the expertise, systems, manpower, or management needed to handle it properly.`
+
+### Value
+
+- Statement: `Only worth doing if the client is materially better off.`
+- Introduction: `Value can show up in different ways. It does not always need to be reduced to a perfect spreadsheet, but there should be a credible case that the benefit meaningfully exceeds the cost.`
+- Value examples:
+  - `Increased revenue`
+  - `Reduced costs`
+  - `Recovered employee or management time`
+  - `Greater capacity`
+  - `Fewer mistakes and less rework`
+  - `Reduced operational risk`
+  - `Less dependency on particular individuals`
+  - `Removal of an ongoing burden from the client`
+
+### Specialist Boundaries
+
+- Statement: `Broad scope, clear specialist boundaries.`
+- Body: `WideOrder is willing to investigate a very broad range of business problems. Where licensed, regulated, medical, engineering, legal, or other specialist expertise is required, WideOrder does not pretend to possess it.`
+- Supporting note: `Instead, WideOrder identifies the requirement, involves the right specialist where needed, and manages the broader process where appropriate.`
+
+### Contact
+
+- Statement: `Start with the problem.`
+- Body: `Send a short email describing what is taking too long, keeps going wrong, or feels harder than it should. A few lines is enough.`
+- Email label: `Email`
+- CTA: `Email WideOrder`
+- Prompt cues:
+  - `What is happening now?`
+  - `What keeps consuming time or attention?`
+  - `What should be easier than it is?`
 
 ## Footer
 
-- Future footer identity:
+- Identity:
   - `WideOrder`
-  - `There is a better way.`
+  - `WideOrder fixes problems for businesses.`
   - `A GreenLangton company`
-- Footer supporting philosophy copy: `The tool isn't the product. The better outcome is.`
+- Supporting philosophy copy: `The point is a better outcome, not a predetermined tool.`
 - Footer navigation:
   - `The Challenge`
   - `How We Work`
-  - `Philosophy`
-  - `Proof`
-  - `Engagement`
-  - `Tell us what's taking your time`
-- WideOrder public contact email: `PENDING DOMAIN EMAIL CONFIGURATION`
-- Rule: `Do not publish errol@greenlangton.com as the WideOrder production contact address unless explicitly approved by the user.`
-- Note: `A future @wideorder.net mailbox will be selected before production launch.`
-- Production copyright/legal-entity line: `PENDING LEGAL ENTITY VERIFICATION`
-- Rule: `The final copyright line must identify the correct legal owner of WideOrder and will be resolved before production deployment.`
+  - `Delivery`
+  - `Value`
+  - `Contact`
+- WideOrder public contact email: `info@wideorder.net`
 
-## Legal / Commercial Items Requiring Later Review
+## Content guardrails
 
-- Placeholder only: limitation of liability
-- Placeholder only: consequential-damages exclusion
-- Placeholder only: no guaranteed commercial result
-- Placeholder only: third-party product/vendor responsibility
-- Placeholder only: confidentiality/data handling
-- Placeholder only: IP ownership
-- Placeholder only: change control
-- Placeholder only: implementation responsibility boundaries
+- Keep the language plain, intelligent, and credible.
+- Avoid bloated consulting language.
+- Prefer clarity and structure over volume.
+- Keep the site focused on the core concept: `WideOrder fixes problems for businesses.`

@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 
 import type { NavItem } from "@/content/home";
@@ -10,6 +12,7 @@ type MobileNavigationProps = {
 };
 
 export function MobileNavigation({ navItems, cta }: MobileNavigationProps) {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
@@ -49,19 +52,14 @@ export function MobileNavigation({ navItems, cta }: MobileNavigationProps) {
           <span />
         </span>
       </button>
-      <div
-        id={panelId}
-        className="mobile-navigation__panel"
-        data-state={isOpen ? "open" : "closed"}
-        aria-hidden={!isOpen}
-      >
+      <div id={panelId} className="mobile-navigation__panel" data-state={isOpen ? "open" : "closed"} aria-hidden={!isOpen}>
         <nav aria-label="Mobile navigation" className="mobile-navigation__nav">
           <ul className="mobile-navigation__list">
             {navItems.map((item) => (
               <li key={item.href}>
-                <a href={item.href} onClick={closeMenu}>
+                <Link href={item.href} aria-current={pathname === item.href ? "page" : undefined} onClick={closeMenu}>
                   {item.label}
-                </a>
+                </Link>
               </li>
             ))}
           </ul>

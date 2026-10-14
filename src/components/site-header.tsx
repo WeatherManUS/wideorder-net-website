@@ -1,3 +1,8 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import type { NavItem } from "@/content/home";
 
 import { BrandMark } from "@/components/brand-mark";
@@ -10,16 +15,20 @@ type SiteHeaderProps = {
 };
 
 export function SiteHeader({ navItems, cta }: SiteHeaderProps) {
+  const pathname = usePathname();
+
   return (
     <header className="site-header">
       <div className="container container--wide">
         <div className="site-header__bar">
-          <BrandMark priority />
+          <BrandMark href="/" priority />
           <nav className="primary-nav" aria-label="Primary navigation">
             <ul>
               {navItems.map((item) => (
                 <li key={item.href}>
-                  <a href={item.href}>{item.label}</a>
+                  <Link href={item.href} aria-current={pathname === item.href ? "page" : undefined}>
+                    {item.label}
+                  </Link>
                 </li>
               ))}
             </ul>

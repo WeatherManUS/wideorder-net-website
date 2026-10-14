@@ -11,6 +11,8 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
 }
 
 function SiteFooter() {
+  const year = new Date().getFullYear();
+
   return (
     <footer className="site-footer">
       <div className="container container--wide site-footer__grid">
@@ -21,6 +23,12 @@ function SiteFooter() {
           <p className="site-footer__philosophy">{siteContent.shared.footer.philosophy}</p>
           <p className="site-footer__philosophy">
             <a href={getContactMailtoHref("WideOrder enquiry")}>{siteConfig.contact.publicMailbox}</a>
+          </p>
+          <p className="site-footer__copyright">
+            <Link href="/admin/login" aria-label="Administrator sign in">
+              ©
+            </Link>{" "}
+            {year} WideOrder Resolve. All rights reserved.
           </p>
         </div>
         <nav className="site-footer__nav" aria-label="Footer navigation">

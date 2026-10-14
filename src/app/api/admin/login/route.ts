@@ -23,7 +23,16 @@ export async function POST(request: Request) {
     });
   }
 
-  const result = await authenticateAdmin(request, password);
+  let result;
+
+  try {
+    result = await authenticateAdmin(request, password);
+  } catch {
+    return NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/login?error=service_unavailable"), {
+      status: 303,
+      headers: ADMIN_NO_STORE_HEADERS,
+    });
+  }
 
   if (!result.ok) {
     return NextResponse.redirect(buildTrustedAdminUrl(request, `/admin/login?error=${result.error}`), {

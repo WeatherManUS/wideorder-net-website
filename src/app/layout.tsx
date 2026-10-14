@@ -1,5 +1,5 @@
 ﻿import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Inter, Manrope } from "next/font/google";
 
 import { isSiteIndexable, siteConfig } from "@/config/site";
 import { themeStylesheet } from "@/theme/tokens";
@@ -10,14 +10,14 @@ const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
-  weight: ["400", "500", "600"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const fraunces = Fraunces({
+const manrope = Manrope({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-manrope",
   display: "swap",
-  weight: ["600", "700"],
+  weight: ["500", "600", "700", "800"],
 });
 
 const themeInitializer = `(() => {
@@ -71,7 +71,7 @@ export default function RootLayout({
         <script id="wideorder-theme-init" dangerouslySetInnerHTML={{ __html: themeInitializer }} />
         <style id="wideorder-theme" dangerouslySetInnerHTML={{ __html: themeStylesheet }} />
       </head>
-      <body className={`${inter.variable} ${fraunces.variable}`}>{children}</body>
+      <body className={`${inter.variable} ${manrope.variable}`}>{children}</body>
     </html>
   );
 }

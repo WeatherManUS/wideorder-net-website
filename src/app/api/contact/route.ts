@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { checkAndRecordContactAttempt } from "@/lib/contact-rate-limit";
 import { processContactRequest, type TurnstileVerificationResponse } from "@/lib/contact-request";
 import { getContactOperationalConfigStatus } from "@/lib/managed-config/service";
 
@@ -45,6 +46,24 @@ export function GET() {
 
 export async function POST(request: Request) {
   const requestId = crypto.randomUUID();
+  const clientIp = getClientIp(request);
+  const rateLimit = checkAndRecordContactAttempt(clientIp);
+
+  if (!rateLimit.allowed) {
+    return json(
+      {
+        ok: false,
+        error: "rate_limited",
+        message: "Too many submissions were received from this connection. Please wait and try again.",
+      },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(rateLimit.retryAfterSeconds),
+        },
+      },
+    );
+  }
 
   let body: unknown;
 
@@ -59,7 +78,7 @@ export async function POST(request: Request) {
     body,
     contentType: request.headers.get("content-type"),
     requestId,
-    clientIp: getClientIp(request),
+    clientIp,
     getConfigStatus: getContactOperationalConfigStatus,
     verifyTurnstile,
   });

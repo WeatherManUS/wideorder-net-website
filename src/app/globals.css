@@ -11,6 +11,8 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  line-height: 1.6;
   background: var(--color-background);
   color: var(--color-text);
   text-rendering: optimizeLegibility;
@@ -143,10 +145,26 @@ ol {
 .hero__brand-promise,
 .proof-story__label,
 .proof-story__kicker {
-  font-size: 0.8125rem;
+  font-family: var(--font-heading);
   line-height: 1.2;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+.section-label,
+.proof-story__label,
+.proof-story__kicker {
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.hero__service-name {
+  font-size: clamp(1rem, 1.2vw, 1.0625rem);
+  font-weight: 800;
+}
+
+.hero__brand-promise {
+  font-size: clamp(0.9375rem, 1.1vw, 1rem);
   font-weight: 600;
 }
 
@@ -165,24 +183,27 @@ ol {
 .principle-band__line,
 .proof-story__metric,
 .engagement__support h3,
-.positioning__statement--strong {
-  font-family: var(--font-serif);
-  font-weight: 600;
-  letter-spacing: -0.03em;
+.positioning__statement--strong,
+.hero__title,
+.environment__outcome p,
+.boundary-card h2 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.035em;
 }
 
 .section-title {
-  max-width: 16ch;
-  font-size: clamp(2rem, 5vw, 3.4rem);
-  line-height: 1.04;
+  max-width: 18ch;
+  font-size: clamp(2rem, 3.1vw, 2.5rem);
+  line-height: 1.08;
 }
 
 .section-copy {
   max-width: var(--text-max);
   margin-top: var(--space-4);
   color: var(--color-text-muted);
-  font-size: 1rem;
-  line-height: 1.72;
+  font-size: clamp(1.0625rem, 1.35vw, 1.125rem);
+  line-height: 1.65;
 }
 
 .section-heading-row {
@@ -198,7 +219,7 @@ ol {
   padding: 0.875rem 1.35rem;
   border: var(--border-width) solid transparent;
   border-radius: var(--radius-md);
-  font-size: 0.975rem;
+  font-size: 1rem;
   font-weight: 600;
   line-height: 1.2;
   text-align: center;
@@ -481,20 +502,18 @@ ol {
 }
 
 .hero__title {
-  max-width: 10ch;
-  font-family: var(--font-serif);
-  font-size: clamp(3rem, 9vw, 5.5rem);
-  line-height: 0.94;
-  letter-spacing: -0.05em;
-  font-weight: 600;
+  max-width: 11ch;
+  font-size: clamp(2.5rem, 6.5vw, 3.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
 }
 
 .hero__copy {
-  max-width: 38rem;
+  max-width: 40rem;
   margin-top: var(--space-5);
   color: var(--color-text-muted);
-  font-size: 1.05rem;
-  line-height: 1.75;
+  font-size: clamp(1.0625rem, 1.4vw, 1.125rem);
+  line-height: 1.65;
 }
 
 .hero__actions {
@@ -631,8 +650,10 @@ ol {
 .proof-story__body h3,
 .engagement__model h3,
 .contact-form .form-label {
-  font-size: 1.1rem;
-  line-height: 1.35;
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
 .process__stage-body p,
@@ -644,8 +665,8 @@ ol {
 .form-privacy,
 .proof-story__summary {
   color: var(--color-text-muted);
-  font-size: 1.02rem;
-  line-height: 1.8;
+  font-size: clamp(1.0625rem, 1.2vw, 1.125rem);
+  line-height: 1.65;
 }
 
 .process__stage-body p + p,
@@ -688,8 +709,8 @@ ol {
 }
 
 .principle-band__line {
-  font-size: clamp(2.25rem, 5vw, 4.5rem);
-  line-height: 0.98;
+  font-size: clamp(2.25rem, 4.5vw, 3.25rem);
+  line-height: 1.06;
 }
 
 .principle-band__line--second {
@@ -700,7 +721,8 @@ ol {
   max-width: 44rem;
   margin: var(--space-6) auto 0;
   color: color-mix(in srgb, var(--color-contrast-text) 82%, transparent);
-  line-height: 1.7;
+  font-size: clamp(1.0625rem, 1.3vw, 1.125rem);
+  line-height: 1.65;
 }
 
 .insitu__cards,
@@ -708,7 +730,35 @@ ol {
 .environment__options,
 .contact-form__grid {
   display: grid;
-  gap: var(--space-4);
+  gap: var(--space-5);
+}
+
+.home-section__heading {
+  max-width: 52rem;
+  margin-bottom: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.home-section--overview .home-section__heading {
+  max-width: 44rem;
+}
+
+.home-section--work .home-section__heading,
+.home-section--explore .home-section__heading {
+  max-width: 52rem;
+}
+
+.section-title--wide,
+.home-section__heading .section-title {
+  max-width: 18ch;
+}
+
+.positioning-band .principle-band__inner {
+  max-width: 56rem;
+}
+
+.positioning-band .principle-band__line {
+  max-width: 14ch;
+  margin-inline: auto;
 }
 
 .insitu__card,
@@ -773,7 +823,6 @@ ol {
 }
 
 .environment__outcome p {
-  font-family: var(--font-serif);
   font-size: clamp(1.55rem, 3.8vw, 2.3rem);
   line-height: 1.08;
 }
@@ -784,6 +833,7 @@ ol {
 
 .proof__intro {
   max-width: 58rem;
+  margin-top: var(--space-5);
 }
 
 .proof__stories {
@@ -935,6 +985,18 @@ ol {
   min-width: 0;
 }
 
+.contact-page__grid {
+  align-items: start;
+}
+
+.contact-page__form-shell {
+  min-width: 0;
+}
+
+.contact-page__form-heading {
+  margin-bottom: var(--space-5);
+}
+
 .contact-form {
   box-shadow: var(--shadow-card);
 }
@@ -949,12 +1011,14 @@ ol {
 }
 
 .form-label {
+  font-family: var(--font-heading);
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .form-input {
   width: 100%;
+  min-width: 0;
   min-height: 3.25rem;
   padding: 0.95rem 1rem;
   border: var(--border-width) solid var(--color-border);
@@ -972,9 +1036,57 @@ ol {
   resize: vertical;
 }
 
+.form-field--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .form-helper,
 .form-privacy {
   font-size: 0.95rem;
+}
+
+.form-error {
+  color: #b42318;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+
+.form-status {
+  min-height: 1.5rem;
+  margin-top: var(--space-3);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+.form-status[data-state="success"] {
+  color: var(--color-accent-text);
+}
+
+.form-status[data-state="error"] {
+  color: #b42318;
+}
+
+.contact-form__turnstile-wrap {
+  display: grid;
+  gap: var(--space-3);
+  margin-top: var(--space-5);
+}
+
+.contact-form__turnstile {
+  min-height: 4.125rem;
+}
+
+.contact-form__turnstile > div {
+  max-width: 100%;
 }
 
 .form-actions {
@@ -1020,6 +1132,22 @@ ol {
 .site-footer__philosophy {
   max-width: 30rem;
   color: var(--color-text);
+}
+
+.site-footer__copyright {
+  margin-top: var(--space-5);
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.site-footer__copyright a {
+  color: inherit;
+}
+
+.site-footer__copyright a:hover,
+.site-footer__copyright a:focus-visible {
+  color: var(--color-accent-text);
 }
 
 .site-footer__philosophy a,
@@ -1112,7 +1240,8 @@ ol {
   .environment__model,
   .contact__intro,
   .contact-form,
-  .contact-card {
+  .contact-card,
+  .contact-page__form-shell {
     grid-column: 1 / -1;
   }
 
@@ -1169,6 +1298,14 @@ ol {
 
   .contact-form,
   .contact-card {
+    grid-column: span 8;
+  }
+
+  .contact-page__grid .contact-card {
+    grid-column: span 4;
+  }
+
+  .contact-page__grid .contact-page__form-shell {
     grid-column: span 8;
   }
 
@@ -1323,7 +1460,6 @@ ol {
 }
 
 .boundary-card h2 {
-  font-family: var(--font-serif);
   font-size: clamp(1.75rem, 4vw, 2.5rem);
   line-height: 1.08;
   letter-spacing: -0.03em;

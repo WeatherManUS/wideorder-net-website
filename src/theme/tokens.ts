@@ -3,7 +3,8 @@ type TokenGroup = Record<string, string>;
 export const designTokens = {
   shared: {
     "font-sans": "var(--font-inter), Arial, Helvetica, sans-serif",
-    "font-serif": "var(--font-fraunces), Georgia, serif",
+    "font-heading": 'var(--font-manrope), "Arial Narrow", Arial, Helvetica, sans-serif',
+    "font-serif": 'var(--font-manrope), "Arial Narrow", Arial, Helvetica, sans-serif',
     "space-1": "0.25rem",
     "space-2": "0.5rem",
     "space-3": "0.75rem",

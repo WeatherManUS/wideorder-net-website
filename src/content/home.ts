@@ -393,9 +393,21 @@ export const siteContent = {
     pageLabel: "Contact",
     title: "Start with the problem.",
     paragraphs: [
-      "Send a short email describing what is taking too long, what keeps going wrong, what needs implementing, or what feels harder than it should.",
+      "Send a short description of what is taking too long, what keeps going wrong, what needs implementing, or what feels harder than it should.",
       "A few lines is enough to begin the conversation.",
     ],
+    fields: [
+      { label: "Name", name: "name", autoComplete: "name", required: true },
+      { label: "Company", name: "company", autoComplete: "organization" },
+      { label: "Email", name: "email", type: "email", autoComplete: "email", required: true },
+      { label: "Phone", name: "phone", type: "tel", autoComplete: "tel" },
+    ] as const satisfies readonly ContactField[],
+    formTitle: "Send a short description of the challenge.",
+    messageLabel: "Business challenge",
+    helperText: "A few clear sentences are enough to explain what is happening and where the friction is.",
+    exampleText: "What is taking too long, what keeps going wrong, or what should already be working?",
+    privacyText: "Your submission is checked for abuse before delivery. We use it only to respond to your enquiry.",
+    submitLabel: "Send enquiry",
     emailLabel: "Email",
     buttonLabel: "Compose an email",
     prompts: [

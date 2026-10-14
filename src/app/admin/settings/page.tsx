@@ -39,18 +39,33 @@ const errorMessages: Record<string, string> = {
 export default async function AdminSettingsPage({ searchParams }: SettingsPageProps) {
   noStore();
 
-  const admin = await getAuthenticatedAdminFromCookies();
+  let admin;
+
+  try {
+    admin = await getAuthenticatedAdminFromCookies();
+  } catch {
+    redirect("/admin/login?error=service_unavailable");
+  }
 
   if (!admin) {
     redirect("/admin/login?error=unauthenticated");
   }
 
-  const [views, auditEntries, persistence, credentialSummary] = await Promise.all([
-    getAdminSettingViews(),
-    getRecentAuditViews(),
-    getPersistenceSummary(),
-    getAdminCredentialSummary(),
-  ]);
+  let views;
+  let auditEntries;
+  let persistence;
+  let credentialSummary;
+
+  try {
+    [views, auditEntries, persistence, credentialSummary] = await Promise.all([
+      getAdminSettingViews(),
+      getRecentAuditViews(),
+      getPersistenceSummary(),
+      getAdminCredentialSummary(),
+    ]);
+  } catch {
+    redirect("/admin/login?error=service_unavailable");
+  }
 
   const publicViews = views.filter((view) => view.category === "public");
   const secretViews = views.filter((view) => view.category === "secret");

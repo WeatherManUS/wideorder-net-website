@@ -28,6 +28,7 @@ const errorMessages: Record<string, string> = {
   invalid_credentials: "The administrator password was not accepted.",
   throttled: "Too many invalid login attempts. Please wait and try again.",
   bootstrap_missing: "Bootstrap admin credentials are not configured yet.",
+  service_unavailable: "Administrator access is unavailable until the managed configuration store is connected.",
   invalid_request: "A valid password is required.",
   csrf: "This login request was rejected. Reload and try again.",
   unauthenticated: "Please sign in to continue.",
@@ -36,7 +37,14 @@ const errorMessages: Record<string, string> = {
 export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   noStore();
 
-  const admin = await getAuthenticatedAdminFromCookies();
+  let admin = null;
+  let serviceUnavailable = false;
+
+  try {
+    admin = await getAuthenticatedAdminFromCookies();
+  } catch {
+    serviceUnavailable = true;
+  }
 
   if (admin) {
     redirect("/admin/settings");
@@ -45,10 +53,23 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   const params = (await searchParams) ?? {};
   const errorKey = typeof params.error === "string" ? params.error : "";
   const statusKey = typeof params.status === "string" ? params.status : "";
-  const errorMessage = errorMessages[errorKey] ?? "";
+  const credentialSummary = serviceUnavailable
+    ? {
+        bootstrapConfigured: false,
+        hasManagedPassword: false,
+        effectiveSource: "missing",
+      }
+    : await getAdminCredentialSummary().catch(() => {
+        serviceUnavailable = true;
+        return {
+          bootstrapConfigured: false,
+          hasManagedPassword: false,
+          effectiveSource: "missing",
+        } as const;
+      });
+  const errorMessage = errorMessages[errorKey] ?? (serviceUnavailable ? errorMessages.service_unavailable : "");
   const statusMessage = statusMessages[statusKey] ?? "";
-  const credentialSummary = await getAdminCredentialSummary();
-  const loginReady = credentialSummary.hasManagedPassword || credentialSummary.bootstrapConfigured;
+  const loginReady = !serviceUnavailable && (credentialSummary.hasManagedPassword || credentialSummary.bootstrapConfigured);
 
   return (
     <main className="admin-shell">

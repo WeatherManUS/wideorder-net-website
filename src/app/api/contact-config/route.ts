@@ -6,11 +6,22 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const config = await getRuntimeContactConfig();
+  try {
+    const config = await getRuntimeContactConfig();
 
-  return NextResponse.json(config, {
-    headers: {
-      "Cache-Control": "no-store, max-age=0, must-revalidate",
-    },
-  });
+    return NextResponse.json(config, {
+      headers: {
+        "Cache-Control": "no-store, max-age=0, must-revalidate",
+      },
+    });
+  } catch {
+    return NextResponse.json(
+      { turnstileSiteKey: "" },
+      {
+        headers: {
+          "Cache-Control": "no-store, max-age=0, must-revalidate",
+        },
+      },
+    );
+  }
 }

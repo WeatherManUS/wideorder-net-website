@@ -29,6 +29,7 @@ type ContactApiErrorCode =
   | "security_verification_failed"
   | "service_unavailable"
   | "delivery_failed"
+  | "rate_limited"
   | "method_not_allowed";
 
 type ContactApiResponse =
@@ -37,6 +38,7 @@ type ContactApiResponse =
       ok: false;
       error: ContactApiErrorCode;
       fieldErrors?: ContactFieldErrors;
+      message?: string;
     };
 
 type ContactConfigResponse = {
@@ -68,6 +70,8 @@ declare global {
 
 const STORAGE_KEY = "wideorder-theme";
 const MEDIA_QUERY = "(prefers-color-scheme: dark)";
+const CONTACT_CONFIGURATION_MESSAGE = "The contact form is not fully configured right now. Please try again later.";
+const CONTACT_RATE_LIMIT_MESSAGE = "Too many attempts were received from this connection. Please wait a little and try again.";
 
 const getResolvedTheme = (): ThemeMode => {
   const explicitTheme = document.documentElement.getAttribute("data-theme");
@@ -276,8 +280,20 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
         return;
       }
 
+      if (result.error === "service_unavailable") {
+        setSubmissionState("error");
+        setStatusMessage(result.message ?? CONTACT_CONFIGURATION_MESSAGE);
+        return;
+      }
+
+      if (result.error === "rate_limited") {
+        setSubmissionState("error");
+        setStatusMessage(result.message ?? CONTACT_RATE_LIMIT_MESSAGE);
+        return;
+      }
+
       setSubmissionState("error");
-      setStatusMessage(CONTACT_ERROR_MESSAGE);
+      setStatusMessage(result.message ?? CONTACT_ERROR_MESSAGE);
     } catch {
       setSubmissionState("error");
       setStatusMessage(CONTACT_ERROR_MESSAGE);

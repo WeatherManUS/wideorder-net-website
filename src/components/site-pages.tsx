@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getContactMailtoHref, siteConfig } from "@/config/site";
 import { siteContent, type DeliveryMode, type EngagementModel, type PrincipleCard, type ProcessStage, type ProofStory } from "@/content/home";
 
+import { ContactForm } from "@/components/contact-form";
 import { ProofResultAnimator } from "@/components/proof-result-animator";
 import { PageShell, SectionLabel } from "@/components/site-shell";
 
@@ -196,10 +197,12 @@ export function HomePage() {
   return (
     <PageShell>
       <HomeHeroSection />
-      <section className="site-section">
+      <section className="site-section home-section home-section--overview">
         <div className="container container--wide">
-          <SectionLabel>What WideOrder Does</SectionLabel>
-          <h2 className="section-title">{siteContent.home.overview.statement}</h2>
+          <div className="home-section__heading">
+            <SectionLabel>What WideOrder Does</SectionLabel>
+            <h2 className="section-title section-title--wide">{siteContent.home.overview.statement}</h2>
+          </div>
           <div className="engagement__models engagement__models--triple">
             {siteContent.home.overview.cards.map((card) => (
               <article key={card.title} className="engagement__model">
@@ -210,7 +213,7 @@ export function HomePage() {
           </div>
         </div>
       </section>
-      <section className="site-section site-section--contrast principle-band">
+      <section className="site-section site-section--contrast principle-band positioning-band">
         <div className="container container--wide principle-band__inner">
           <SectionLabel>Positioning</SectionLabel>
           <h2 className="principle-band__line">{siteContent.home.positioning.lineOne}</h2>
@@ -218,11 +221,13 @@ export function HomePage() {
           <p className="principle-band__body">{siteContent.home.positioning.body}</p>
         </div>
       </section>
-      <section className="site-section site-section--surface">
+      <section className="site-section site-section--surface home-section home-section--work">
         <div className="container container--wide">
-          <SectionLabel>Our Work</SectionLabel>
-          <h2 className="section-title">{siteContent.home.workPreview.statement}</h2>
-          <p className="section-copy proof__intro">{siteContent.home.workPreview.introduction}</p>
+          <div className="home-section__heading">
+            <SectionLabel>Our Work</SectionLabel>
+            <h2 className="section-title section-title--wide">{siteContent.home.workPreview.statement}</h2>
+            <p className="section-copy proof__intro">{siteContent.home.workPreview.introduction}</p>
+          </div>
           <div className="engagement__models">
             {siteContent.ourWork.stories.map((story) => (
               <ProofStorySummaryCard key={story.id} story={story} />
@@ -230,10 +235,12 @@ export function HomePage() {
           </div>
         </div>
       </section>
-      <section className="site-section">
+      <section className="site-section home-section home-section--explore">
         <div className="container container--wide">
-          <SectionLabel>Explore</SectionLabel>
-          <h2 className="section-title">Move from a short introduction to the detail you need.</h2>
+          <div className="home-section__heading">
+            <SectionLabel>Explore</SectionLabel>
+            <h2 className="section-title section-title--wide">Move from a short introduction to the detail you need.</h2>
+          </div>
           <div className="engagement__models">
             {siteContent.home.detailLinks.map((item) => (
               <Link key={item.href} className="engagement__model teaser-card interactive-card" href={item.href}>
@@ -499,12 +506,24 @@ export function OurApproachPage() {
 export function ContactPage() {
   return (
     <PageShell>
-      <PageHero
-        eyebrow={siteContent.contact.pageLabel}
-        title={siteContent.contact.title}
-        paragraphs={siteContent.contact.paragraphs}
-        support={<ContactCard subject="WideOrder contact enquiry" buttonLabel={siteContent.contact.buttonLabel} />}
-      />
+      <PageHero eyebrow={siteContent.contact.pageLabel} title={siteContent.contact.title} paragraphs={siteContent.contact.paragraphs} />
+      <section className="site-section site-section--surface">
+        <div className="container container--wide contact__grid contact-page__grid">
+          <ContactCard subject="WideOrder contact enquiry" buttonLabel={siteContent.contact.buttonLabel} />
+          <div className="contact-page__form-shell">
+            <SectionLabel>Website Form</SectionLabel>
+            <h2 className="section-title section-title--wide contact-page__form-heading">{siteContent.contact.formTitle}</h2>
+            <ContactForm
+              fields={siteContent.contact.fields}
+              messageLabel={siteContent.contact.messageLabel}
+              helperText={siteContent.contact.helperText}
+              exampleText={siteContent.contact.exampleText}
+              privacyText={siteContent.contact.privacyText}
+              submitLabel={siteContent.contact.submitLabel}
+            />
+          </div>
+        </div>
+      </section>
     </PageShell>
   );
 }

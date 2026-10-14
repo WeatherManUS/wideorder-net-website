@@ -156,7 +156,7 @@ function ContactCard({
 
 function ProofStorySummaryCard({ story }: { story: ProofStory }) {
   return (
-    <Link className="engagement__model summary-card" href={`/our-work#${story.id}`}>
+    <Link className="engagement__model summary-card interactive-card" href={`/our-work#${story.id}`}>
       <p className="proof-story__kicker">{story.title}</p>
       <p className="summary-card__result">{story.result}</p>
       <p>{story.summary}</p>
@@ -236,13 +236,13 @@ export function HomePage() {
           <h2 className="section-title">Move from a short introduction to the detail you need.</h2>
           <div className="engagement__models">
             {siteContent.home.detailLinks.map((item) => (
-              <article key={item.href} className="engagement__model">
+              <Link key={item.href} className="engagement__model teaser-card interactive-card" href={item.href}>
                 <h3>{item.label}</h3>
                 <p>{item.body}</p>
-                <Link className="teaser-link" href={item.href}>
+                <span className="teaser-link">
                   Go to {item.label}
-                </Link>
-              </article>
+                </span>
+              </Link>
             ))}
           </div>
         </div>

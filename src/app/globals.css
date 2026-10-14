@@ -930,6 +930,11 @@ ol {
   max-width: 14ch;
 }
 
+.contact-card {
+  width: 100%;
+  min-width: 0;
+}
+
 .contact-form {
   box-shadow: var(--shadow-card);
 }
@@ -1106,7 +1111,8 @@ ol {
   .environment__intro,
   .environment__model,
   .contact__intro,
-  .contact-form {
+  .contact-form,
+  .contact-card {
     grid-column: 1 / -1;
   }
 
@@ -1161,7 +1167,8 @@ ol {
     grid-column: span 4;
   }
 
-  .contact-form {
+  .contact-form,
+  .contact-card {
     grid-column: span 8;
   }
 
@@ -1331,10 +1338,14 @@ ol {
   font-size: 1.25rem;
   font-weight: 600;
   color: var(--color-accent-text);
-  word-break: break-word;
+  min-width: 0;
+  word-break: normal;
+  overflow-wrap: anywhere;
 }
 
 .contact-card__email a {
+  display: inline-block;
+  max-width: 100%;
   text-decoration: underline;
   text-underline-offset: 0.18em;
 }
@@ -1348,6 +1359,10 @@ ol {
   flex-wrap: wrap;
   gap: var(--space-4);
   margin-top: var(--space-6);
+}
+
+.contact-card__actions .button {
+  min-width: min(100%, 14rem);
 }
 
 .contact-card__questions {
@@ -1575,9 +1590,36 @@ ol {
   min-width: 0;
 }
 
-.summary-card {
+.summary-card,
+.teaser-card {
   display: grid;
   gap: var(--space-3);
+}
+
+.interactive-card {
+  position: relative;
+  cursor: pointer;
+  transition:
+    transform var(--transition-base),
+    border-color var(--transition-fast),
+    box-shadow var(--transition-base),
+    background-color var(--transition-fast);
+}
+
+.interactive-card:hover,
+.interactive-card:focus-visible {
+  transform: translateY(-3px);
+  border-color: color-mix(in srgb, var(--color-brass) 78%, var(--color-border));
+  box-shadow: 0 18px 34px rgba(23, 36, 45, 0.1);
+}
+
+.interactive-card:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--color-brass) 60%, var(--color-accent));
+  outline-offset: 4px;
+}
+
+.interactive-card .teaser-link {
+  width: fit-content;
 }
 
 .summary-card__result {
@@ -1602,8 +1644,9 @@ ol {
   transition: transform var(--transition-fast);
 }
 
-.engagement__model:hover .teaser-link::after,
-.engagement__model:focus-within .teaser-link::after {
+.interactive-card:hover .teaser-link::after,
+.interactive-card:focus-visible .teaser-link::after,
+.interactive-card:focus-within .teaser-link::after {
   transform: translateX(0.2rem);
 }
 

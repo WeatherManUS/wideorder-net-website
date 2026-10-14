@@ -7,7 +7,7 @@
 - Source inputs are the approved WideOrder v2 redesign brief, the repository guidance, and the previously approved detailed WideOrder methodology and case-study content already in the repo history.
 - This revision intentionally shortens the homepage while preserving the detailed material across supporting pages.
 - Do not use the term `10x` in WideOrder branding, website copy, documentation, or marketing.
-- The approved public contact path remains a direct email CTA, not the unfinished website form flow.
+- The approved public contact path remains a direct email CTA rather than the unfinished website form flow.
 - Keep indexing disabled unless `SITE_INDEXABLE=true` is explicitly set for an approved launch.
 
 ## Brand hierarchy
@@ -35,7 +35,7 @@
   - `Our Work`
   - `Our Approach`
   - `Contact`
-- Primary CTA: `Email WideOrder`
+- Primary CTA: `Let's talk`
 
 ## Homepage
 
@@ -72,7 +72,7 @@
 
 ### Work preview
 
-- Statement: `Documented examples, not generic claims.`
+- Statement: `Examples of real business problems solved.`
 - Purpose: link visitors into the detailed case-study page and supporting pages without recreating a long single-page layout.
 
 ## What We Do
@@ -162,7 +162,7 @@
 - Supporting copy: `Send a short email describing what is taking too long, what keeps going wrong, what needs implementing, or what feels harder than it should.`
 - Supporting copy: `A few lines is enough to begin the conversation.`
 - Email label: `Email`
-- CTA: `Email WideOrder`
+- CTA: `Compose an email`
 - Prompt cues:
   - `What is happening now?`
   - `What keeps consuming time, attention or capacity?`

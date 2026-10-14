@@ -194,12 +194,16 @@ ol {
   align-items: center;
   justify-content: center;
   min-height: 3rem;
+  max-width: 100%;
   padding: 0.875rem 1.35rem;
   border: var(--border-width) solid transparent;
   border-radius: var(--radius-md);
   font-size: 0.975rem;
   font-weight: 600;
-  line-height: 1;
+  line-height: 1.2;
+  text-align: center;
+  white-space: normal;
+  text-wrap: balance;
   transition:
     background-color var(--transition-fast),
     color var(--transition-fast),
@@ -211,6 +215,10 @@ ol {
 .button:hover {
   transform: translateY(-1px);
   box-shadow: 0 10px 24px rgba(23, 36, 45, 0.08);
+}
+
+.button:focus-visible {
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-accent) 18%, transparent);
 }
 
 .button--primary {
@@ -438,6 +446,13 @@ ol {
 .mobile-navigation__cta {
   width: 100%;
   margin-top: var(--space-4);
+}
+
+.cta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  align-items: center;
 }
 
 .hero {
@@ -1002,6 +1017,19 @@ ol {
   color: var(--color-text);
 }
 
+.site-footer__philosophy a,
+.contact-card__email a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+
+.site-footer__philosophy a:hover,
+.site-footer__philosophy a:focus-visible,
+.contact-card__email a:hover,
+.contact-card__email a:focus-visible {
+  color: var(--color-accent-text);
+}
+
 .site-footer__nav ul {
   display: flex;
   flex-wrap: wrap;
@@ -1230,6 +1258,10 @@ ol {
   .proof-story__metric {
     min-height: auto;
   }
+
+  .cta-row .button {
+    width: 100%;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -1305,6 +1337,10 @@ ol {
 .contact-card__email a {
   text-decoration: underline;
   text-underline-offset: 0.18em;
+}
+
+.contact-card__copy {
+  margin-top: var(--space-4);
 }
 
 .contact-card__actions {

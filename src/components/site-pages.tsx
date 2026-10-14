@@ -41,7 +41,7 @@ function PageHero({
 }
 
 function HomeHeroSection() {
-  const emailHref = getContactMailtoHref("WideOrder enquiry");
+  const emailHref = getContactMailtoHref("WideOrder challenge enquiry");
 
   return (
     <section className="hero anchor-section">
@@ -56,7 +56,7 @@ function HomeHeroSection() {
           <p className="hero__copy">{siteContent.home.hero.secondaryCopy}</p>
           <div className="hero__actions cta-row">
             <a className="button button--primary" href={emailHref}>
-              Email WideOrder
+              {siteContent.home.hero.primaryCtaLabel}
             </a>
             <Link className="button button--secondary" href={siteContent.home.hero.secondaryCta.href}>
               {siteContent.home.hero.secondaryCta.label}
@@ -124,7 +124,13 @@ function PrincipleCardGrid({ principles }: { principles: readonly PrincipleCard[
   );
 }
 
-function ContactCard({ subject }: { subject: string }) {
+function ContactCard({
+  subject,
+  buttonLabel = "Let's talk",
+}: {
+  subject: string;
+  buttonLabel?: string;
+}) {
   const emailHref = getContactMailtoHref(subject);
 
   return (
@@ -133,9 +139,10 @@ function ContactCard({ subject }: { subject: string }) {
       <p className="contact-card__email">
         <a href={emailHref}>{siteConfig.contact.publicMailbox}</a>
       </p>
+      <p className="contact-card__copy">Use the address directly or start a draft with the button below.</p>
       <div className="contact-card__actions">
         <a className="button button--primary" href={emailHref}>
-          {siteContent.contact.buttonLabel}
+          {buttonLabel}
         </a>
       </div>
       <ul className="contact-card__questions">
@@ -143,7 +150,6 @@ function ContactCard({ subject }: { subject: string }) {
           <li key={prompt}>{prompt}</li>
         ))}
       </ul>
-      <p className="form-privacy">{siteContent.contact.note}</p>
     </div>
   );
 }
@@ -266,11 +272,11 @@ export function WhatWeDoPage() {
         eyebrow={siteContent.whatWeDo.pageLabel}
         title={siteContent.whatWeDo.title}
         paragraphs={siteContent.whatWeDo.paragraphs}
-        actions={<a className="button button--primary" href={getContactMailtoHref("WideOrder enquiry")}>Email WideOrder</a>}
+        actions={<a className="button button--primary" href={getContactMailtoHref("WideOrder enquiry")}>{"Let's talk"}</a>}
         support={
           <div className="engagement__support">
             <p className="engagement__support-lead">What makes WideOrder different</p>
-            <p>{siteContent.whatWeDo.deliveryStatement}</p>
+            <p>WideOrder stays focused on the problem, then helps get the right work done.</p>
           </div>
         }
       />
@@ -379,7 +385,7 @@ export function OurWorkPage() {
         eyebrow={siteContent.ourWork.pageLabel}
         title={siteContent.ourWork.title}
         paragraphs={siteContent.ourWork.paragraphs}
-        actions={<a className="button button--primary" href={getContactMailtoHref("WideOrder case study enquiry")}>Email WideOrder</a>}
+        actions={<a className="button button--primary" href={getContactMailtoHref("WideOrder case study enquiry")}>{"Let's talk"}</a>}
       />
       <section className="site-section">
         <div className="container container--wide">
@@ -414,12 +420,6 @@ export function OurApproachPage() {
         eyebrow={siteContent.ourApproach.pageLabel}
         title={siteContent.ourApproach.title}
         paragraphs={siteContent.ourApproach.paragraphs}
-        support={
-          <div className="engagement__support">
-            <p className="engagement__support-lead">Brand structure</p>
-            <p>WideOrder is the primary company-facing brand. WideOrder Resolve remains the current problem-solving service offering. inSITU remains the established methodology.</p>
-          </div>
-        }
       />
       <section className="site-section site-section--contrast principle-band">
         <div className="container container--wide principle-band__inner">
@@ -499,23 +499,12 @@ export function OurApproachPage() {
 export function ContactPage() {
   return (
     <PageShell>
-      <PageHero eyebrow={siteContent.contact.pageLabel} title={siteContent.contact.title} paragraphs={siteContent.contact.paragraphs} support={<ContactCard subject="WideOrder enquiry" />} />
-      <section className="site-section">
-        <div className="container container--wide challenge__layout">
-          <div>
-            <SectionLabel>What To Send</SectionLabel>
-            <h2 className="section-title">A short description is enough.</h2>
-            <p className="section-copy">If the challenge is real, the first useful step is simply to describe it clearly enough to start a conversation.</p>
-          </div>
-          <ul className="challenge__list">
-            {siteContent.contact.prompts.map((prompt) => (
-              <li key={prompt} className="challenge__item">
-                {prompt}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <PageHero
+        eyebrow={siteContent.contact.pageLabel}
+        title={siteContent.contact.title}
+        paragraphs={siteContent.contact.paragraphs}
+        support={<ContactCard subject="WideOrder contact enquiry" buttonLabel={siteContent.contact.buttonLabel} />}
+      />
     </PageShell>
   );
 }

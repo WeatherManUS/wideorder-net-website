@@ -52,7 +52,7 @@ export const siteContent = {
       { label: "Contact", href: "/contact" },
     ] as const satisfies readonly NavItem[],
     primaryCta: {
-      label: "Email WideOrder",
+      label: "Let's talk",
       href: "/contact",
     },
     footer: {
@@ -75,7 +75,8 @@ export const siteContent = {
       supportingCopy:
         "Clients engage WideOrder when something needs addressing, improving, implementing, coordinating or managing.",
       secondaryCopy:
-        "The work may be clearly defined, or it may only be clear that something is not working as it should. WideOrder investigates the situation, determines a sensible course of action, and helps ensure the work gets done.",
+        "Sometimes the problem is clear. Sometimes it is only clear that something is not working as it should. WideOrder investigates, works out a sensible path, and helps get the right work done.",
+      primaryCtaLabel: "Tell us about your challenge",
       examples: [
         "A report that takes hours",
         "A stalled implementation",
@@ -114,9 +115,9 @@ export const siteContent = {
       body: "WideOrder is not defined by consulting, software, automation, outsourcing or staffing alone. Those may form part of a solution, but none individually defines the business.",
     },
     workPreview: {
-      statement: "Documented examples, not generic claims.",
+      statement: "Examples of real business problems solved.",
       introduction:
-        "WideOrder's experience spans very different operational problems, but the underlying approach stays consistent: understand the situation, identify what will genuinely help, and deliver the better outcome.",
+        "WideOrder works across very different operational challenges, but the underlying approach stays the same: understand the situation, identify what will genuinely help, and deliver the better outcome.",
     },
     detailLinks: [
       {
@@ -132,7 +133,7 @@ export const siteContent = {
       {
         label: "Our Work",
         href: "/our-work",
-        body: "Review four existing case studies with their real challenges, interventions and supported results.",
+        body: "See four case studies covering the challenge, the better way, and the outcome.",
       },
       {
         label: "Our Approach",
@@ -157,7 +158,7 @@ export const siteContent = {
       "A recurring burden the business needs handled properly on an ongoing basis.",
     ],
     deliveryStatement:
-      "Depending on the engagement, WideOrder can investigate and diagnose a problem, develop practical options, execute work directly, coordinate external specialists, manage delivery through completion, or provide an ongoing service.",
+      "Depending on the engagement, WideOrder can investigate the problem, develop practical options, execute work directly, coordinate specialists, manage delivery, or provide an ongoing service.",
     deliveryModes: [
       {
         title: "Direct execution",
@@ -272,11 +273,11 @@ export const siteContent = {
     title: "Real-world problem-solving across very different operational challenges.",
     paragraphs: [
       "These are not products. They are examples of a consistent way of thinking applied to very different business problems.",
-      "The figures below are the supported results already documented in the existing WideOrder material.",
+      "Each case study shows the challenge, the better way, and the outcome.",
     ],
-    statement: "The proof is in the outcome.",
+    statement: "Start with the outcome, then explore the detail.",
     introduction:
-      "Four very different operational challenges. One consistent way of thinking. These are not products - they are proof that the same philosophy resolves very different challenges.",
+      "Use these summaries to scan the outcomes quickly, then jump to the case study that is most relevant.",
     stories: [
       {
         id: "retail-pricing",
@@ -396,12 +397,11 @@ export const siteContent = {
       "A few lines is enough to begin the conversation.",
     ],
     emailLabel: "Email",
-    buttonLabel: "Email WideOrder",
+    buttonLabel: "Compose an email",
     prompts: [
       "What is happening now?",
       "What keeps consuming time, attention or capacity?",
       "What should be easier, more reliable, or simply done already?",
     ],
-    note: "The current contact path is a direct email CTA for reliability during the active preview phase.",
   },
 } as const;

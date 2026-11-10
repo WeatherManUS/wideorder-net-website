@@ -4,6 +4,7 @@ import { getContactMailtoHref, siteConfig } from "@/config/site";
 import { siteContent, type DeliveryMode, type EngagementModel, type PrincipleCard, type ProcessStage, type ProofStory } from "@/content/home";
 
 import { ContactForm } from "@/components/contact-form";
+import { CaseStudyComparison } from "@/components/case-study-comparison";
 import { ProofResultAnimator } from "@/components/proof-result-animator";
 import { PageShell, SectionLabel } from "@/components/site-shell";
 import { OrderMotif } from "@/components/order-motif";
@@ -52,9 +53,9 @@ function HomeHeroSection() {
         <div className="hero__content">
           <p className="hero__service-name">{siteContent.home.hero.serviceName}</p>
           <h1 id="hero-title" className="hero__title">
-            {siteContent.home.hero.brandPromise}
+            {siteContent.home.hero.headline}
           </h1>
-          <p className="hero__statement">{siteContent.home.hero.statement}</p>
+          <p className="hero__statement">{siteContent.home.hero.brandPromise} {siteContent.home.hero.statement}</p>
           <p className="hero__copy">{siteContent.home.hero.supportingCopy}</p>
           <p className="hero__copy">{siteContent.home.hero.secondaryCopy}</p>
           <div className="hero__actions cta-row">
@@ -176,6 +177,7 @@ function ProofStoryArticle({ story, reverse }: { story: ProofStory; reverse: boo
         <p className="proof-story__kicker">{story.title}</p>
         <p className="proof-story__label">The result</p>
         <ProofResultAnimator title={story.title} result={story.result} />
+        <CaseStudyComparison story={story} />
       </div>
       <div className="proof-story__body">
         <h3>{story.title}</h3>
@@ -233,7 +235,14 @@ export function HomePage() {
             <p className="section-copy proof__intro">{siteContent.home.workPreview.introduction}</p>
           </div>
           <div className="engagement__models results-index">
-            {siteContent.ourWork.stories.map((story) => (
+            <article className="engagement__model flagship-story">
+              <SectionLabel>Featured case study / Retail Pricing</SectionLabel>
+              <h3>From a full-time pricing burden to approximately 20 minutes.</h3>
+              <p>{siteContent.ourWork.stories[0].betterWay}</p>
+              <CaseStudyComparison story={siteContent.ourWork.stories[0]} />
+              <Link className="teaser-link" href="/our-work/retail-pricing">Read the Retail Pricing case study</Link>
+            </article>
+            {siteContent.ourWork.stories.slice(1).map((story) => (
               <ProofStorySummaryCard key={story.id} story={story} />
             ))}
           </div>

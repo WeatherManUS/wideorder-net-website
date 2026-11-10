@@ -7,7 +7,7 @@ const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || "playwright");
 const sharp = require("sharp");
 const base = process.env.QA_BASE_URL || "http://localhost:3102";
-const output = new URL("../docs/qa/marketing/", import.meta.url);
+const output = new URL(process.env.QA_OUTPUT_DIRECTORY || "../docs/qa/marketing/", import.meta.url);
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch();
 const report = { metadata: [], layouts: [], interactions: [], requests: {}, pageErrors: [] };
@@ -72,6 +72,15 @@ try {
   let attribution = await page.evaluate(() => JSON.parse(sessionStorage.getItem("wideorder-attribution-v1")));
   assert.equal(attribution.first.utm_source, "linkedin");
   report.interactions.push("No optional requests/storage before consent or after rejection; analytics-only loads only GA4, with one manual initial page view");
+
+  // The comparison emits only the allowlisted case identifier and interaction.
+  if (await page.locator('.flagship-story').count()) {
+    await page.locator('.flagship-story').getByRole('button', { name: 'After', exact: true }).click();
+    const comparisons = (await commands(page)).filter(command => command[0] === 'event' && command[1] === 'case_study_interaction');
+    assert.equal(comparisons.length, 1);
+    assert.equal(comparisons[0][2].case_study_id, 'retail-pricing');
+    assert.equal(comparisons[0][2].interaction_type, 'comparison_toggle');
+  }
 
   await page.goto(`${base}/contact?utm_source=instagram&utm_medium=organic_social&utm_campaign=process_improvement&utm_content=reporting_v2`);
   await page.waitForFunction(() => document.querySelector("#wideorder-google"));

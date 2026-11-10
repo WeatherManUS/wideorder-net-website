@@ -101,7 +101,7 @@ try {
   assert.equal(await page.evaluate(() => document.activeElement.tagName), "A");
   await trigger.click();
   await page.screenshot({ path: fileURLToPath(new URL("desktop-menu.png", output)) });
-  await page.getByRole("heading", { name: "There is a better way.", exact: true }).click();
+  await page.locator("h1").click();
   assert.equal(await page.locator(".appearance-menu").count(), 0);
   await context.close();
 

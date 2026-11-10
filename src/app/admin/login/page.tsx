@@ -1,3 +1,4 @@
+import { SiteFooter } from "@/components/site-shell";
 ﻿import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import { redirect } from "next/navigation";
@@ -72,6 +73,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
   const loginReady = !serviceUnavailable && (credentialSummary.hasManagedPassword || credentialSummary.bootstrapConfigured);
 
   return (
+    <>
     <main className="admin-shell">
       <div className="admin-card admin-card--narrow">
         <p className="admin-eyebrow">WideOrder internal administration</p>
@@ -108,5 +110,7 @@ export default async function AdminLoginPage({ searchParams }: LoginPageProps) {
         </form>
       </div>
     </main>
+    <SiteFooter utility />
+    </>
   );
 }

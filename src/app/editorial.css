@@ -750,3 +750,12 @@
     transform: none;
   }
 }
+
+/* Keep the featured outcome within the established card and palette system. */
+.hero__title { max-width: 15ch; font-size: clamp(2.75rem, 5.5vw, 5rem); line-height: 1.04; }
+.flagship-story { grid-column: 1 / -1; }
+.flagship-story h3 { max-width: 30ch; font-size: clamp(1.5rem, 3vw, 2.5rem); line-height: 1.15; }
+.case-comparison { margin-block: 1.5rem; font-size: 1rem; line-height: 1.65; }
+.case-comparison .cta-row { margin-block: 0 1rem; }
+.case-comparison [aria-pressed="true"] { background: var(--color-text); color: var(--color-background); }
+.case-comparison .button::after { content: none; }

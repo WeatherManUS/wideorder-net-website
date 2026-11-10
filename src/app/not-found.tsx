@@ -1,9 +1,11 @@
+import { SiteFooter } from "@/components/site-shell";
 ﻿import Link from "next/link";
 
 import { BrandMark } from "@/components/brand-mark";
 
 export default function NotFound() {
   return (
+    <>
     <main className="not-found">
       <div className="container container--narrow">
         <div className="not-found__card">
@@ -19,5 +21,7 @@ export default function NotFound() {
         </div>
       </div>
     </main>
+    <SiteFooter utility />
+    </>
   );
 }

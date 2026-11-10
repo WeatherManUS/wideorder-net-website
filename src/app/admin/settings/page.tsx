@@ -1,3 +1,4 @@
+import { SiteFooter } from "@/components/site-shell";
 ﻿import type { Metadata } from "next";
 import { unstable_noStore as noStore } from "next/cache";
 import { redirect } from "next/navigation";
@@ -80,6 +81,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
     : "Set the persistent administrator password now so routine admin access no longer depends on the bootstrap environment hash.";
 
   return (
+    <>
     <main className="admin-shell">
       <div className="admin-card">
         <div className="admin-header-row">
@@ -229,5 +231,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
         </section>
       </div>
     </main>
+    <SiteFooter utility />
+    </>
   );
 }

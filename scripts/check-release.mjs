@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { htmlReleaseIdentity, verifyHtmlFooter } from "../src/lib/release/publication.ts";
 import { utcTimestamp } from "../src/lib/release/metadata.ts";
 import { versionParts } from "../src/lib/release/ledger.ts";
+import { releaseRoutes } from "./release-routes.mjs";
 
 const origin = new URL(process.argv[2] || "https://wideorder.net");
 if (origin.username || origin.password || origin.search || origin.hash || origin.pathname !== "/" || !(origin.protocol === "https:" || (origin.protocol === "http:" && ["localhost", "127.0.0.1"].includes(origin.hostname)))) throw new Error("Supply an HTTPS origin or a localhost test origin.");
@@ -27,6 +28,21 @@ assert.equal(page.status, 200);
 const html = await page.text();
 const tags = htmlReleaseIdentity(html);
 const footerVerified = verifyHtmlFooter(html, release);
+for (const path of releaseRoutes) {
+  for (const crawler of [false, true]) {
+    const response = await fetch(new URL(path, origin), { ...options, signal: AbortSignal.timeout(15000), headers: { ...options.headers, ...(crawler ? { 'User-Agent': 'Googlebot' } : {}) } });
+    if (crawler && response.status === 403) {
+      console.log(`Crawler retrieval blocked (HTTP 403): ${path}; no release HTML available for this user agent.`);
+      continue;
+    }
+    assert.equal(response.status, 200, path);
+    for (const header of ['cache-control', 'cdn-cache-control', 'surrogate-control']) assert.match(response.headers.get(header) || '', /no-store/, `${path}: ${header}`);
+    const source = await response.text();
+    assert.deepEqual(htmlReleaseIdentity(source), tags, path);
+    assert.equal(verifyHtmlFooter(source, release), true, path);
+  }
+}
+console.log(`Verified ${releaseRoutes.length} public routes; crawler restrictions reported separately.`);
 assert.equal(tags["wideorder-version"], release.version);
 assert.equal(tags["wideorder-build"], release.buildId);
 assert.equal(tags["wideorder-release"], release.releaseId);

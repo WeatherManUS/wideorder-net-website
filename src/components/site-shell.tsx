@@ -17,7 +17,7 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="section-label">{children}</p>;
 }
 
-async function SiteFooter() {
+export async function SiteFooter({ utility = false }: { utility?: boolean } = {}) {
   await connection();
   const year = copyrightYear();
   const showVersion = footerVersionEnabled();
@@ -48,7 +48,7 @@ async function SiteFooter() {
             {" "}<span className="site-footer__rights">All rights reserved.</span>
           </p>
           <p><Link href="/privacy">Privacy information</Link></p>
-          <TrackingPreferencesButton />
+          {utility ? null : <TrackingPreferencesButton />}
           {getSocialProfiles().length ? <nav aria-label="WideOrder social profiles" className="social-links">
             {getSocialProfiles().map((profile) => <a key={profile.platform} href={profile.url} data-social-platform={profile.platform} target="_blank" rel="noopener noreferrer">{({ linkedin: "LinkedIn", youtube: "YouTube", facebook: "Facebook", instagram: "Instagram", x: "X" })[profile.platform]}</a>)}
           </nav> : null}

@@ -7,7 +7,7 @@
 - Source inputs are the approved WideOrder v2 redesign brief, the repository guidance, and the previously approved detailed WideOrder methodology and case-study content already in the repo history.
 - This revision intentionally shortens the homepage while preserving the detailed material across supporting pages.
 - Do not use the term `10x` in WideOrder branding, website copy, documentation, or marketing.
-- The approved public contact path remains a direct email CTA rather than the unfinished website form flow.
+- Direct email remains the primary CTA. The deployed `/contact` page also offers an abuse-checked enquiry form; delivery readiness must be verified independently.
 - Keep indexing disabled unless `SITE_INDEXABLE=true` is explicitly set for an approved launch.
 
 ## Brand hierarchy
@@ -25,7 +25,7 @@
 - `/how-we-work` - five-stage process, paid Discovery model, and engagement structures
 - `/our-work` - preserved case studies with supported figures and detailed writeups
 - `/our-approach` - inSITU, existing-environment assessment, and value philosophy
-- `/contact` - direct email CTA and conversation prompts
+- `/contact` - direct email CTA and enquiry form
 - `/our-work/[slug]` - individually shareable case studies using the existing approved titles, summaries, narratives, and result figures; existing `/our-work#id` anchors remain available.
 - `/privacy` - operational privacy information and tracking choices. Explain essential contact/security services, optional consent-gated analytics/advertising, 180-day local consent storage, 30-minute session attribution, browser privacy signals, and privacy requests to `info@wideorder.net`. Do not claim qualified leads from clicks, send form content to analytics, or claim legal certification.
 - Marketing system labels: `From complexity to clarity`, `Before`, `After`, `Tracking preferences`, and `Case study permalink` are presentation/navigation labels, not new service or performance claims.
@@ -50,7 +50,7 @@
 - Service name: `WideOrder Resolve`
 - Brand promise: `There is a better way.`
 - Primary statement: `WideOrder solves problems for businesses.`
-- Visual hierarchy: use the brand promise as the homepage H1 and retain the primary statement immediately below it.
+- Homepage H1: `Solve the problems holding your business back.` Keep the brand promise and primary statement immediately below it.
 - Primary hero CTA: `Discuss a Challenge` (direct email).
 - Secondary hero CTA: `Explore Our Work` (`/our-work`).
 - The decorative visual motif is labelled `Complexity → Clarity → Order`; it describes the design metaphor, not a new service or performance claim.
@@ -81,6 +81,9 @@
 - Body: `WideOrder is not defined by consulting, software, automation, outsourcing or staffing alone. Those may form part of a solution, but none individually defines the business.`
 
 ### Work preview
+
+- Feature Retail Pricing: `From a full-time pricing burden to approximately 20 minutes.` Retain the existing ERP narrative and approximate result, without implying a universal guarantee.
+- Before/After controls compare the approved challenge and outcome narratives; full narratives remain visible in each case study.
 
 - Statement: `Examples of real business problems solved.`
 - Purpose: link visitors into the detailed case-study page and supporting pages without recreating a long single-page layout.

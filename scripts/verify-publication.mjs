@@ -2,6 +2,7 @@ import { readFileSync, appendFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 import { allocate, artifactRelease, versionParts } from "../src/lib/release/ledger.ts";
 import { htmlReleaseIdentity, verifyHtmlFooter } from "../src/lib/release/publication.ts";
+import { releaseRoutes } from "./release-routes.mjs";
 import { appendEvent, loadLedger, github } from "./release-ledger.mjs";
 
 const origin = "https://wideorder.net";
@@ -42,12 +43,15 @@ async function liveRelease() {
   return live;
 }
 async function verifyPage(live) {
-  const page = await fetch(`${origin}/?verification=${Date.now()}`, options());
-  if (!page.ok || !page.headers.get("cache-control")?.includes("no-store")) throw new Error("Uncached initial HTML is not ready.");
-  const html = await page.text();
-  const tags = htmlReleaseIdentity(html);
-  if (tags["wideorder-version"] !== live.version || tags["wideorder-build"] !== live.buildId || tags["wideorder-release"] !== live.releaseId) throw new Error("Initial HTML metadata differs from the endpoint.");
-  return verifyHtmlFooter(html, live);
+  for (const route of releaseRoutes) {
+    const page = await fetch(`${origin}${route}`, options());
+    if (!page.ok || !page.headers.get("cache-control")?.includes("no-store")) throw new Error("Uncached initial HTML is not ready.");
+    const html = await page.text();
+    const tags = htmlReleaseIdentity(html);
+    if (tags["wideorder-version"] !== live.version || tags["wideorder-build"] !== live.buildId || tags["wideorder-release"] !== live.releaseId) throw new Error("Initial HTML metadata differs from the endpoint.");
+    if (!verifyHtmlFooter(html, live)) throw new Error(`Release footer is hidden on ${route}.`);
+  }
+  return true;
 }
 async function reconcileAbandonedReservation() {
   const { events } = await loadLedger();

@@ -5,6 +5,7 @@ import { siteContent } from "@/content/home";
 
 import { BrandMark } from "@/components/brand-mark";
 import { SiteHeader } from "@/components/site-header";
+import { SectionMotion } from "@/components/section-motion";
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="section-label">{children}</p>;
@@ -60,6 +61,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
       <main id="main-content" className="site-main" tabIndex={-1}>
         {children}
       </main>
+      <SectionMotion />
       <SiteFooter />
     </div>
   );

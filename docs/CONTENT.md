@@ -44,6 +44,10 @@
 - Service name: `WideOrder Resolve`
 - Brand promise: `There is a better way.`
 - Primary statement: `WideOrder solves problems for businesses.`
+- Visual hierarchy: use the brand promise as the homepage H1 and retain the primary statement immediately below it.
+- Primary hero CTA: `Discuss a Challenge` (direct email).
+- Secondary hero CTA: `Explore Our Work` (`/our-work`).
+- The decorative visual motif is labelled `Complexity → Clarity → Order`; it describes the design metaphor, not a new service or performance claim.
 - Supporting copy: `Clients engage WideOrder when something needs addressing, improving, implementing, coordinating or managing.`
 - Supporting copy: `The work may be clearly defined, or it may only be clear that something is not working as it should. WideOrder investigates the situation, determines a sensible course of action, and helps ensure the work gets done.`
 - Supporting examples:

@@ -5,6 +5,7 @@ import { isSiteIndexable, siteConfig } from "@/config/site";
 import { themeStylesheet } from "@/theme/tokens";
 
 import "./globals.css";
+import "./editorial.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -66,12 +67,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${manrope.variable}`} suppressHydrationWarning>
       <head>
         <script id="wideorder-theme-init" dangerouslySetInnerHTML={{ __html: themeInitializer }} />
         <style id="wideorder-theme" dangerouslySetInnerHTML={{ __html: themeStylesheet }} />
       </head>
-      <body className={`${inter.variable} ${manrope.variable}`}>{children}</body>
+      <body>{children}</body>
     </html>
   );
 }

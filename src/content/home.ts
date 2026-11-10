@@ -76,7 +76,7 @@ export const siteContent = {
         "Clients engage WideOrder when something needs addressing, improving, implementing, coordinating or managing.",
       secondaryCopy:
         "Sometimes the problem is clear. Sometimes it is only clear that something is not working as it should. WideOrder investigates, works out a sensible path, and helps get the right work done.",
-      primaryCtaLabel: "Tell us about your challenge",
+      primaryCtaLabel: "Discuss a Challenge",
       examples: [
         "A report that takes hours",
         "A stalled implementation",
@@ -88,8 +88,8 @@ export const siteContent = {
         "A job nobody has fixed properly",
       ],
       secondaryCta: {
-        label: "See what we do",
-        href: "/what-we-do",
+        label: "Explore Our Work",
+        href: "/our-work",
       },
     },
     overview: {

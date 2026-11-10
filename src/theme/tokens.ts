@@ -45,7 +45,7 @@ export const designTokens = {
     "color-text-muted": "#4C5B64",
     "color-muted": "#4C5B64",
     "color-accent": "#55734E",
-    "color-accent-text": "#55734E",
+    "color-accent-text": "#4B6745",
     "color-accent-strong": "#3F5A3B",
     "color-accent-secondary": "#A3BE8C",
     "color-brass": "#B17B34",
@@ -55,6 +55,7 @@ export const designTokens = {
     "color-contrast-surface": "#17242D",
     "color-contrast-text": "#F4F2ED",
     "color-field-background": "#FFFFFF",
+    "color-error": "#B42318",
     "color-ink": "#17242D"
   },
   dark: {
@@ -76,6 +77,7 @@ export const designTokens = {
     "color-contrast-surface": "#263E4B",
     "color-contrast-text": "#F4F0E8",
     "color-field-background": "#213540",
+    "color-error": "#FFB4AB",
     "color-ink": "#F4F0E8"
   },
   option3Light: {
@@ -97,6 +99,7 @@ export const designTokens = {
     "color-contrast-surface": "#211B36",
     "color-contrast-text": "#F5F1FF",
     "color-field-background": "#FFFFFF",
+    "color-error": "#B42318",
     "color-ink": "#211B36"
   },
   option3Dark: {
@@ -118,6 +121,7 @@ export const designTokens = {
     "color-contrast-surface": "#2A2338",
     "color-contrast-text": "#F5F1FF",
     "color-field-background": "#2A2338",
+    "color-error": "#FFB4AB",
     "color-ink": "#F5F1FF"
   }
 } as const satisfies Record<string, TokenGroup>;

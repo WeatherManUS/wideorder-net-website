@@ -6,6 +6,8 @@ import { siteContent, type DeliveryMode, type EngagementModel, type PrincipleCar
 import { ContactForm } from "@/components/contact-form";
 import { ProofResultAnimator } from "@/components/proof-result-animator";
 import { PageShell, SectionLabel } from "@/components/site-shell";
+import { OrderMotif } from "@/components/order-motif";
+import { ResultDisplay } from "@/components/result-display";
 
 function PageHero({
   eyebrow,
@@ -35,7 +37,7 @@ function PageHero({
           </div>
           {actions ? <div className="cta-row">{actions}</div> : null}
         </div>
-        {support ? <div className="page-hero__support">{support}</div> : null}
+        <div className="page-hero__support">{support ?? <OrderMotif />}</div>
       </div>
     </section>
   );
@@ -49,10 +51,10 @@ function HomeHeroSection() {
       <div className="container container--wide hero__grid">
         <div className="hero__content">
           <p className="hero__service-name">{siteContent.home.hero.serviceName}</p>
-          <p className="hero__brand-promise">{siteContent.home.hero.brandPromise}</p>
           <h1 id="hero-title" className="hero__title">
-            {siteContent.home.hero.statement}
+            {siteContent.home.hero.brandPromise}
           </h1>
+          <p className="hero__statement">{siteContent.home.hero.statement}</p>
           <p className="hero__copy">{siteContent.home.hero.supportingCopy}</p>
           <p className="hero__copy">{siteContent.home.hero.secondaryCopy}</p>
           <div className="hero__actions cta-row">
@@ -64,7 +66,8 @@ function HomeHeroSection() {
             </Link>
           </div>
         </div>
-        <div className="hero__visual">
+        <div className="hero__visual"><OrderMotif /></div>
+        <div className="hero__examples">
           <ul className="hero__list">
             {siteContent.home.hero.examples.map((example) => (
               <li key={example} className="hero__pill">
@@ -159,7 +162,7 @@ function ProofStorySummaryCard({ story }: { story: ProofStory }) {
   return (
     <Link className="engagement__model summary-card interactive-card" href={`/our-work#${story.id}`}>
       <p className="proof-story__kicker">{story.title}</p>
-      <p className="summary-card__result">{story.result}</p>
+      <ResultDisplay result={story.result} />
       <p>{story.summary}</p>
       <span className="teaser-link">Read the case study</span>
     </Link>
@@ -228,7 +231,7 @@ export function HomePage() {
             <h2 className="section-title section-title--wide">{siteContent.home.workPreview.statement}</h2>
             <p className="section-copy proof__intro">{siteContent.home.workPreview.introduction}</p>
           </div>
-          <div className="engagement__models">
+          <div className="engagement__models results-index">
             {siteContent.ourWork.stories.map((story) => (
               <ProofStorySummaryCard key={story.id} story={story} />
             ))}
@@ -241,7 +244,7 @@ export function HomePage() {
             <SectionLabel>Explore</SectionLabel>
             <h2 className="section-title section-title--wide">Move from a short introduction to the detail you need.</h2>
           </div>
-          <div className="engagement__models">
+          <div className="engagement__models explore-index">
             {siteContent.home.detailLinks.map((item) => (
               <Link key={item.href} className="engagement__model teaser-card interactive-card" href={item.href}>
                 <h3>{item.label}</h3>
@@ -399,7 +402,7 @@ export function OurWorkPage() {
           <SectionLabel>Case Study Summaries</SectionLabel>
           <h2 className="section-title">{siteContent.ourWork.statement}</h2>
           <p className="section-copy proof__intro">{siteContent.ourWork.introduction}</p>
-          <div className="engagement__models">
+          <div className="engagement__models results-index">
             {siteContent.ourWork.stories.map((story) => (
               <ProofStorySummaryCard key={story.id} story={story} />
             ))}

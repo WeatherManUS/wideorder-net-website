@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { htmlReleaseIdentity } from "../src/lib/release/publication.ts";
+import { htmlReleaseIdentity, verifyHtmlFooter } from "../src/lib/release/publication.ts";
 import { utcTimestamp } from "../src/lib/release/metadata.ts";
 
 const origin = new URL(process.argv[2] || "https://wideorder.net");
@@ -18,7 +18,9 @@ if (release.environment === "production") assert.ok(utcTimestamp(release.publish
 else assert.equal(release.publishedAt, null);
 const page = await fetch(new URL(`/?release-verification=${release.releaseId}`, origin), options);
 assert.equal(page.status, 200);
-const tags = htmlReleaseIdentity(await page.text());
+const html = await page.text();
+const tags = htmlReleaseIdentity(html);
+const footerVerified = verifyHtmlFooter(html, release);
 assert.equal(tags["wideorder-version"], release.version);
 assert.equal(tags["wideorder-build"], release.buildId);
 assert.equal(tags["wideorder-release"], release.releaseId);
@@ -31,4 +33,4 @@ assert.equal(head.status, 200);
 assert.match(head.headers.get("cache-control") || "", /no-store/);
 const rejected = await fetch(new URL("/api/release-publication", origin), { ...options, method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
 assert.ok([401, 409].includes(rejected.status), "Anonymous publication must be rejected.");
-console.log(JSON.stringify({ result: "passed", version: release.version, buildId: release.buildId, releaseId: release.releaseId, buildTime: release.buildTime, publishedAt: release.publishedAt, environment: release.environment, checks: ["public JSON", "cache headers", "HTML agreement", "immutable repeated response", "HEAD", "anonymous publication rejected"] }, null, 2));
+console.log(JSON.stringify({ result: "passed", version: release.version, buildId: release.buildId, releaseId: release.releaseId, buildTime: release.buildTime, publishedAt: release.publishedAt, environment: release.environment, footerVerified, checks: ["public JSON", "cache headers", "HTML agreement", "immutable repeated response", "HEAD", "anonymous publication rejected"] }, null, 2));

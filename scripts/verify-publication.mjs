@@ -1,5 +1,6 @@
 import { sourceFingerprint } from "./release-context.mjs";
 import { execFileSync } from "node:child_process";
+import { verifyHtmlFooter } from "../src/lib/release/publication.ts";
 
 const origin = "https://wideorder.net";
 const sourceHash = sourceFingerprint();
@@ -30,6 +31,9 @@ while (Date.now() - started < maximumWait) {
     const finalResponse = await fetch(`${origin}/version.json?verification=${Date.now()}`, { cache: "no-store", headers: { "Cache-Control": "no-cache, no-store" }, signal: AbortSignal.timeout(15000) });
     const final = await finalResponse.json();
     if (!finalResponse.ok || !finalResponse.headers.get("cache-control")?.includes("no-store") || final.releaseId !== live.releaseId || !final.publishedAt || final.publishedAt !== recorded.publishedAt) throw new Error("Final public verification did not agree.");
+    const page = await fetch(`${origin}/?release-verification=${final.releaseId}`, { cache: "no-store", headers: { "Cache-Control": "no-cache, no-store" }, signal: AbortSignal.timeout(15000) });
+    if (!page.ok) throw new Error("Final public HTML is unavailable.");
+    verifyHtmlFooter(await page.text(), final);
     console.log(`[release] deployment completed and publicly verified: ${final.version} / ${final.buildId}; publishedAt=${final.publishedAt}`);
     process.exit(0);
   } catch (error) {

@@ -1,65 +1,106 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useId, useRef, useState, type CSSProperties } from "react";
+import { appearances, isAppearance, type Appearance } from "@/theme/appearances";
 
-const themes = ["light", "dark", "option3-light", "option3-dark"] as const;
-type Theme = (typeof themes)[number];
-const labels = ["Option 1 Light", "Option 1 Dark", "Option 3 Light", "Option 3 Dark"];
 const STORAGE_KEY = "wideorder-theme";
 const MEDIA_QUERY = "(prefers-color-scheme: dark)";
-const isTheme = (value: string | null): value is Theme => themes.some((theme) => theme === value);
-const getResolvedTheme = (): Theme => {
-  const explicit = document.documentElement.getAttribute("data-theme");
-  return isTheme(explicit) ? explicit : window.matchMedia(MEDIA_QUERY).matches ? "option3-dark" : "option3-light";
-};
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("option3-light");
+  const [theme, setTheme] = useState<Appearance>("option3-light");
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
+  const trigger = useRef<HTMLButtonElement>(null);
+  const items = useRef<(HTMLButtonElement | null)[]>([]);
+  const opening = useRef<"hover" | "explicit">("hover");
+  const hoverClose = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const id = useId();
+  const active = appearances.find((appearance) => appearance.id === theme)!;
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(MEDIA_QUERY);
     const syncTheme = () => {
       let stored: string | null = null;
-      try { stored = window.localStorage.getItem(STORAGE_KEY); } catch { /* Storage may be unavailable. */ }
-      if (isTheme(stored)) {
-        document.documentElement.setAttribute("data-theme", stored);
-      } else {
-        document.documentElement.setAttribute("data-theme", mediaQuery.matches ? "option3-dark" : "option3-light");
-      }
-      setTheme(getResolvedTheme());
+      try { stored = localStorage.getItem(STORAGE_KEY); } catch { /* Storage can be unavailable. */ }
+      const selected = isAppearance(stored) ? stored : mediaQuery.matches ? "option3-dark" : "option3-light";
+      document.documentElement.setAttribute("data-theme", selected);
+      setTheme(selected);
+    };
+    const outside = (event: PointerEvent) => {
+      if (event.target instanceof Node && !root.current?.contains(event.target)) setOpen(false);
+    };
+    const dismiss = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      setOpen(false);
+      if (root.current?.contains(document.activeElement)) trigger.current?.focus();
     };
     syncTheme();
     mediaQuery.addEventListener("change", syncTheme);
     window.addEventListener("storage", syncTheme);
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("keydown", dismiss);
     return () => {
       mediaQuery.removeEventListener("change", syncTheme);
       window.removeEventListener("storage", syncTheme);
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("keydown", dismiss);
+      if (hoverClose.current) clearTimeout(hoverClose.current);
     };
   }, []);
 
-  const handleToggle = () => {
-    const nextTheme = themes[(themes.indexOf(getResolvedTheme()) + 1) % themes.length];
-    document.documentElement.setAttribute("data-theme", nextTheme);
-    try { window.localStorage.setItem(STORAGE_KEY, nextTheme); } catch { /* Keep the selection for this page. */ }
-    setTheme(nextTheme);
+  const close = (restoreFocus = false) => { setOpen(false); if (restoreFocus) trigger.current?.focus(); };
+  const show = (index = appearances.findIndex((appearance) => appearance.id === theme)) => {
+    opening.current = "explicit";
+    setOpen(true);
+    requestAnimationFrame(() => items.current[index]?.focus());
   };
-  const index = themes.indexOf(theme);
-  const accessibleLabel = `Current theme: ${labels[index]}; activate for ${labels[(index + 1) % themes.length]}.`;
+  const choose = (value: Appearance) => {
+    document.documentElement.setAttribute("data-theme", value);
+    try { localStorage.setItem(STORAGE_KEY, value); } catch { /* Keep the current page usable. */ }
+    setTheme(value);
+    close(true);
+  };
+  const previewStyle = (tokens: (typeof appearances)[number]["tokens"]): CSSProperties => ({
+    "--preview-background": tokens["color-background"],
+    "--preview-surface": tokens["color-surface"],
+    "--preview-accent": tokens["color-accent"],
+    "--preview-text": tokens["color-text"],
+  }) as CSSProperties;
 
   return (
-    <button
-      type="button"
-      className="theme-toggle"
-      aria-label={accessibleLabel}
-      title={accessibleLabel}
-      onClick={handleToggle}
-    >
-      <span className="theme-toggle__icon" aria-hidden="true">
-        <svg viewBox="0 0 24 24" focusable="false">
-          <path d="M12 3.75a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0V4.5a.75.75 0 0 1 .75-.75Zm0 12.75a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm7.5-5.25a.75.75 0 0 1 .75.75.75.75 0 0 1-.75.75H18a.75.75 0 0 1 0-1.5h1.5ZM6 12a.75.75 0 0 1-.75.75h-1.5A.75.75 0 0 1 3 12a.75.75 0 0 1 .75-.75h1.5A.75.75 0 0 1 6 12Zm11.303-5.303a.75.75 0 0 1 1.06 0l1.061 1.06a.75.75 0 1 1-1.06 1.061l-1.061-1.06a.75.75 0 0 1 0-1.061Zm-11.666 0a.75.75 0 0 1 1.06 1.061L5.637 8.818a.75.75 0 1 1-1.06-1.06l1.06-1.061Zm12.727 10.606 1.06 1.06a.75.75 0 0 1-1.06 1.061l-1.061-1.06a.75.75 0 1 1 1.06-1.061ZM6.697 17.303a.75.75 0 0 1 0 1.06l-1.06 1.061a.75.75 0 1 1-1.061-1.06l1.06-1.061a.75.75 0 0 1 1.061 0ZM12 18a.75.75 0 0 1 .75.75v1.5a.75.75 0 0 1-1.5 0v-1.5A.75.75 0 0 1 12 18Z" />
-        </svg>
-      </span>
-      <span className="sr-only">{accessibleLabel}</span>
-    </button>
+    <div ref={root} className="appearance-selector"
+      onPointerEnter={(event) => { if (hoverClose.current) clearTimeout(hoverClose.current); if (event.pointerType === "mouse" && !open) { opening.current = "hover"; setOpen(true); } }}
+      onPointerLeave={() => { if (opening.current === "hover" && !root.current?.contains(document.activeElement)) hoverClose.current = setTimeout(() => close(), 120); }}
+      onBlurCapture={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) close(); }}
+      onKeyDown={(event) => {
+        if (event.key === "Escape") { event.preventDefault(); event.stopPropagation(); close(true); }
+        if (event.key === "Tab" && open) close(true);
+      }}>
+      <button ref={trigger} id={`${id}-trigger`} type="button" className="theme-toggle appearance-trigger"
+        aria-label={`Appearance: ${active.name}`} title={`Appearance: ${active.name}`}
+        aria-haspopup="menu" aria-expanded={open} aria-controls={`${id}-menu`}
+        onClick={() => { if (open && opening.current === "explicit") close(); else show(); }}
+        onKeyDown={(event) => {
+          if (event.key === "ArrowDown" || event.key === "ArrowUp") { event.preventDefault(); show(event.key === "ArrowUp" ? appearances.length - 1 : undefined); }
+        }}>
+        <span className="appearance-preview appearance-preview--small" style={previewStyle(active.tokens)} aria-hidden="true"><i /><b /></span>
+        <svg className="appearance-chevron" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="m3 4.5 3 3 3-3" stroke="currentColor" strokeWidth="1.5" /></svg>
+      </button>
+      {open ? <div id={`${id}-menu`} className="appearance-menu" role="menu" aria-label="Choose appearance"
+        onKeyDown={(event) => {
+          const index = items.current.findIndex((item) => item === document.activeElement);
+          const next = event.key === "ArrowDown" ? (index + 1) % appearances.length : event.key === "ArrowUp" ? (index - 1 + appearances.length) % appearances.length : event.key === "Home" ? 0 : event.key === "End" ? appearances.length - 1 : null;
+          if (next !== null) { event.preventDefault(); items.current[next]?.focus(); }
+        }}>
+        <p className="appearance-menu__heading" role="presentation">Appearance</p>
+        {appearances.map((appearance, index) => <button key={appearance.id} ref={(element) => { items.current[index] = element; }} type="button"
+          className="appearance-option" role="menuitemradio" aria-checked={theme === appearance.id} tabIndex={-1}
+          onClick={() => choose(appearance.id)}>
+          <span className="appearance-preview" style={previewStyle(appearance.tokens)} aria-hidden="true"><i /><b /></span>
+          <span className="appearance-option__copy"><span>{appearance.name}</span><small>{appearance.description}</small></span>
+          <span className="appearance-option__check" aria-hidden="true">{theme === appearance.id ? <svg viewBox="0 0 16 16" fill="none"><path d="m3 8 3 3 7-7" stroke="currentColor" strokeWidth="1.8" /></svg> : null}</span>
+        </button>)}
+      </div> : null}
+    </div>
   );
 }

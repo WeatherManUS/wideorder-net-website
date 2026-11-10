@@ -33,3 +33,13 @@ export function publicRelease(record: BuildRecord, publication: Publication | nu
     buildTime: record.buildTime, publishedAt: environment === "production" ? publication?.publishedAt ?? null : null,
     publicationSource: environment === "production" && publication ? "github-actions-public-probe" : null, environment };
 }
+
+/** Shared by the endpoint and server-rendered footer; publication never falls back to build time. */
+export function currentRelease() {
+  const environment = deploymentEnvironment();
+  if (environment === "development" && process.env.NODE_ENV !== "production") return { application: "WideOrder", ...releaseIdentity(), buildStartedAt: null, buildTime: null, publishedAt: null, publicationSource: null, environment };
+  const build = readBuildRecord();
+  const identity = releaseIdentity();
+  if (build.buildId !== identity.buildId || build.releaseId !== identity.releaseId || build.version !== identity.version) throw new Error("Compiled identity mismatch.");
+  return publicRelease(build, readPublication(build), environment);
+}

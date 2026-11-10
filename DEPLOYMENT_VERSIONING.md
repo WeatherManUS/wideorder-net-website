@@ -1,6 +1,6 @@
 # Deployment versioning
 
-WideOrder's authoritative public release check is **https://wideorder.net/version.json**. It is a server-rendered JSON endpoint: no login or JavaScript is required. The website interface has no visible version badge.
+WideOrder's authoritative public release check is **https://wideorder.net/version.json**. It is a server-rendered JSON endpoint: no login or JavaScript is required. A discreet release line is temporarily included in the server-rendered copyright footer.
 
 ## Metadata and build integration
 
@@ -35,7 +35,7 @@ node scripts/check-release.mjs https://wideorder.net
 
 Require HTTP 200, valid JSON, the expected `version`/`buildId`/`releaseId`, UTC ISO 8601 build/publication timestamps, and `environment: production`. Compare the build/release IDs with page-source meta tags. The GitHub workflow is successful only after rereading the public endpoint and confirming its recorded publication timestamp. Server-private source digests, verification identities, tokens, account details and filesystem paths are not returned publicly.
 
-`Cache-Control: no-store, max-age=0`, `CDN-Cache-Control: no-store`, `Surrogate-Control: no-store`, and legacy no-cache headers apply specifically to `/version.json`. Other pages/assets retain their normal caching. If a separately configured CDN overrides origin cache directives, add an exact-path bypass for `/version.json` in that existing CDN; do not disable whole-site caching. No authenticated CDN control-plane change was made by this code.
+`Cache-Control: no-store, max-age=0`, `CDN-Cache-Control: no-store`, `Surrogate-Control: no-store`, and legacy no-cache headers apply specifically to `/version.json`. Public HTML now renders at request time and sends no-store directives so the footer can read the post-deployment publication record immediately. CSS, JavaScript, fonts and images retain their normal caching. If a separately configured CDN overrides origin cache directives, add an exact-path bypass for `/version.json` in that existing CDN; do not disable whole-site caching. No authenticated CDN control-plane change was made by this code.
 
 If the JSON is current but HTML tags differ, the HTML or external review tool is stale. Retry with a unique query parameter and a fresh HTTP request rather than relying on a tool's saved page snapshot. A query is a diagnostic aid, not a replacement for correct no-store behavior.
 
@@ -54,3 +54,13 @@ After a Hostinger rollback, run **Verify public release → Run workflow** on `m
 Run `npm run lint`, `npm run typecheck`, `node --experimental-strip-types --test src/lib/release/release.test.mjs`, and `npm run build`. Start with `RELEASE_ENVIRONMENT=staging` and `npm run start`; verify the JSON/cache headers and source tags agree while `publishedAt` remains null. Unit tests exercise signature validation, spoofed/fork/expired identities, stale HTML, publication races, source changes, repeat builds, and restoration of an already published artifact. Actual production rollback is an operator action, not an automatic test that removes the live release.
 
 References: [Hostinger's GitHub deployment flow](https://www.hostinger.com/support/how-to-deploy-a-nodejs-website-in-hostinger/), [GitHub OIDC claims](https://docs.github.com/en/actions/reference/security/oidc), [Next.js build IDs](https://nextjs.org/docs/app/api-reference/config/next-config-js/generateBuildId).
+
+## Temporary footer and appearance selector
+
+`SHOW_FOOTER_VERSION` is the single display flag: it defaults to enabled. Set it to `false` in the runtime environment and restart the app to hide the footer version/publication line without disabling `/version.json` or the HTML release meta tags. The footer reads the same `currentRelease()` function as the endpoint on each server request, using Next.js `connection()` to avoid capturing a pre-publication value during the build. Until production success is verified, it explicitly says ?Publication not yet confirmed? and never substitutes build time.
+
+All internal timestamps remain UTC. The footer formats the verified `publishedAt` with `America/Chicago`, including CST or CDT as appropriate. Its copyright year is also computed in that time zone. The publication verifier checks the footer's server-rendered release ID, version and UTC `<time datetime>` after recording success. Initial HTML includes the readable text without client-side JavaScript. HTML cache bypass is limited to public page entry points; other assets keep their performance caching.
+
+The four existing appearance palettes keep their stored keys and colors. Their permanent UI names are Ivory & Sage, Navy & Sage, Pearl & Indigo, and Ink & Indigo. The preview menu supports mouse hover/click, touch, Arrow keys, Home/End, Enter/Space, Escape, Tab and persisted choices.
+
+Run `node --experimental-strip-types --test src/lib/release/footer.test.mjs` for CST/CDT, year-boundary and display-flag checks. `scripts/appearance-footer-qa.mjs` exercises initial HTML, JavaScript-disabled footer visibility, all themes at desktop/mobile widths, persistence, hover/touch and keyboard behavior. Supply `QA_BASE_URL` and an existing `PLAYWRIGHT_MODULE_PATH`. Local-only fixture seeding is opt-in (`QA_SEED_LOCAL_PUBLICATION=true`) and rejected for production origins; `QA_HIDDEN_BASE_URL` can verify a second local server started with `SHOW_FOOTER_VERSION=false`.

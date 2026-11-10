@@ -53,6 +53,18 @@ export function htmlReleaseIdentity(html: string) {
   return found;
 }
 
+export function verifyHtmlFooter(html: string, expected: { version: string; releaseId: string; publishedAt: string | null }) {
+  const footer = /<footer\b[^>]*>[\s\S]*?<\/footer>/i.exec(html)?.[0] ?? "";
+  const enabled = /\bdata-footer-version-enabled=["']([^"']+)["']/i.exec(footer)?.[1];
+  if (enabled === "false") return false; // The single display flag may deliberately hide this line.
+  if (enabled !== "true") throw new Error("Server-rendered footer release visibility is missing.");
+  const releaseId = /\bdata-footer-release=["']([^"']+)["']/i.exec(footer)?.[1];
+  const version = /\bdata-release-version=["']([^"']+)["']/i.exec(footer)?.[1];
+  const publishedAt = /<time\b[^>]*\bdatetime=["']([^"']+)["']/i.exec(footer)?.[1] ?? null;
+  if (releaseId !== expected.releaseId || version !== expected.version || publishedAt !== expected.publishedAt) throw new Error("Server-rendered footer differs from the release endpoint.");
+  return true;
+}
+
 export async function confirmPublicRelease(build: BuildRecord, fetcher: typeof fetch = fetch) {
   const options: RequestInit = { cache: "no-store", redirect: "error", headers: { "Cache-Control": "no-cache, no-store" }, signal: AbortSignal.timeout(15000) };
   const response = await fetcher(`${PUBLIC_ORIGIN}/version.json?verification=${build.releaseId}`, options);

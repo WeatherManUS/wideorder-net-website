@@ -9,13 +9,20 @@ const nextConfig = {
     WIDEORDER_RELEASE_ID: identity.releaseId,
   },
   outputFileTracingIncludes: {
-    '/version.json': ['./.release/release.json'],
-    '/api/release-publication': ['./.release/release.json'],
+    '/*': ['./.release/release.json'],
   },
   agentRules: false,
   reactStrictMode: true,
   async headers() {
     return [
+      ...['/', '/what-we-do', '/how-we-work', '/our-work', '/our-work/:slug', '/our-approach', '/contact', '/privacy'].map(source => ({
+        source,
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, max-age=0' },
+          { key: 'CDN-Cache-Control', value: 'no-store' },
+          { key: 'Surrogate-Control', value: 'no-store' },
+        ],
+      })),
       {
         source: '/version.json',
         headers: [

@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import { mkdir, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
+import { appearances } from "../src/theme/appearances.ts";
 
 // Use an existing Playwright installation; this audit adds no application dependency.
 const require = createRequire(import.meta.url);
@@ -89,14 +90,15 @@ try {
   await page.goto(baseURL);
   await page.evaluate(() => localStorage.setItem("wideorder-theme", "light"));
   await page.reload();
-  await page.locator(".theme-toggle").click();
-  for (const expected of ["dark", "option3-light", "option3-dark", "light"]) {
+  for (const appearance of appearances) {
+    const expected = appearance.id;
+    await page.getByRole("button", { name: /^Appearance:/ }).click();
+    await page.getByRole("menuitemradio", { name: appearance.name }).click();
     assert.equal(await page.locator("html").getAttribute("data-theme"), expected);
     await page.reload();
     assert.equal(await page.locator("html").getAttribute("data-theme"), expected);
-    await page.locator(".theme-toggle").click();
   }
-  report.interactions.push("Four-state theme cycle, wraparound and reload persistence");
+  report.interactions.push("Four-theme appearance selection and reload persistence");
   await page.goto(baseURL);
   assert.equal(await page.locator(".hero__title").innerText(), "There is a better way.");
   assert.match(await page.getByRole("link", { name: "Discuss a Challenge" }).getAttribute("href"), /^mailto:/);

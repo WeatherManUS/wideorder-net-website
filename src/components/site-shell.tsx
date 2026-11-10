@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { connection } from "next/server";
 
 import { getContactMailtoHref, siteConfig } from "@/config/site";
 import { siteContent } from "@/content/home";
@@ -8,13 +9,20 @@ import { SiteHeader } from "@/components/site-header";
 import { SectionMotion } from "@/components/section-motion";
 import { MarketingRuntime, TrackingPreferencesButton } from "@/components/marketing-runtime";
 import { getSocialProfiles } from "@/config/marketing";
+import { currentRelease, releaseIdentity } from "@/lib/release/metadata";
+import { copyrightYear, footerVersionEnabled, formatPublicationTime } from "@/lib/release/footer";
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="section-label">{children}</p>;
 }
 
-function SiteFooter() {
-  const year = new Date().getFullYear();
+async function SiteFooter() {
+  await connection();
+  const year = copyrightYear();
+  const showVersion = footerVersionEnabled();
+  let release: ReturnType<typeof currentRelease> | null = null;
+  try { if (showVersion) release = currentRelease(); } catch { /* Never substitute build time for missing publication. */ }
+  const published = formatPublicationTime(release?.publishedAt ?? null);
 
   return (
     <footer className="site-footer">
@@ -27,11 +35,16 @@ function SiteFooter() {
           <p className="site-footer__philosophy">
             <a href={getContactMailtoHref("WideOrder enquiry")}>{siteConfig.contact.publicMailbox}</a>
           </p>
-          <p className="site-footer__copyright">
+          <p className="site-footer__copyright" data-footer-version-enabled={showVersion ? "true" : "false"}>
             <Link href="/admin/login" aria-label="Administrator sign in">
               ©
             </Link>{" "}
-            {year} WideOrder Resolve. All rights reserved.
+            {year} WideOrder Resolve
+            {showVersion ? <span className="site-footer__release" data-footer-release={release?.releaseId ?? releaseIdentity().releaseId} data-release-version={release?.version ?? releaseIdentity().version}>
+              {" · "}v{release?.version ?? releaseIdentity().version}{" · "}
+              {published && release?.publishedAt ? <>Published <time dateTime={release.publishedAt}>{published}</time></> : "Publication not yet confirmed"}
+            </span> : null}
+            {" "}<span className="site-footer__rights">All rights reserved.</span>
           </p>
           <p><Link href="/privacy">Privacy information</Link></p>
           <TrackingPreferencesButton />

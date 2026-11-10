@@ -8,6 +8,7 @@ import { releaseIdentity } from "@/lib/release/metadata";
 import "./globals.css";
 import "./editorial.css";
 import "./marketing.css";
+import "./appearance.css";
 
 const inter = Inter({
   subsets: ["latin"],

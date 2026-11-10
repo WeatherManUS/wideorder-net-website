@@ -17,3 +17,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.1.0002 — published** (2026-11-10T20:15:30.228Z)
   Automate production versions with durable release ledger
   Commit: `40d36091e4045be1f7029b1a4f3f3d32049c7de5`; previous: 0.1.0001; artifact: 9452f306-27b0-4913-9e45-eac223820270; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-10T22:39:12.145Z)
+  Verify all release pages and strengthen homepage case study
+  Commit: `cd5b973771da7779dbc88eaa7870ccf7e1ba2f29`; previous: 0.1.0002; artifact: not built; rollback: none.

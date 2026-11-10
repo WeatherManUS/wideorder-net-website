@@ -2,68 +2,49 @@
 
 import { useEffect, useState } from "react";
 
-type ThemeMode = "light" | "dark";
-
+const themes = ["light", "dark", "option3-light", "option3-dark"] as const;
+type Theme = (typeof themes)[number];
+const labels = ["Option 1 Light", "Option 1 Dark", "Option 3 Light", "Option 3 Dark"];
 const STORAGE_KEY = "wideorder-theme";
 const MEDIA_QUERY = "(prefers-color-scheme: dark)";
-
-const getResolvedTheme = (): ThemeMode => {
-  const explicitTheme = document.documentElement.getAttribute("data-theme");
-
-  if (explicitTheme === "light" || explicitTheme === "dark") {
-    return explicitTheme;
-  }
-
-  return window.matchMedia(MEDIA_QUERY).matches ? "dark" : "light";
+const isTheme = (value: string | null): value is Theme => themes.some((theme) => theme === value);
+const getResolvedTheme = (): Theme => {
+  const explicit = document.documentElement.getAttribute("data-theme");
+  return isTheme(explicit) ? explicit : window.matchMedia(MEDIA_QUERY).matches ? "dark" : "light";
 };
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<ThemeMode>("light");
+  const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(MEDIA_QUERY);
-
     const syncTheme = () => {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-
-      if (stored === "light" || stored === "dark") {
-        setTheme(stored);
-        return;
+      let stored: string | null = null;
+      try { stored = window.localStorage.getItem(STORAGE_KEY); } catch { /* Storage may be unavailable. */ }
+      if (isTheme(stored)) {
+        document.documentElement.setAttribute("data-theme", stored);
+      } else {
+        document.documentElement.removeAttribute("data-theme");
       }
-
-      setTheme(mediaQuery.matches ? "dark" : "light");
+      setTheme(getResolvedTheme());
     };
-
     syncTheme();
-
-    const handleSystemThemeChange = () => {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-
-      if (!stored) {
-        setTheme(mediaQuery.matches ? "dark" : "light");
-      }
-    };
-
-    const handleStorage = () => syncTheme();
-
-    mediaQuery.addEventListener("change", handleSystemThemeChange);
-    window.addEventListener("storage", handleStorage);
-
+    mediaQuery.addEventListener("change", syncTheme);
+    window.addEventListener("storage", syncTheme);
     return () => {
-      mediaQuery.removeEventListener("change", handleSystemThemeChange);
-      window.removeEventListener("storage", handleStorage);
+      mediaQuery.removeEventListener("change", syncTheme);
+      window.removeEventListener("storage", syncTheme);
     };
   }, []);
 
   const handleToggle = () => {
-    const nextTheme: ThemeMode = getResolvedTheme() === "dark" ? "light" : "dark";
-
+    const nextTheme = themes[(themes.indexOf(getResolvedTheme()) + 1) % themes.length];
     document.documentElement.setAttribute("data-theme", nextTheme);
-    window.localStorage.setItem(STORAGE_KEY, nextTheme);
+    try { window.localStorage.setItem(STORAGE_KEY, nextTheme); } catch { /* Keep the selection for this page. */ }
     setTheme(nextTheme);
   };
-
-  const accessibleLabel = theme === "dark" ? "Switch to light theme" : "Switch to dark theme";
+  const index = themes.indexOf(theme);
+  const accessibleLabel = `Current theme: ${labels[index]}; activate for ${labels[(index + 1) % themes.length]}.`;
 
   return (
     <button

@@ -68,7 +68,6 @@ declare global {
   }
 }
 
-const STORAGE_KEY = "wideorder-theme";
 const MEDIA_QUERY = "(prefers-color-scheme: dark)";
 const CONTACT_CONFIGURATION_MESSAGE = "The contact form is not fully configured right now. Please try again later.";
 const CONTACT_RATE_LIMIT_MESSAGE = "Too many attempts were received from this connection. Please wait a little and try again.";
@@ -76,8 +75,11 @@ const CONTACT_RATE_LIMIT_MESSAGE = "Too many attempts were received from this co
 const getResolvedTheme = (): ThemeMode => {
   const explicitTheme = document.documentElement.getAttribute("data-theme");
 
-  if (explicitTheme === "light" || explicitTheme === "dark") {
-    return explicitTheme;
+  if (explicitTheme === "light" || explicitTheme === "option3-light") {
+    return "light";
+  }
+  if (explicitTheme === "dark" || explicitTheme === "option3-dark") {
+    return "dark";
   }
 
   return window.matchMedia(MEDIA_QUERY).matches ? "dark" : "light";
@@ -98,14 +100,7 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
     const mediaQuery = window.matchMedia(MEDIA_QUERY);
 
     const syncTheme = () => {
-      const storedTheme = window.localStorage.getItem(STORAGE_KEY);
-
-      if (storedTheme === "light" || storedTheme === "dark") {
-        setTheme(storedTheme);
-        return;
-      }
-
-      setTheme(mediaQuery.matches ? "dark" : "light");
+      setTheme(getResolvedTheme());
     };
 
     syncTheme();

@@ -24,7 +24,7 @@ const themeInitializer = `(() => {
   try {
     const storageKey = 'wideorder-theme';
     const storedTheme = window.localStorage.getItem(storageKey);
-    if (storedTheme === 'light' || storedTheme === 'dark') {
+    if (['light', 'dark', 'option3-light', 'option3-dark'].includes(storedTheme)) {
       document.documentElement.setAttribute('data-theme', storedTheme);
     }
   } catch {

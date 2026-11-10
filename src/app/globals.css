@@ -272,7 +272,7 @@ ol {
 .brand-mark {
   display: inline-flex;
   align-items: center;
-  width: min(15rem, 54vw);
+  width: min(17.25rem, 62.1vw);
 }
 
 .brand-mark__image {
@@ -285,7 +285,7 @@ ol {
   background-size: contain;
 }
 
-:root[data-theme="dark"] .brand-mark__image {
+:root:is([data-theme="dark"], [data-theme="option3-dark"]) .brand-mark__image {
   background-image: url("/brand/wideorder-logo-dark.png");
 }
 
@@ -1343,7 +1343,7 @@ ol {
   }
 
   .brand-mark {
-    width: 15.5rem;
+    width: 17.825rem;
   }
 
   .primary-nav {
@@ -1410,31 +1410,31 @@ ol {
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) .hero__visual,
-  :root[data-theme="dark"] .hero__visual {
+  :root:is([data-theme="dark"], [data-theme="option3-dark"]) .hero__visual {
     background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 88%, transparent), color-mix(in srgb, var(--color-background-secondary) 92%, transparent));
   }
 
   :root:not([data-theme]) .challenge__item,
   :root:not([data-theme]) .insitu__card,
   :root:not([data-theme]) .engagement__model,
-  :root[data-theme="dark"] .challenge__item,
-  :root[data-theme="dark"] .insitu__card,
-  :root[data-theme="dark"] .engagement__model {
+  :root:is([data-theme="dark"], [data-theme="option3-dark"]) .challenge__item,
+  :root:is([data-theme="dark"], [data-theme="option3-dark"]) .insitu__card,
+  :root:is([data-theme="dark"], [data-theme="option3-dark"]) .engagement__model {
     background: color-mix(in srgb, var(--color-surface) 78%, var(--color-background-secondary));
   }
 
   :root:not([data-theme]) .proof-story__result,
-  :root[data-theme="dark"] .proof-story__result {
+  :root:is([data-theme="dark"], [data-theme="option3-dark"]) .proof-story__result {
     background: linear-gradient(180deg, color-mix(in srgb, var(--color-surface) 96%, transparent), color-mix(in srgb, var(--color-background-secondary) 88%, transparent));
   }
 
   :root:not([data-theme]) .engagement__support,
-  :root[data-theme="dark"] .engagement__support {
+  :root:is([data-theme="dark"], [data-theme="option3-dark"]) .engagement__support {
     background: color-mix(in srgb, var(--color-surface) 72%, var(--color-background-secondary));
   }
 
   :root:not([data-theme]) .site-footer,
-  :root[data-theme="dark"] .site-footer {
+  :root:is([data-theme="dark"], [data-theme="option3-dark"]) .site-footer {
     background: color-mix(in srgb, var(--color-background-secondary) 94%, var(--color-surface));
   }
 }

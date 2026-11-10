@@ -21,3 +21,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **Unversioned attempt — waiting-for-hostinger** (2026-11-10T22:39:12.145Z)
   Verify all release pages and strengthen homepage case study
   Commit: `cd5b973771da7779dbc88eaa7870ccf7e1ba2f29`; previous: 0.1.0002; artifact: not built; rollback: none.
+
+- **v0.1.0003 — verifying** (2026-11-10T22:39:12.145Z)
+  Verify all release pages and strengthen homepage case study
+  Commit: `cd5b973771da7779dbc88eaa7870ccf7e1ba2f29`; previous: 0.1.0002; artifact: f6745d78-07a0-4b46-a890-4bcc32c24df6; rollback: none.

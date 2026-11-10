@@ -1,8 +1,25 @@
+import { configIdentity } from './scripts/release-context.mjs';
+
+const identity = configIdentity();
 const nextConfig = {
+  generateBuildId: async () => identity.releaseId,
+  env: {
+    WIDEORDER_RELEASE_VERSION: identity.version,
+    WIDEORDER_RELEASE_BUILD_ID: identity.buildId,
+    WIDEORDER_RELEASE_ID: identity.releaseId,
+  },
   agentRules: false,
   reactStrictMode: true,
   async headers() {
     return [
+      {
+        source: '/version.json',
+        headers: [
+          { key: 'Cache-Control', value: 'no-store, max-age=0' },
+          { key: 'CDN-Cache-Control', value: 'no-store' },
+          { key: 'Surrogate-Control', value: 'no-store' },
+        ],
+      },
       {
         source: '/admin/:path*',
         headers: [

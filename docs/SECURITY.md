@@ -28,6 +28,12 @@
 - Environment secrets must be supplied through environment configuration rather than source control.
 - Review this document before making dependency or security-tooling changes.
 
+## Release identity checkpoint — 2026-11-10
+
+- The lockfile/install were synchronized to the already declared `next@16.4.1`; no new npm dependency was added. This removes the prior package/lock mismatch from deployment inputs.
+- `npm audit --omit=dev` after synchronization reports one existing moderate `nodemailer` advisory and no high/critical runtime findings. The historical zero-runtime-finding target above remains a target, not the current audit result; remediate the remaining mail-library finding in dependency maintenance.
+- Production publication confirmation uses short-lived GitHub OIDC tokens, fixed official signing-key discovery, immutable repository/owner IDs, an exact `main` workflow identity, source/artifact binding and a public-response probe. The callback never accepts an anonymous timestamp or derives publication from application startup. Public release responses use an explicit field allowlist.
+
 ## Phase 6 hardening implementation
 
 - Contact form protection now consists of server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and controlled server-side Resend transactional delivery wiring.

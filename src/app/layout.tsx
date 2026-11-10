@@ -3,6 +3,7 @@ import { Inter, Manrope } from "next/font/google";
 
 import { isSiteIndexable, organizationStructuredData, siteConfig } from "@/config/site";
 import { themeStylesheet } from "@/theme/tokens";
+import { releaseIdentity } from "@/lib/release/metadata";
 
 import "./globals.css";
 import "./editorial.css";
@@ -76,6 +77,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${manrope.variable}`} suppressHydrationWarning>
       <head>
+        <meta name="wideorder-version" content={releaseIdentity().version} />
+        <meta name="wideorder-build" content={releaseIdentity().buildId} />
+        <meta name="wideorder-release" content={releaseIdentity().releaseId} />
         <script id="wideorder-theme-init" dangerouslySetInnerHTML={{ __html: themeInitializer }} />
         <style id="wideorder-theme" dangerouslySetInnerHTML={{ __html: themeStylesheet }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData()).replace(/</g, "\\u003c") }} />

@@ -4,6 +4,7 @@ Thumbs.db
 .idea/
 node_modules/
 .next/
+.release/
 out/
 dist/
 coverage/

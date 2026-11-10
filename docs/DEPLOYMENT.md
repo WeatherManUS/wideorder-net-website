@@ -22,6 +22,7 @@
 - Deployment source: GitHub repository `WeatherManUS/wideorder-net-website`
 - Active branch: `main`
 - Application type: Next.js Node.js web app
+- Build command: `npm run build` (release-aware wrapper around the existing Next.js production build). Keep the complete `.next` artifact. See [`../DEPLOYMENT_VERSIONING.md`](../DEPLOYMENT_VERSIONING.md) for automatic build IDs, public version/cache checks, GitHub Actions success observation, and tracked rollback.
 - Preview-first intent remains in effect even though the apex domain was attached early
 - The site must remain crawl-blocked and non-indexed until Phase 7 activation is explicitly approved
 - Environment variables are supplied through Hostinger and must never be committed to Git

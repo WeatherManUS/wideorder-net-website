@@ -21,9 +21,13 @@ export function sourceFingerprint(root = process.cwd()) {
   for (const name of files.sort()) {
     const bytes = readFileSync(path.join(root, name));
     let content = bytes;
-    // Git checkouts can use CRLF on Windows; normalize text, never approved binary assets.
-    if (!bytes.includes(0)) {
-      try { content = Buffer.from(new TextDecoder("utf-8", { fatal: true }).decode(bytes).replace(/\r\n/g, "\n")); } catch { /* Binary. */ }
+    // Git can normalize legacy non-UTF-8 text too. Preserve every byte except text CRLF.
+    const knownText = /\.(?:[cm]?jsx?|tsx?|json|md|txt|html?|css|ya?ml|xml|svg|toml|ini|sql|sh|ps1)$/i.test(name) || /\/(?:\.gitignore|\.editorconfig|\.gitattributes)$/.test(`/${name}`);
+    const binary = /\.(?:png|webp|jpe?g|gif|ico|ttf|otf|woff2?|pdf|zip)$/i.test(name);
+    if (!binary && !bytes.includes(0)) {
+      let text = knownText;
+      if (!text) { try { new TextDecoder("utf-8", { fatal: true }).decode(bytes); text = true; } catch { /* Unknown binary. */ } }
+      if (text) content = Buffer.from(bytes.toString("latin1").replace(/\r\n/g, "\n"), "latin1");
     }
     hash.update(name).update("\0").update(String(content.length)).update("\0").update(content);
   }

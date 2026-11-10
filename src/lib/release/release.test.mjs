@@ -29,12 +29,16 @@ test("source identity changes with source bytes, excludes private/generated file
     await writeFile(path.join(directory, ".next", "ignored.json"), "generated");
     await writeFile(path.join(directory, ".env.local"), "SECRET=must-not-appear");
     assert.equal(sourceFingerprint(directory), first);
+    await writeFile(path.join(directory, "legacy.md"), Buffer.from([0x96, 13, 10]));
+    const legacy = sourceFingerprint(directory);
+    await writeFile(path.join(directory, "legacy.md"), Buffer.from([0x96, 10]));
+    assert.equal(sourceFingerprint(directory), legacy);
     await writeFile(path.join(directory, "package.json"), '{"version":"0.1.0"}\r\n');
-    assert.equal(sourceFingerprint(directory), first);
+    assert.equal(sourceFingerprint(directory), legacy);
     const a = createBuildContext(directory), b = createBuildContext(directory);
     assert.equal(a.buildId, b.buildId); assert.notEqual(a.releaseId, b.releaseId);
     await writeFile(path.join(directory, "page.ts"), "export const headline = 'Changed code';");
-    assert.notEqual(sourceFingerprint(directory), first);
+    assert.notEqual(sourceFingerprint(directory), a.sourceHash);
     await writeFile(path.join(directory, "binary.png"), Buffer.from([0, 13, 10]));
     const binary = sourceFingerprint(directory);
     await writeFile(path.join(directory, "binary.png"), Buffer.from([0, 10]));

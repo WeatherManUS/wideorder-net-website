@@ -36,6 +36,12 @@
 
 ## Phase 6 hardening implementation
 
+### Durable release policy — 2026-11-10
+
+- Policy-managed builds read the public, allowlisted release-history ledger for version and publication metadata. They reject the legacy publication callback, so an ephemeral local marker cannot override the durable counter.
+- The trusted main-branch publication workflow uses its short-lived repository `GITHUB_TOKEN` with `contents: write` solely to append Git commits on `release-history`; it does not persist credentials in checkout or pass tokens to the website. No npm dependency is required by the workflow scripts. Git ref updates require fast-forward and never use force.
+- Runtime ledger reads use a fixed public GitHub repository/branch, bounded timeouts, validated public fields and immutable artifact bindings. No write credential is needed in Hostinger. Public history intentionally includes release Git commits/build IDs and no private deployment configuration.
+
 - Contact form protection now consists of server-side validation, Cloudflare Turnstile verification, a hidden honeypot, and controlled server-side Resend transactional delivery wiring.
 - Missing contact-provider or Turnstile configuration returns a controlled runtime error instead of false success.
 - Minimal operational logging avoids full message content, Turnstile tokens, and secret values.

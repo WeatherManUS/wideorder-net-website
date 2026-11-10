@@ -1,4 +1,4 @@
-name: Verify public release
+name: Allocate and verify production release
 on:
   push:
     branches: [main]
@@ -7,15 +7,20 @@ on:
       release_ref:
         description: Source commit/tag of the artifact to verify (use its original ref after a Hostinger rollback)
         required: false
-        default: main
+        default: ""
+
+      authorize_phase:
+        description: Explicitly authorize the phase in release-policy.json (for example 0.2); leave empty for normal releases
+        required: false
+        default: ""
 
 permissions:
-  contents: read
-  id-token: write
+  contents: write
+  actions: read
 
 concurrency:
-  group: wideorder-production-publication
-  cancel-in-progress: true
+  group: wideorder-production-ledger
+  cancel-in-progress: false
 
 jobs:
   publication:
@@ -26,11 +31,22 @@ jobs:
       - name: Check out expected release source
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
-          ref: ${{ inputs.release_ref || github.sha }}
+          ref: ${{ github.sha }}
+          fetch-depth: 0
           persist-credentials: false
       - name: Use the repository Node.js baseline
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
           node-version: 24
-      - name: Wait for Hostinger and confirm the public deployment
+      - name: Allocate and verify the exact Hostinger artifact
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_REF: ${{ inputs.release_ref }}
+          AUTHORIZE_PHASE: ${{ inputs.authorize_phase }}
         run: node scripts/verify-publication.mjs
+      - name: Preserve failed or cancelled attempt
+        if: failure() || cancelled()
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          RELEASE_REF: ${{ inputs.release_ref }}
+        run: node scripts/verify-publication.mjs fail

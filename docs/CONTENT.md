@@ -41,6 +41,7 @@
 - Primary CTA: `Let's talk`
 - Permanent appearance selector: `Ivory & Sage`, `Navy & Sage`, `Pearl & Indigo`, `Ink & Indigo`. These are descriptive UI names for the four existing palettes; stored theme keys and palette colors are unchanged.
 - The copyright statement can temporarily show the actual release version and verified publication time in America/Chicago, controlled by `SHOW_FOOTER_VERSION`.
+- Production release identifiers use `vMAJOR.MINOR.RELEASE` with four release digits, allocated from the durable release-history ledger only. Before allocation/publication, show an explicit pending message instead of an older version or a build timestamp.
 
 ## Homepage
 

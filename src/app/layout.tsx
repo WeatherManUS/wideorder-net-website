@@ -3,7 +3,8 @@ import { Inter, Manrope } from "next/font/google";
 
 import { isSiteIndexable, organizationStructuredData, siteConfig } from "@/config/site";
 import { themeStylesheet } from "@/theme/tokens";
-import { releaseIdentity } from "@/lib/release/metadata";
+import { connection } from "next/server";
+import { currentRelease } from "@/lib/release/server";
 
 import "./globals.css";
 import "./editorial.css";
@@ -70,17 +71,19 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  await connection();
+  const release = await currentRelease();
   return (
     <html lang="en" className={`${inter.variable} ${manrope.variable}`} suppressHydrationWarning>
       <head>
-        <meta name="wideorder-version" content={releaseIdentity().version} />
-        <meta name="wideorder-build" content={releaseIdentity().buildId} />
-        <meta name="wideorder-release" content={releaseIdentity().releaseId} />
+        <meta name="wideorder-version" content={release.version} />
+        <meta name="wideorder-build" content={release.buildId} />
+        <meta name="wideorder-release" content={release.releaseId} />
         <script id="wideorder-theme-init" dangerouslySetInnerHTML={{ __html: themeInitializer }} />
         <style id="wideorder-theme" dangerouslySetInnerHTML={{ __html: themeStylesheet }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData()).replace(/</g, "\\u003c") }} />

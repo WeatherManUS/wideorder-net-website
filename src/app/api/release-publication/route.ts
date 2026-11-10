@@ -25,6 +25,7 @@ export async function POST(request: Request) {
     try { verificationId = await authenticatePublication(request.headers.get("authorization")?.replace(/^Bearer /, "") ?? ""); }
     catch { return reply({ error: "unauthorized" }, 401); }
     const build = readBuildRecord();
+    if (build.versionPolicy) return reply({ error: "publication_uses_durable_release_ledger" }, 409);
     if (body?.releaseId !== build.releaseId || !matchesBuildSource(build, body)) return reply({ error: "release_mismatch" }, 409);
     await confirmPublicRelease(build);
     const publication = await recordPublication(build, verificationId);

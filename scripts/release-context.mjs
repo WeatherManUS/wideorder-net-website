@@ -40,7 +40,9 @@ export function createBuildContext(root = process.cwd()) {
   let commit = "";
   try { commit = execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim(); } catch { /* Source archives remain identifiable by digest. */ }
   const sourceHash = sourceFingerprint(root);
-  return { application: "WideOrder", version, commit, buildId: `${/^[a-f\d]{40,64}$/.test(commit) ? commit.slice(0, 12) : "source"}-${sourceHash.slice(0, 16)}`,
+  let policy;
+  try { policy = JSON.parse(readFileSync(path.join(root, "release-policy.json"), "utf8")); } catch { /* Legacy source fixtures. */ }
+  return { application: "WideOrder", version: policy?.baseline ?? version, ...(policy ? { versionPolicy: 1, phase: { major: policy.major, minor: policy.minor } } : {}), commit, buildId: `${/^[a-f\d]{40,64}$/.test(commit) ? commit.slice(0, 12) : "source"}-${sourceHash.slice(0, 16)}`,
     releaseId: randomUUID(), sourceHash, buildStartedAt: new Date().toISOString() };
 }
 

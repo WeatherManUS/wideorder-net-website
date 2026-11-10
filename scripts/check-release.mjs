@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { htmlReleaseIdentity, verifyHtmlFooter } from "../src/lib/release/publication.ts";
 import { utcTimestamp } from "../src/lib/release/metadata.ts";
+import { versionParts } from "../src/lib/release/ledger.ts";
 
 const origin = new URL(process.argv[2] || "https://wideorder.net");
 if (origin.username || origin.password || origin.search || origin.hash || origin.pathname !== "/" || !(origin.protocol === "https:" || (origin.protocol === "http:" && ["localhost", "127.0.0.1"].includes(origin.hostname)))) throw new Error("Supply an HTTPS origin or a localhost test origin.");
@@ -16,6 +17,11 @@ assert.ok(utcTimestamp(release.buildTime));
 assert.ok(utcTimestamp(release.buildStartedAt));
 if (release.environment === "production") assert.ok(utcTimestamp(release.publishedAt), "Production publication has not yet been confirmed.");
 else assert.equal(release.publishedAt, null);
+if (release.versionPolicy === 1 && release.environment === "production") {
+  const parts = versionParts(release.version);
+  for (const key of ["major", "minor", "release"]) assert.equal(release[key], parts[key]);
+  assert.equal(release.deploymentStatus, "published");
+}
 const page = await fetch(new URL(`/?release-verification=${release.releaseId}`, origin), options);
 assert.equal(page.status, 200);
 const html = await page.text();

@@ -18,6 +18,7 @@ const paths = ["/", "/what-we-do", "/how-we-work", "/our-work", "/our-approach",
 try {
   if (process.env.QA_SEED_LOCAL_PUBLICATION === "true") {
     assert.ok(["localhost", "127.0.0.1"].includes(new URL(base).hostname), "Fixtures are allowed only on localhost.");
+    assert.ok(!readBuildRecord().versionPolicy, "Policy-managed artifacts use the durable ledger, never local publication fixtures.");
     const previous = await fetch(`${base}/version.json`).then((response) => response.json());
     if (!previous.publishedAt) {
       const html = await fetch(base).then((response) => response.text());

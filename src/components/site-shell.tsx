@@ -9,7 +9,8 @@ import { SiteHeader } from "@/components/site-header";
 import { SectionMotion } from "@/components/section-motion";
 import { MarketingRuntime, TrackingPreferencesButton } from "@/components/marketing-runtime";
 import { getSocialProfiles } from "@/config/marketing";
-import { currentRelease, releaseIdentity } from "@/lib/release/metadata";
+import { releaseIdentity } from "@/lib/release/metadata";
+import { currentRelease } from "@/lib/release/server";
 import { copyrightYear, footerVersionEnabled, formatPublicationTime } from "@/lib/release/footer";
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {
@@ -20,8 +21,8 @@ async function SiteFooter() {
   await connection();
   const year = copyrightYear();
   const showVersion = footerVersionEnabled();
-  let release: ReturnType<typeof currentRelease> | null = null;
-  try { if (showVersion) release = currentRelease(); } catch { /* Never substitute build time for missing publication. */ }
+  let release: Awaited<ReturnType<typeof currentRelease>> | null = null;
+  try { if (showVersion) release = await currentRelease(); } catch { /* Never substitute build time for missing publication. */ }
   const published = formatPublicationTime(release?.publishedAt ?? null);
 
   return (
@@ -41,7 +42,7 @@ async function SiteFooter() {
             </Link>{" "}
             {year} WideOrder Resolve
             {showVersion ? <span className="site-footer__release" data-footer-release={release?.releaseId ?? releaseIdentity().releaseId} data-release-version={release?.version ?? releaseIdentity().version}>
-              {" · "}v{release?.version ?? releaseIdentity().version}{" · "}
+              {" · "}{release?.version === "unallocated" ? "Release awaiting allocation" : `v${release?.version ?? releaseIdentity().version}`}{" · "}
               {published && release?.publishedAt ? <>Published <time dateTime={release.publishedAt}>{published}</time></> : "Publication not yet confirmed"}
             </span> : null}
             {" "}<span className="site-footer__rights">All rights reserved.</span>

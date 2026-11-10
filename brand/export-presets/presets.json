@@ -1,0 +1,734 @@
+{
+  "version": 1,
+  "verified": "2026-11-10",
+  "presets": [
+    {
+      "id": "square-post",
+      "width": 1080,
+      "height": 1080,
+      "template": "insight",
+      "channel": "shared",
+      "safeArea": [
+        75,
+        86,
+        928,
+        907
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "portrait-post",
+      "width": 1080,
+      "height": 1350,
+      "template": "before-after",
+      "channel": "shared",
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "vertical-video",
+      "width": 1080,
+      "height": 1920,
+      "template": "demonstration",
+      "channel": "shared",
+      "safeArea": [
+        72,
+        250,
+        936,
+        1330
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "landscape-video",
+      "width": 1920,
+      "height": 1080,
+      "template": "demonstration",
+      "channel": "shared",
+      "safeArea": [
+        96,
+        54,
+        1728,
+        972
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "social-preview",
+      "width": 1200,
+      "height": 630,
+      "template": "case-study",
+      "channel": "website",
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ],
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "linkedin-company-banner",
+      "width": 1512,
+      "height": 256,
+      "template": "banner",
+      "channel": "linkedin",
+      "safeArea": [
+        350,
+        36,
+        1086,
+        184
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": "Leave the left region free for the company avatar; verify crop in Page admin."
+    },
+    {
+      "id": "linkedin-avatar",
+      "width": 400,
+      "height": 400,
+      "template": "avatar",
+      "channel": "linkedin",
+      "safeArea": [
+        60,
+        60,
+        280,
+        280
+      ],
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "linkedin-standard-post",
+      "width": 1200,
+      "height": 1200,
+      "template": "insight",
+      "channel": "linkedin",
+      "safeArea": [
+        84,
+        96,
+        1032,
+        1008
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "linkedin-before-after",
+      "width": 1080,
+      "height": 1350,
+      "template": "before-after",
+      "channel": "linkedin",
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "linkedin-document",
+      "width": 1080,
+      "height": 1350,
+      "template": "case-study",
+      "channel": "linkedin",
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": "Use --carousel for problem / approach / outcome pages; upload as a document after manual PDF export."
+    },
+    {
+      "id": "linkedin-result",
+      "width": 1080,
+      "height": 1350,
+      "template": "case-study",
+      "channel": "linkedin",
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "linkedin-article-cover",
+      "width": 1920,
+      "height": 1080,
+      "template": "case-study",
+      "channel": "linkedin",
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "linkedin-sponsored",
+      "width": 1200,
+      "height": 627,
+      "template": "problem",
+      "channel": "linkedin",
+      "safeArea": [
+        84,
+        50,
+        1032,
+        526
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "youtube-banner",
+      "width": 2560,
+      "height": 1440,
+      "template": "banner",
+      "channel": "youtube",
+      "safeArea": [
+        508,
+        508,
+        1544,
+        424
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": "Conservative text/logo center corresponding to official minimum-canvas safe area scaled to this canvas."
+    },
+    {
+      "id": "youtube-thumbnail",
+      "width": 1280,
+      "height": 720,
+      "template": "case-study",
+      "channel": "youtube",
+      "safeArea": [
+        64,
+        48,
+        1152,
+        588
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": "Brief working preset; official help now recommends higher-resolution 3840x2160. Avoid bottom-right timestamp with --safe-area override when needed."
+    },
+    {
+      "id": "youtube-title-card",
+      "width": 1920,
+      "height": 1080,
+      "template": "demonstration",
+      "channel": "youtube",
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "youtube-intro",
+      "width": 1920,
+      "height": 1080,
+      "template": "insight",
+      "channel": "youtube",
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "youtube-outro",
+      "width": 1920,
+      "height": 1080,
+      "template": "outro",
+      "channel": "youtube",
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "youtube-lower-third",
+      "width": 1920,
+      "height": 1080,
+      "template": "lower-third",
+      "channel": "youtube",
+      "safeArea": [
+        96,
+        800,
+        1728,
+        210
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "youtube-screen-overlay",
+      "width": 1920,
+      "height": 1080,
+      "template": "screen-overlay",
+      "channel": "youtube",
+      "safeArea": [
+        96,
+        54,
+        1728,
+        972
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "youtube-end-screen",
+      "width": 1920,
+      "height": 1080,
+      "template": "end-screen",
+      "channel": "youtube",
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "youtube-short",
+      "width": 1080,
+      "height": 1920,
+      "template": "demonstration",
+      "channel": "youtube",
+      "safeArea": [
+        90,
+        250,
+        810,
+        1320
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "facebook-cover",
+      "width": 851,
+      "height": 315,
+      "template": "banner",
+      "channel": "facebook",
+      "safeArea": [
+        190,
+        45,
+        600,
+        205
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": "Working composition; check current mobile and desktop Page crop before upload."
+    },
+    {
+      "id": "facebook-avatar",
+      "width": 400,
+      "height": 400,
+      "template": "avatar",
+      "channel": "facebook",
+      "safeArea": [
+        60,
+        60,
+        280,
+        280
+      ],
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "facebook-post",
+      "width": 1200,
+      "height": 630,
+      "template": "case-study",
+      "channel": "facebook",
+      "safeArea": [
+        84,
+        50,
+        1032,
+        529
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "facebook-short-video",
+      "width": 1080,
+      "height": 1920,
+      "template": "demonstration",
+      "channel": "facebook",
+      "safeArea": [
+        90,
+        250,
+        810,
+        1320
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "facebook-ad",
+      "width": 1080,
+      "height": 1080,
+      "template": "problem",
+      "channel": "facebook",
+      "safeArea": [
+        75,
+        86,
+        928,
+        907
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "instagram-avatar",
+      "width": 400,
+      "height": 400,
+      "template": "avatar",
+      "channel": "instagram",
+      "safeArea": [
+        60,
+        60,
+        280,
+        280
+      ],
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "instagram-square",
+      "width": 1080,
+      "height": 1080,
+      "template": "insight",
+      "channel": "instagram",
+      "safeArea": [
+        75,
+        86,
+        928,
+        907
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "instagram-portrait",
+      "width": 1080,
+      "height": 1350,
+      "template": "before-after",
+      "channel": "instagram",
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "instagram-carousel",
+      "width": 1080,
+      "height": 1350,
+      "template": "case-study",
+      "channel": "instagram",
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "instagram-reels-cover",
+      "width": 1080,
+      "height": 1920,
+      "template": "demonstration",
+      "channel": "instagram",
+      "safeArea": [
+        90,
+        300,
+        810,
+        1240
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "instagram-story",
+      "width": 1080,
+      "height": 1920,
+      "template": "problem",
+      "channel": "instagram",
+      "safeArea": [
+        72,
+        250,
+        936,
+        1330
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "x-header",
+      "width": 1500,
+      "height": 500,
+      "template": "banner",
+      "channel": "x",
+      "safeArea": [
+        430,
+        75,
+        980,
+        340
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": "Leave lower-left profile overlap clear and check device crop."
+    },
+    {
+      "id": "x-avatar",
+      "width": 400,
+      "height": 400,
+      "template": "avatar",
+      "channel": "x",
+      "safeArea": [
+        60,
+        60,
+        280,
+        280
+      ],
+      "formats": [
+        "svg",
+        "png"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "x-image-post",
+      "width": 1600,
+      "height": 900,
+      "template": "case-study",
+      "channel": "x",
+      "safeArea": [
+        112,
+        72,
+        1376,
+        756
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    },
+    {
+      "id": "x-campaign-card",
+      "width": 1200,
+      "height": 630,
+      "template": "problem",
+      "channel": "x",
+      "safeArea": [
+        84,
+        50,
+        1032,
+        529
+      ],
+      "formats": [
+        "svg",
+        "png",
+        "webp",
+        "jpg"
+      ],
+      "notes": ""
+    }
+  ]
+}

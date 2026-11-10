@@ -1,0 +1,17 @@
+{
+  "assets": [
+    {
+      "path": "public/brand/wideorder-logo-light.png",
+      "sha256": "a0ec721b47af3081ac21140d6c35b306da6b0808839a28027469f33268b0b727",
+      "status": "approved raster, unchanged; SVG wrappers are not vector masters"
+    },
+    {
+      "path": "public/brand/wideorder-logo-dark.png",
+      "sha256": "239d8b71365ce71381554887efa2f2c669a473a6ca4f50d5b9902ee0495d26b1",
+      "status": "approved raster, unchanged; SVG wrappers are not vector masters"
+    }
+  ],
+  "vectorMaster": "not supplied",
+  "stackedMark": "not supplied",
+  "compactMark": "existing cropped-looking icon requires brand-owner review; default social avatars use the complete approved wordmark"
+}

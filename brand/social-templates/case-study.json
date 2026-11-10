@@ -1,0 +1,8 @@
+{
+  "label": "The case study",
+  "headline": "Month-End Reporting",
+  "body": "Repetitive monthly preparation work that previously consumed multiple skilled days was reduced to approximately 10 minutes.",
+  "result": "~1,200 minutes -> ~10 minutes",
+  "cta": "Explore the work → wideorder.net/our-work/month-end-reporting",
+  "source": "src/content/home.ts: ourWork.stories[month-end-reporting]"
+}

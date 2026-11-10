@@ -41,6 +41,7 @@ export async function processContactRequest({
   clientIp,
   getConfigStatus,
   verifyTurnstile,
+  deliverMails = sendContactMails,
   logger = DEFAULT_LOGGER,
 }: {
   body: unknown;
@@ -49,6 +50,7 @@ export async function processContactRequest({
   clientIp: string;
   getConfigStatus: () => Promise<ContactOperationalConfigStatus>;
   verifyTurnstile: (input: { token: string; secretKey: string; remoteIp: string }) => Promise<TurnstileVerificationResponse>;
+  deliverMails?: typeof sendContactMails;
   logger?: ContactWorkflowLogger;
 }): Promise<ProcessContactRequestResult> {
   if (!contentType?.includes("application/json")) {
@@ -167,7 +169,7 @@ export async function processContactRequest({
       recipient: configStatus.config.transactional.recipient,
     };
 
-    const mailResult = await sendContactMails({
+    const mailResult = await deliverMails({
       transactional: transactionalConfig,
       submission: data,
       requestId,
@@ -188,7 +190,7 @@ export async function processContactRequest({
 
     return {
       status: 200,
-      body: { ok: true },
+      body: { ok: true, conversionId: requestId },
     };
   } catch (error) {
     logger.error("[contact] transactional_delivery_failed", {

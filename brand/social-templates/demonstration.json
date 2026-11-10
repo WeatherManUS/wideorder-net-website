@@ -1,0 +1,7 @@
+{
+  "label": "The demonstration",
+  "headline": "Month-End Reporting",
+  "result": "~1,200 minutes -> ~10 minutes",
+  "cta": "Discuss a challenge → wideorder.net/contact",
+  "source": "src/content/home.ts: ourWork.stories[month-end-reporting]"
+}

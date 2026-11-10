@@ -1,11 +1,12 @@
 ﻿import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 
-import { isSiteIndexable, siteConfig } from "@/config/site";
+import { isSiteIndexable, organizationStructuredData, siteConfig } from "@/config/site";
 import { themeStylesheet } from "@/theme/tokens";
 
 import "./globals.css";
 import "./editorial.css";
+import "./marketing.css";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -27,6 +28,8 @@ const themeInitializer = `(() => {
     const storedTheme = window.localStorage.getItem(storageKey);
     if (['light', 'dark', 'option3-light', 'option3-dark'].includes(storedTheme)) {
       document.documentElement.setAttribute('data-theme', storedTheme);
+    } else {
+      document.documentElement.setAttribute('data-theme', window.matchMedia('(prefers-color-scheme: dark)').matches ? 'option3-dark' : 'option3-light');
     }
   } catch {
     // Intentionally empty.
@@ -46,7 +49,11 @@ export const metadata: Metadata = {
     description: siteConfig.openGraph.description,
     url: siteConfig.openGraph.url,
     siteName: siteConfig.openGraph.siteName,
+    images: [{ url: "/social/home.png", width: 1200, height: 630, alt: "WideOrder — There is a better way. From complexity to clarity." }],
   },
+  twitter: { card: "summary_large_image", title: siteConfig.title, description: siteConfig.description,
+    images: [{ url: "/social/home.png", alt: "WideOrder — There is a better way. From complexity to clarity." }] },
+  verification: { google: /^[A-Za-z0-9_-]{10,150}$/.test(process.env.GOOGLE_SITE_VERIFICATION ?? "") ? process.env.GOOGLE_SITE_VERIFICATION : undefined },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -71,6 +78,7 @@ export default function RootLayout({
       <head>
         <script id="wideorder-theme-init" dangerouslySetInnerHTML={{ __html: themeInitializer }} />
         <style id="wideorder-theme" dangerouslySetInnerHTML={{ __html: themeStylesheet }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationStructuredData()).replace(/</g, "\\u003c") }} />
       </head>
       <body>{children}</body>
     </html>

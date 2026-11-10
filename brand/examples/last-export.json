@@ -1,0 +1,23 @@
+{
+  "generated": "2026-11-10",
+  "assets": [
+    {
+      "id": "youtube-thumbnail-light",
+      "width": 1280,
+      "height": 720,
+      "channel": "youtube",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-thumbnail-light.svg",
+      "files": [
+        "brand/examples/portable/youtube-thumbnail-light.svg"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1152,
+        588
+      ]
+    }
+  ]
+}

@@ -1,0 +1,344 @@
+{
+  "metadata": [
+    {
+      "route": "/",
+      "title": "WideOrder solves problems for businesses. | WideOrder",
+      "image": "https://wideorder.net/social/home.png",
+      "canonical": "https://wideorder.net/"
+    },
+    {
+      "route": "/what-we-do",
+      "title": "What We Do | WideOrder",
+      "image": "https://wideorder.net/social/what-we-do.png",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "route": "/how-we-work",
+      "title": "How We Work | WideOrder",
+      "image": "https://wideorder.net/social/how-we-work.png",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "route": "/our-work",
+      "title": "Our Work | WideOrder",
+      "image": "https://wideorder.net/social/our-work.png",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "route": "/our-approach",
+      "title": "Our Approach | WideOrder",
+      "image": "https://wideorder.net/social/our-approach.png",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "route": "/contact",
+      "title": "Contact | WideOrder",
+      "image": "https://wideorder.net/social/contact.png",
+      "canonical": "https://wideorder.net/contact"
+    },
+    {
+      "route": "/privacy",
+      "title": "Privacy and Tracking Choices | WideOrder",
+      "image": "https://wideorder.net/social/home.png",
+      "canonical": "https://wideorder.net/privacy"
+    },
+    {
+      "route": "/our-work/retail-pricing",
+      "title": "Retail Pricing: ~20 minutes | WideOrder",
+      "image": "https://wideorder.net/social/retail-pricing.png",
+      "canonical": "https://wideorder.net/our-work/retail-pricing"
+    },
+    {
+      "route": "/our-work/technology-deployment",
+      "title": "Technology Deployment: up to 16 machines simultaneously | WideOrder",
+      "image": "https://wideorder.net/social/technology-deployment.png",
+      "canonical": "https://wideorder.net/our-work/technology-deployment"
+    },
+    {
+      "route": "/our-work/remote-infrastructure-printing",
+      "title": "Remote Infrastructure & Printing: ~30 minutes -> 0 downtime | WideOrder",
+      "image": "https://wideorder.net/social/remote-infrastructure-printing.png",
+      "canonical": "https://wideorder.net/our-work/remote-infrastructure-printing"
+    },
+    {
+      "route": "/our-work/month-end-reporting",
+      "title": "Month-End Reporting: ~1,200 minutes -> ~10 minutes | WideOrder",
+      "image": "https://wideorder.net/social/month-end-reporting.png",
+      "canonical": "https://wideorder.net/our-work/month-end-reporting"
+    }
+  ],
+  "layouts": [
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/privacy",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/our-work/retail-pricing",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/our-work/technology-deployment",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/our-work/remote-infrastructure-printing",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/our-work/month-end-reporting",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/privacy",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/our-work/retail-pricing",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/our-work/technology-deployment",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/our-work/remote-infrastructure-printing",
+      "overflow": false
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/our-work/month-end-reporting",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/privacy",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/our-work/retail-pricing",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/our-work/technology-deployment",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/our-work/remote-infrastructure-printing",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/our-work/month-end-reporting",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/privacy",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/our-work/retail-pricing",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/our-work/technology-deployment",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/our-work/remote-infrastructure-printing",
+      "overflow": false
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/our-work/month-end-reporting",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/privacy",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/our-work/retail-pricing",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/our-work/technology-deployment",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/our-work/remote-infrastructure-printing",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/our-work/month-end-reporting",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/privacy",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/our-work/retail-pricing",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/our-work/technology-deployment",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/our-work/remote-infrastructure-printing",
+      "overflow": false
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/our-work/month-end-reporting",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/privacy",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/our-work/retail-pricing",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/our-work/technology-deployment",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/our-work/remote-infrastructure-printing",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/our-work/month-end-reporting",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/privacy",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/our-work/retail-pricing",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/our-work/technology-deployment",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/our-work/remote-infrastructure-printing",
+      "overflow": false
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/our-work/month-end-reporting",
+      "overflow": false
+    }
+  ],
+  "interactions": [
+    "No optional requests/storage before consent or after rejection; analytics-only loads only GA4, with one manual initial page view",
+    "First/last campaign attribution survives navigation; accepted inquiry produces one opaque-ID conversion; duplicate response and honeypot-style success do not add conversions; no form values enter SDK queues",
+    "Withdrawal reloads both tabs, clears attribution/accessibly scoped vendor cookies, and prevents further optional SDK loads",
+    "GPC blocks advertising despite acceptance; DNT blocks both categories",
+    "Advertising-only loads the four configured provider SDKs, stores no session attribution, and deduplicates lead commands across Google Ads, Meta, LinkedIn and X",
+    "GTM requires both categories and suppresses every direct-provider transport",
+    "A personal/unknown query key prevents optional tags from loading",
+    "First-visit master palette follows system mode; saved Option 1 preference stays authoritative; no-JavaScript dark fallback uses the approved master dark palette"
+  ],
+  "requests": {
+    "analytics": [
+      "https://www.googletagmanager.com/gtag/js?id=G-TEST1234",
+      "https://www.googletagmanager.com/gtag/js?id=G-TEST1234",
+      "https://www.googletagmanager.com/gtag/js?id=G-TEST1234"
+    ],
+    "gpc": [
+      "https://www.googletagmanager.com/gtag/js?id=G-TEST1234"
+    ],
+    "dnt": [],
+    "advertising_only": [
+      "https://www.googletagmanager.com/gtag/js?id=AW-123456789",
+      "https://snap.licdn.com/li.lms-analytics/insight.min.js",
+      "https://connect.facebook.net/en_US/fbevents.js",
+      "https://static.ads-twitter.com/uwt.js"
+    ],
+    "gtm": [
+      "https://www.googletagmanager.com/gtm.js?id=GTM-TEST1234"
+    ],
+    "unsafe_query": []
+  },
+  "pageErrors": []
+}

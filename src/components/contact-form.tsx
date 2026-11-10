@@ -4,6 +4,7 @@ import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { ContactField } from "@/content/home";
+import { trackMarketingEvent } from "@/lib/marketing/browser";
 import {
   CONTACT_ERROR_MESSAGE,
   CONTACT_SECURITY_MESSAGE,
@@ -33,7 +34,7 @@ type ContactApiErrorCode =
   | "method_not_allowed";
 
 type ContactApiResponse =
-  | { ok: true }
+  | { ok: true; conversionId?: string }
   | {
       ok: false;
       error: ContactApiErrorCode;
@@ -93,6 +94,8 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
   const [turnstileSiteKey, setTurnstileSiteKey] = useState("");
   const [theme, setTheme] = useState<ThemeMode>("light");
   const formRef = useRef<HTMLFormElement>(null);
+  const inFlightRef = useRef(false);
+  const contactStartedRef = useRef(false);
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const turnstileWidgetIdRef = useRef<TurnstileInstanceId | null>(null);
 
@@ -213,7 +216,7 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
       return;
     }
 
-    if (submissionState === "submitting") {
+    if (inFlightRef.current || submissionState === "submitting") {
       return;
     }
 
@@ -225,6 +228,7 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
     }
 
     const formData = new FormData(form);
+    inFlightRef.current = true;
 
     setSubmissionState("submitting");
     setStatusMessage("");
@@ -250,6 +254,7 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
       const result = (await response.json().catch(() => ({ ok: false, error: "delivery_failed" }))) as ContactApiResponse;
 
       if (result.ok) {
+        if (result.conversionId) trackMarketingEvent("generate_lead", { lead_id: result.conversionId });
         formRef.current?.reset();
         resetTurnstile();
         setSubmissionState("success");
@@ -292,6 +297,8 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
     } catch {
       setSubmissionState("error");
       setStatusMessage(CONTACT_ERROR_MESSAGE);
+    } finally {
+      inFlightRef.current = false;
     }
   };
 
@@ -314,7 +321,8 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
           onReady={() => renderTurnstile()}
         />
       ) : null}
-      <form ref={formRef} className="contact-form" aria-busy={submissionState === "submitting"} onSubmit={handleSubmit}>
+      <form ref={formRef} className="contact-form" aria-busy={submissionState === "submitting"} onSubmit={handleSubmit}
+        onFocus={() => { if (!contactStartedRef.current && trackMarketingEvent("contact_start", { cta_position: "contact_form", interaction_type: "form_focus" })) contactStartedRef.current = true; }}>
         <div className="contact-form__grid">
           {fields.map((field) => (
             <div key={field.name} className="form-field">

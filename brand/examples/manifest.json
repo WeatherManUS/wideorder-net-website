@@ -1,0 +1,988 @@
+{
+  "generated": "2026-11-10",
+  "assets": [
+    {
+      "id": "home",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/home.svg",
+      "files": [
+        "public/social/home.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "what-we-do",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/what-we-do.svg",
+      "files": [
+        "public/social/what-we-do.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "how-we-work",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/how-we-work.svg",
+      "files": [
+        "public/social/how-we-work.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "our-work",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/our-work.svg",
+      "files": [
+        "public/social/our-work.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "our-approach",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/our-approach.svg",
+      "files": [
+        "public/social/our-approach.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "contact",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/contact.svg",
+      "files": [
+        "public/social/contact.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "retail-pricing",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/retail-pricing.svg",
+      "files": [
+        "public/social/retail-pricing.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "technology-deployment",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/technology-deployment.svg",
+      "files": [
+        "public/social/technology-deployment.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "remote-infrastructure-printing",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/remote-infrastructure-printing.svg",
+      "files": [
+        "public/social/remote-infrastructure-printing.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "month-end-reporting",
+      "width": 1200,
+      "height": 630,
+      "channel": "website",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/social-previews/month-end-reporting.svg",
+      "files": [
+        "public/social/month-end-reporting.png"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1072,
+        534
+      ]
+    },
+    {
+      "id": "square-post-light",
+      "width": 1080,
+      "height": 1080,
+      "channel": "shared",
+      "template": "insight",
+      "variation": "light",
+      "source": "brand/examples/sources/square-post-light.svg",
+      "files": [
+        "brand/examples/exports/square-post-light.svg",
+        "brand/examples/exports/square-post-light.png",
+        "brand/examples/exports/square-post-light.webp",
+        "brand/examples/exports/square-post-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        86,
+        928,
+        907
+      ]
+    },
+    {
+      "id": "portrait-post-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "shared",
+      "template": "before-after",
+      "variation": "light",
+      "source": "brand/examples/sources/portrait-post-light.svg",
+      "files": [
+        "brand/examples/exports/portrait-post-light.svg",
+        "brand/examples/exports/portrait-post-light.png",
+        "brand/examples/exports/portrait-post-light.webp",
+        "brand/examples/exports/portrait-post-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    },
+    {
+      "id": "vertical-video-light",
+      "width": 1080,
+      "height": 1920,
+      "channel": "shared",
+      "template": "demonstration",
+      "variation": "light",
+      "source": "brand/examples/sources/vertical-video-light.svg",
+      "files": [
+        "brand/examples/exports/vertical-video-light.svg",
+        "brand/examples/exports/vertical-video-light.png",
+        "brand/examples/exports/vertical-video-light.webp",
+        "brand/examples/exports/vertical-video-light.jpg"
+      ],
+      "safeArea": [
+        72,
+        250,
+        936,
+        1330
+      ]
+    },
+    {
+      "id": "landscape-video-light",
+      "width": 1920,
+      "height": 1080,
+      "channel": "shared",
+      "template": "demonstration",
+      "variation": "light",
+      "source": "brand/examples/sources/landscape-video-light.svg",
+      "files": [
+        "brand/examples/exports/landscape-video-light.svg",
+        "brand/examples/exports/landscape-video-light.png",
+        "brand/examples/exports/landscape-video-light.webp",
+        "brand/examples/exports/landscape-video-light.jpg"
+      ],
+      "safeArea": [
+        96,
+        54,
+        1728,
+        972
+      ]
+    },
+    {
+      "id": "linkedin-company-banner-light",
+      "width": 1512,
+      "height": 256,
+      "channel": "linkedin",
+      "template": "banner",
+      "variation": "light",
+      "source": "brand/examples/sources/linkedin-company-banner-light.svg",
+      "files": [
+        "brand/examples/exports/linkedin-company-banner-light.svg",
+        "brand/examples/exports/linkedin-company-banner-light.png",
+        "brand/examples/exports/linkedin-company-banner-light.webp",
+        "brand/examples/exports/linkedin-company-banner-light.jpg"
+      ],
+      "safeArea": [
+        350,
+        36,
+        1086,
+        184
+      ]
+    },
+    {
+      "id": "linkedin-avatar-light",
+      "width": 400,
+      "height": 400,
+      "channel": "linkedin",
+      "template": "avatar",
+      "variation": "light",
+      "source": "brand/examples/sources/linkedin-avatar-light.svg",
+      "files": [
+        "brand/examples/exports/linkedin-avatar-light.svg",
+        "brand/examples/exports/linkedin-avatar-light.png"
+      ],
+      "safeArea": [
+        60,
+        60,
+        280,
+        280
+      ]
+    },
+    {
+      "id": "linkedin-standard-post-light",
+      "width": 1200,
+      "height": 1200,
+      "channel": "linkedin",
+      "template": "insight",
+      "variation": "light",
+      "source": "brand/examples/sources/linkedin-standard-post-light.svg",
+      "files": [
+        "brand/examples/exports/linkedin-standard-post-light.svg",
+        "brand/examples/exports/linkedin-standard-post-light.png",
+        "brand/examples/exports/linkedin-standard-post-light.webp",
+        "brand/examples/exports/linkedin-standard-post-light.jpg"
+      ],
+      "safeArea": [
+        84,
+        96,
+        1032,
+        1008
+      ]
+    },
+    {
+      "id": "linkedin-before-after-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "linkedin",
+      "template": "before-after",
+      "variation": "light",
+      "source": "brand/examples/sources/linkedin-before-after-light.svg",
+      "files": [
+        "brand/examples/exports/linkedin-before-after-light.svg",
+        "brand/examples/exports/linkedin-before-after-light.png",
+        "brand/examples/exports/linkedin-before-after-light.webp",
+        "brand/examples/exports/linkedin-before-after-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    },
+    {
+      "id": "linkedin-document-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "linkedin",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/linkedin-document-light.svg",
+      "files": [
+        "brand/examples/exports/linkedin-document-light.svg",
+        "brand/examples/exports/linkedin-document-light.png",
+        "brand/examples/exports/linkedin-document-light.webp",
+        "brand/examples/exports/linkedin-document-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    },
+    {
+      "id": "linkedin-result-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "linkedin",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/linkedin-result-light.svg",
+      "files": [
+        "brand/examples/exports/linkedin-result-light.svg",
+        "brand/examples/exports/linkedin-result-light.png",
+        "brand/examples/exports/linkedin-result-light.webp",
+        "brand/examples/exports/linkedin-result-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    },
+    {
+      "id": "linkedin-article-cover-light",
+      "width": 1920,
+      "height": 1080,
+      "channel": "linkedin",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/linkedin-article-cover-light.svg",
+      "files": [
+        "brand/examples/exports/linkedin-article-cover-light.svg",
+        "brand/examples/exports/linkedin-article-cover-light.png",
+        "brand/examples/exports/linkedin-article-cover-light.webp",
+        "brand/examples/exports/linkedin-article-cover-light.jpg"
+      ],
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ]
+    },
+    {
+      "id": "linkedin-sponsored-light",
+      "width": 1200,
+      "height": 627,
+      "channel": "linkedin",
+      "template": "problem",
+      "variation": "light",
+      "source": "brand/examples/sources/linkedin-sponsored-light.svg",
+      "files": [
+        "brand/examples/exports/linkedin-sponsored-light.svg",
+        "brand/examples/exports/linkedin-sponsored-light.png",
+        "brand/examples/exports/linkedin-sponsored-light.webp",
+        "brand/examples/exports/linkedin-sponsored-light.jpg"
+      ],
+      "safeArea": [
+        84,
+        50,
+        1032,
+        526
+      ]
+    },
+    {
+      "id": "youtube-banner-light",
+      "width": 2560,
+      "height": 1440,
+      "channel": "youtube",
+      "template": "banner",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-banner-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-banner-light.svg",
+        "brand/examples/exports/youtube-banner-light.png",
+        "brand/examples/exports/youtube-banner-light.webp",
+        "brand/examples/exports/youtube-banner-light.jpg"
+      ],
+      "safeArea": [
+        508,
+        508,
+        1544,
+        424
+      ]
+    },
+    {
+      "id": "youtube-thumbnail-light",
+      "width": 1280,
+      "height": 720,
+      "channel": "youtube",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-thumbnail-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-thumbnail-light.svg",
+        "brand/examples/exports/youtube-thumbnail-light.png",
+        "brand/examples/exports/youtube-thumbnail-light.webp",
+        "brand/examples/exports/youtube-thumbnail-light.jpg"
+      ],
+      "safeArea": [
+        64,
+        48,
+        1152,
+        588
+      ]
+    },
+    {
+      "id": "youtube-title-card-light",
+      "width": 1920,
+      "height": 1080,
+      "channel": "youtube",
+      "template": "demonstration",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-title-card-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-title-card-light.svg",
+        "brand/examples/exports/youtube-title-card-light.png",
+        "brand/examples/exports/youtube-title-card-light.webp",
+        "brand/examples/exports/youtube-title-card-light.jpg"
+      ],
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ]
+    },
+    {
+      "id": "youtube-intro-light",
+      "width": 1920,
+      "height": 1080,
+      "channel": "youtube",
+      "template": "insight",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-intro-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-intro-light.svg",
+        "brand/examples/exports/youtube-intro-light.png",
+        "brand/examples/exports/youtube-intro-light.webp",
+        "brand/examples/exports/youtube-intro-light.jpg"
+      ],
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ]
+    },
+    {
+      "id": "youtube-outro-light",
+      "width": 1920,
+      "height": 1080,
+      "channel": "youtube",
+      "template": "outro",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-outro-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-outro-light.svg",
+        "brand/examples/exports/youtube-outro-light.png",
+        "brand/examples/exports/youtube-outro-light.webp",
+        "brand/examples/exports/youtube-outro-light.jpg"
+      ],
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ]
+    },
+    {
+      "id": "youtube-lower-third-light",
+      "width": 1920,
+      "height": 1080,
+      "channel": "youtube",
+      "template": "lower-third",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-lower-third-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-lower-third-light.svg",
+        "brand/examples/exports/youtube-lower-third-light.png",
+        "brand/examples/exports/youtube-lower-third-light.webp"
+      ],
+      "safeArea": [
+        96,
+        800,
+        1728,
+        210
+      ]
+    },
+    {
+      "id": "youtube-screen-overlay-light",
+      "width": 1920,
+      "height": 1080,
+      "channel": "youtube",
+      "template": "screen-overlay",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-screen-overlay-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-screen-overlay-light.svg",
+        "brand/examples/exports/youtube-screen-overlay-light.png",
+        "brand/examples/exports/youtube-screen-overlay-light.webp"
+      ],
+      "safeArea": [
+        96,
+        54,
+        1728,
+        972
+      ]
+    },
+    {
+      "id": "youtube-end-screen-light",
+      "width": 1920,
+      "height": 1080,
+      "channel": "youtube",
+      "template": "end-screen",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-end-screen-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-end-screen-light.svg",
+        "brand/examples/exports/youtube-end-screen-light.png",
+        "brand/examples/exports/youtube-end-screen-light.webp",
+        "brand/examples/exports/youtube-end-screen-light.jpg"
+      ],
+      "safeArea": [
+        134,
+        86,
+        1651,
+        907
+      ]
+    },
+    {
+      "id": "youtube-short-light",
+      "width": 1080,
+      "height": 1920,
+      "channel": "youtube",
+      "template": "demonstration",
+      "variation": "light",
+      "source": "brand/examples/sources/youtube-short-light.svg",
+      "files": [
+        "brand/examples/exports/youtube-short-light.svg",
+        "brand/examples/exports/youtube-short-light.png",
+        "brand/examples/exports/youtube-short-light.webp",
+        "brand/examples/exports/youtube-short-light.jpg"
+      ],
+      "safeArea": [
+        90,
+        250,
+        810,
+        1320
+      ]
+    },
+    {
+      "id": "facebook-cover-light",
+      "width": 851,
+      "height": 315,
+      "channel": "facebook",
+      "template": "banner",
+      "variation": "light",
+      "source": "brand/examples/sources/facebook-cover-light.svg",
+      "files": [
+        "brand/examples/exports/facebook-cover-light.svg",
+        "brand/examples/exports/facebook-cover-light.png",
+        "brand/examples/exports/facebook-cover-light.webp",
+        "brand/examples/exports/facebook-cover-light.jpg"
+      ],
+      "safeArea": [
+        190,
+        45,
+        600,
+        205
+      ]
+    },
+    {
+      "id": "facebook-avatar-light",
+      "width": 400,
+      "height": 400,
+      "channel": "facebook",
+      "template": "avatar",
+      "variation": "light",
+      "source": "brand/examples/sources/facebook-avatar-light.svg",
+      "files": [
+        "brand/examples/exports/facebook-avatar-light.svg",
+        "brand/examples/exports/facebook-avatar-light.png"
+      ],
+      "safeArea": [
+        60,
+        60,
+        280,
+        280
+      ]
+    },
+    {
+      "id": "facebook-post-light",
+      "width": 1200,
+      "height": 630,
+      "channel": "facebook",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/facebook-post-light.svg",
+      "files": [
+        "brand/examples/exports/facebook-post-light.svg",
+        "brand/examples/exports/facebook-post-light.png",
+        "brand/examples/exports/facebook-post-light.webp",
+        "brand/examples/exports/facebook-post-light.jpg"
+      ],
+      "safeArea": [
+        84,
+        50,
+        1032,
+        529
+      ]
+    },
+    {
+      "id": "facebook-short-video-light",
+      "width": 1080,
+      "height": 1920,
+      "channel": "facebook",
+      "template": "demonstration",
+      "variation": "light",
+      "source": "brand/examples/sources/facebook-short-video-light.svg",
+      "files": [
+        "brand/examples/exports/facebook-short-video-light.svg",
+        "brand/examples/exports/facebook-short-video-light.png",
+        "brand/examples/exports/facebook-short-video-light.webp",
+        "brand/examples/exports/facebook-short-video-light.jpg"
+      ],
+      "safeArea": [
+        90,
+        250,
+        810,
+        1320
+      ]
+    },
+    {
+      "id": "facebook-ad-light",
+      "width": 1080,
+      "height": 1080,
+      "channel": "facebook",
+      "template": "problem",
+      "variation": "light",
+      "source": "brand/examples/sources/facebook-ad-light.svg",
+      "files": [
+        "brand/examples/exports/facebook-ad-light.svg",
+        "brand/examples/exports/facebook-ad-light.png",
+        "brand/examples/exports/facebook-ad-light.webp",
+        "brand/examples/exports/facebook-ad-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        86,
+        928,
+        907
+      ]
+    },
+    {
+      "id": "instagram-avatar-light",
+      "width": 400,
+      "height": 400,
+      "channel": "instagram",
+      "template": "avatar",
+      "variation": "light",
+      "source": "brand/examples/sources/instagram-avatar-light.svg",
+      "files": [
+        "brand/examples/exports/instagram-avatar-light.svg",
+        "brand/examples/exports/instagram-avatar-light.png"
+      ],
+      "safeArea": [
+        60,
+        60,
+        280,
+        280
+      ]
+    },
+    {
+      "id": "instagram-square-light",
+      "width": 1080,
+      "height": 1080,
+      "channel": "instagram",
+      "template": "insight",
+      "variation": "light",
+      "source": "brand/examples/sources/instagram-square-light.svg",
+      "files": [
+        "brand/examples/exports/instagram-square-light.svg",
+        "brand/examples/exports/instagram-square-light.png",
+        "brand/examples/exports/instagram-square-light.webp",
+        "brand/examples/exports/instagram-square-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        86,
+        928,
+        907
+      ]
+    },
+    {
+      "id": "instagram-portrait-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "instagram",
+      "template": "before-after",
+      "variation": "light",
+      "source": "brand/examples/sources/instagram-portrait-light.svg",
+      "files": [
+        "brand/examples/exports/instagram-portrait-light.svg",
+        "brand/examples/exports/instagram-portrait-light.png",
+        "brand/examples/exports/instagram-portrait-light.webp",
+        "brand/examples/exports/instagram-portrait-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    },
+    {
+      "id": "instagram-carousel-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "instagram",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/instagram-carousel-light.svg",
+      "files": [
+        "brand/examples/exports/instagram-carousel-light.svg",
+        "brand/examples/exports/instagram-carousel-light.png",
+        "brand/examples/exports/instagram-carousel-light.webp",
+        "brand/examples/exports/instagram-carousel-light.jpg"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    },
+    {
+      "id": "instagram-reels-cover-light",
+      "width": 1080,
+      "height": 1920,
+      "channel": "instagram",
+      "template": "demonstration",
+      "variation": "light",
+      "source": "brand/examples/sources/instagram-reels-cover-light.svg",
+      "files": [
+        "brand/examples/exports/instagram-reels-cover-light.svg",
+        "brand/examples/exports/instagram-reels-cover-light.png",
+        "brand/examples/exports/instagram-reels-cover-light.webp",
+        "brand/examples/exports/instagram-reels-cover-light.jpg"
+      ],
+      "safeArea": [
+        90,
+        300,
+        810,
+        1240
+      ]
+    },
+    {
+      "id": "instagram-story-light",
+      "width": 1080,
+      "height": 1920,
+      "channel": "instagram",
+      "template": "problem",
+      "variation": "light",
+      "source": "brand/examples/sources/instagram-story-light.svg",
+      "files": [
+        "brand/examples/exports/instagram-story-light.svg",
+        "brand/examples/exports/instagram-story-light.png",
+        "brand/examples/exports/instagram-story-light.webp",
+        "brand/examples/exports/instagram-story-light.jpg"
+      ],
+      "safeArea": [
+        72,
+        250,
+        936,
+        1330
+      ]
+    },
+    {
+      "id": "x-header-light",
+      "width": 1500,
+      "height": 500,
+      "channel": "x",
+      "template": "banner",
+      "variation": "light",
+      "source": "brand/examples/sources/x-header-light.svg",
+      "files": [
+        "brand/examples/exports/x-header-light.svg",
+        "brand/examples/exports/x-header-light.png",
+        "brand/examples/exports/x-header-light.webp",
+        "brand/examples/exports/x-header-light.jpg"
+      ],
+      "safeArea": [
+        430,
+        75,
+        980,
+        340
+      ]
+    },
+    {
+      "id": "x-avatar-light",
+      "width": 400,
+      "height": 400,
+      "channel": "x",
+      "template": "avatar",
+      "variation": "light",
+      "source": "brand/examples/sources/x-avatar-light.svg",
+      "files": [
+        "brand/examples/exports/x-avatar-light.svg",
+        "brand/examples/exports/x-avatar-light.png"
+      ],
+      "safeArea": [
+        60,
+        60,
+        280,
+        280
+      ]
+    },
+    {
+      "id": "x-image-post-light",
+      "width": 1600,
+      "height": 900,
+      "channel": "x",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/x-image-post-light.svg",
+      "files": [
+        "brand/examples/exports/x-image-post-light.svg",
+        "brand/examples/exports/x-image-post-light.png",
+        "brand/examples/exports/x-image-post-light.webp",
+        "brand/examples/exports/x-image-post-light.jpg"
+      ],
+      "safeArea": [
+        112,
+        72,
+        1376,
+        756
+      ]
+    },
+    {
+      "id": "x-campaign-card-light",
+      "width": 1200,
+      "height": 630,
+      "channel": "x",
+      "template": "problem",
+      "variation": "light",
+      "source": "brand/examples/sources/x-campaign-card-light.svg",
+      "files": [
+        "brand/examples/exports/x-campaign-card-light.svg",
+        "brand/examples/exports/x-campaign-card-light.png",
+        "brand/examples/exports/x-campaign-card-light.webp",
+        "brand/examples/exports/x-campaign-card-light.jpg"
+      ],
+      "safeArea": [
+        84,
+        50,
+        1032,
+        529
+      ]
+    },
+    {
+      "id": "document-1-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "linkedin",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/document-1-light.svg",
+      "files": [
+        "brand/examples/exports/document-1-light.svg",
+        "brand/examples/exports/document-1-light.png"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    },
+    {
+      "id": "document-2-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "linkedin",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/document-2-light.svg",
+      "files": [
+        "brand/examples/exports/document-2-light.svg",
+        "brand/examples/exports/document-2-light.png"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    },
+    {
+      "id": "document-3-light",
+      "width": 1080,
+      "height": 1350,
+      "channel": "linkedin",
+      "template": "case-study",
+      "variation": "light",
+      "source": "brand/examples/sources/document-3-light.svg",
+      "files": [
+        "brand/examples/exports/document-3-light.svg",
+        "brand/examples/exports/document-3-light.png"
+      ],
+      "safeArea": [
+        75,
+        108,
+        928,
+        1134
+      ]
+    }
+  ]
+}

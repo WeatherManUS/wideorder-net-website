@@ -1,0 +1,43 @@
+.tracking-preferences {
+  padding: 0.4rem 0;
+  border: 0;
+  background: none;
+  color: var(--color-text);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  font-size: 0.875rem;
+}
+.tracking-preferences:hover { color: var(--color-accent-text); }
+.social-links { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; margin-top: 1rem; font-size: 0.9rem; }
+.social-links a { text-decoration: underline; text-underline-offset: 0.25em; }
+.consent-panel {
+  position: fixed;
+  inset: auto 1.5rem 1.5rem auto;
+  width: min(40rem, calc(100vw - 3rem));
+  max-height: calc(100dvh - 3rem);
+  overflow-y: auto;
+  z-index: 1000;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-top: 3px solid var(--color-accent-text);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: 0 0 0 100vmax color-mix(in srgb, var(--color-ink) 25%, transparent);
+}
+.consent-panel h2 { font-family: var(--font-heading); font-size: 1.6rem; line-height: 1.2; }
+.consent-panel p { margin-top: 1rem; font-size: 0.9375rem; color: var(--color-text-muted); }
+.consent-panel a { text-decoration: underline; text-underline-offset: 0.2em; }
+.consent-panel label { display: flex; gap: 0.75rem; align-items: baseline; margin-top: 1.25rem; font-size: 0.9375rem; }
+.consent-panel input { accent-color: var(--color-accent); min-width: 1rem; min-height: 1rem; }
+.consent-panel__actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-block: 1.5rem 0.75rem; }
+.consent-panel .button { flex: 1 1 9rem; min-height: 2.75rem; font-size: 0.875rem; }
+.consent-panel .button:disabled { cursor: default; opacity: 0.6; }
+.privacy-copy { max-width: 68ch; }
+.privacy-copy h2 { margin-top: 2.5rem; font-family: var(--font-heading); font-size: 1.6rem; line-height: 1.2; }
+.privacy-copy p, .privacy-copy ul { margin-top: 1rem; color: var(--color-text-muted); }
+.privacy-copy ul { padding-left: 1.25rem; }
+.privacy-copy a, .case-study-permalink { text-decoration: underline; text-underline-offset: 0.25em; }
+.case-study-permalink { display: inline-block; margin-top: 1.5rem; color: var(--color-accent-text); font-size: 0.9375rem; }
+@media (max-width: 480px) {
+  .consent-panel { inset: auto 0.75rem 0.75rem; width: calc(100vw - 1.5rem); max-height: calc(100dvh - 1.5rem); }
+}

@@ -60,6 +60,22 @@ test("case F: honeypot returns success and performs no provider or turnstile cal
   assert.equal(verifyCalls, 0);
 });
 
+test("only an accepted internal inquiry returns an opaque conversion reference", async () => {
+  const requestId = "10000000-0000-4000-8000-000000000001";
+  const input = {
+    body: { name: "Taylor Example", email: "visitor@example.test", message: "Hello", website: "", turnstileToken: "token" },
+    contentType: "application/json", requestId, clientIp: "127.0.0.1",
+    getConfigStatus: async () => createConfigStatus(), verifyTurnstile: async () => ({ success: true }), logger: createLogger(),
+  };
+  const delivery = { requestId, deliveryRole: "internal", provider: "resend_api", providerStatus: "accepted", providerMessageId: "provider-id" };
+  const accepted = await processContactRequest({ ...input, deliverMails: async () => ({ internalDelivery: delivery, visitorCopyDelivery: null }) });
+  assert.deepEqual(accepted.body, { ok: true, conversionId: requestId });
+  const rejected = await processContactRequest({ ...input, deliverMails: async () => ({ internalDelivery: { ...delivery, providerStatus: "rejected", providerMessageId: null }, visitorCopyDelivery: null }) });
+  assert.equal(rejected.status, 502);
+  assert.equal(rejected.body.conversionId, undefined);
+  assert.ok(!JSON.stringify(accepted.body).includes(input.body.email));
+});
+
 test("case G: turnstile failure returns validation-style error and performs no delivery", async () => {
   let verifyCalls = 0;
   const result = await processContactRequest({

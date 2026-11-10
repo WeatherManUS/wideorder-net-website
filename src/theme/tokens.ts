@@ -135,7 +135,7 @@ export const themeStylesheet = [
   ":root {",
   "  color-scheme: light;",
   serialize(designTokens.shared),
-  serialize(designTokens.light),
+  serialize(designTokens.option3Light),
   "}",
   ":root[data-theme='light'] {",
   "  color-scheme: light;",
@@ -156,7 +156,7 @@ export const themeStylesheet = [
   "@media (prefers-color-scheme: dark) {",
   "  :root:not([data-theme]) {",
   "    color-scheme: dark;",
-  serialize(designTokens.dark),
+  serialize(designTokens.option3Dark),
   "  }",
   "}"
 ].join("\n");

@@ -1,0 +1,927 @@
+{
+  "cases": [
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/what-we-do",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/how-we-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/our-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/our-approach",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "route": "/contact",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/contact"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/what-we-do",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/how-we-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/our-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/our-approach",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "route": "/contact",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/contact"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/what-we-do",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/how-we-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/our-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/our-approach",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "route": "/contact",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/contact"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/what-we-do",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/how-we-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/our-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/our-approach",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "route": "/contact",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/contact"
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net"
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/what-we-do",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/how-we-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/our-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/our-approach",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "theme": "option3-light",
+      "width": 1440,
+      "route": "/contact",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/contact"
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net"
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/what-we-do",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/how-we-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/our-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/our-approach",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "theme": "option3-light",
+      "width": 390,
+      "route": "/contact",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/contact"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/what-we-do",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/how-we-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/our-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/our-approach",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 1440,
+      "route": "/contact",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/contact"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/what-we-do",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/what-we-do"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/how-we-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/how-we-work"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/our-work",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-work"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/our-approach",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/our-approach"
+    },
+    {
+      "theme": "option3-dark",
+      "width": 390,
+      "route": "/contact",
+      "overflow": false,
+      "headerOverlap": false,
+      "font": "Manrope, \"Manrope Fallback\", \"Arial Narrow\", Arial, Helvetica, sans-serif",
+      "textOverflow": [],
+      "language": "en",
+      "canonical": "https://wideorder.net/contact"
+    }
+  ],
+  "contrast": [
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "background",
+      "ratio": 13.93
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "background-secondary",
+      "ratio": 13.93
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 15.83
+    },
+    {
+      "theme": "light",
+      "foreground": "text",
+      "background": "surface-muted",
+      "ratio": 12.3
+    },
+    {
+      "theme": "light",
+      "foreground": "text-muted",
+      "background": "background",
+      "ratio": 6.18
+    },
+    {
+      "theme": "light",
+      "foreground": "text-muted",
+      "background": "background-secondary",
+      "ratio": 6.18
+    },
+    {
+      "theme": "light",
+      "foreground": "text-muted",
+      "background": "surface",
+      "ratio": 7.03
+    },
+    {
+      "theme": "light",
+      "foreground": "text-muted",
+      "background": "surface-muted",
+      "ratio": 5.46
+    },
+    {
+      "theme": "light",
+      "foreground": "accent-text",
+      "background": "background",
+      "ratio": 5.56
+    },
+    {
+      "theme": "light",
+      "foreground": "accent-text",
+      "background": "background-secondary",
+      "ratio": 5.56
+    },
+    {
+      "theme": "light",
+      "foreground": "accent-text",
+      "background": "surface",
+      "ratio": 6.32
+    },
+    {
+      "theme": "light",
+      "foreground": "accent-text",
+      "background": "surface-muted",
+      "ratio": 4.91
+    },
+    {
+      "theme": "light",
+      "foreground": "error",
+      "background": "background",
+      "ratio": 5.78
+    },
+    {
+      "theme": "light",
+      "foreground": "error",
+      "background": "background-secondary",
+      "ratio": 5.78
+    },
+    {
+      "theme": "light",
+      "foreground": "error",
+      "background": "surface",
+      "ratio": 6.57
+    },
+    {
+      "theme": "light",
+      "foreground": "error",
+      "background": "surface-muted",
+      "ratio": 5.11
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "background",
+      "ratio": 13.93
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "background-secondary",
+      "ratio": 11.86
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 9.86
+    },
+    {
+      "theme": "dark",
+      "foreground": "text",
+      "background": "surface-muted",
+      "ratio": 11.21
+    },
+    {
+      "theme": "dark",
+      "foreground": "text-muted",
+      "background": "background",
+      "ratio": 11.06
+    },
+    {
+      "theme": "dark",
+      "foreground": "text-muted",
+      "background": "background-secondary",
+      "ratio": 9.42
+    },
+    {
+      "theme": "dark",
+      "foreground": "text-muted",
+      "background": "surface",
+      "ratio": 7.83
+    },
+    {
+      "theme": "dark",
+      "foreground": "text-muted",
+      "background": "surface-muted",
+      "ratio": 8.9
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent-text",
+      "background": "background",
+      "ratio": 7.76
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent-text",
+      "background": "background-secondary",
+      "ratio": 6.61
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent-text",
+      "background": "surface",
+      "ratio": 5.5
+    },
+    {
+      "theme": "dark",
+      "foreground": "accent-text",
+      "background": "surface-muted",
+      "ratio": 6.25
+    },
+    {
+      "theme": "dark",
+      "foreground": "error",
+      "background": "background",
+      "ratio": 9.32
+    },
+    {
+      "theme": "dark",
+      "foreground": "error",
+      "background": "background-secondary",
+      "ratio": 7.94
+    },
+    {
+      "theme": "dark",
+      "foreground": "error",
+      "background": "surface",
+      "ratio": 6.6
+    },
+    {
+      "theme": "dark",
+      "foreground": "error",
+      "background": "surface-muted",
+      "ratio": 7.51
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "text",
+      "background": "background",
+      "ratio": 15.24
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "text",
+      "background": "background-secondary",
+      "ratio": 14.19
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 16.47
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "text",
+      "background": "surface-muted",
+      "ratio": 14.19
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "text-muted",
+      "background": "background",
+      "ratio": 4.96
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "text-muted",
+      "background": "background-secondary",
+      "ratio": 4.62
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "text-muted",
+      "background": "surface",
+      "ratio": 5.36
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "text-muted",
+      "background": "surface-muted",
+      "ratio": 4.62
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "accent-text",
+      "background": "background",
+      "ratio": 6.25
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "accent-text",
+      "background": "background-secondary",
+      "ratio": 5.82
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "accent-text",
+      "background": "surface",
+      "ratio": 6.76
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "accent-text",
+      "background": "surface-muted",
+      "ratio": 5.82
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "error",
+      "background": "background",
+      "ratio": 6.08
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "error",
+      "background": "background-secondary",
+      "ratio": 5.66
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "error",
+      "background": "surface",
+      "ratio": 6.57
+    },
+    {
+      "theme": "option3-light",
+      "foreground": "error",
+      "background": "surface-muted",
+      "ratio": 5.66
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "text",
+      "background": "background",
+      "ratio": 16.35
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "text",
+      "background": "background-secondary",
+      "ratio": 14.92
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "text",
+      "background": "surface",
+      "ratio": 14.92
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "text",
+      "background": "surface-muted",
+      "ratio": 13.55
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "text-muted",
+      "background": "background",
+      "ratio": 8.75
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "text-muted",
+      "background": "background-secondary",
+      "ratio": 7.98
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "text-muted",
+      "background": "surface",
+      "ratio": 7.98
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "text-muted",
+      "background": "surface-muted",
+      "ratio": 7.25
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "accent-text",
+      "background": "background",
+      "ratio": 6.6
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "accent-text",
+      "background": "background-secondary",
+      "ratio": 6.02
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "accent-text",
+      "background": "surface",
+      "ratio": 6.02
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "accent-text",
+      "background": "surface-muted",
+      "ratio": 5.46
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "error",
+      "background": "background",
+      "ratio": 10.7
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "error",
+      "background": "background-secondary",
+      "ratio": 9.76
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "error",
+      "background": "surface",
+      "ratio": 9.76
+    },
+    {
+      "theme": "option3-dark",
+      "foreground": "error",
+      "background": "surface-muted",
+      "ratio": 8.86
+    }
+  ],
+  "interactions": [
+    "Four-state theme cycle, wraparound and reload persistence",
+    "Hero email/work CTAs and case-study landing-page navigation",
+    "Mobile menu open, Escape, focus return and route navigation; contact fields retained",
+    "21 additional responsive boundary checks from 320px through 1280px",
+    "Reduced motion: no running animations after scrolling",
+    "JavaScript disabled: headline, case studies, CTAs and system-theme CSS available"
+  ],
+  "pageErrors": []
+}

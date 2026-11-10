@@ -160,7 +160,7 @@ function ContactCard({
 
 function ProofStorySummaryCard({ story }: { story: ProofStory }) {
   return (
-    <Link className="engagement__model summary-card interactive-card" href={`/our-work#${story.id}`}>
+    <Link className="engagement__model summary-card interactive-card" href={`/our-work/${story.id}`}>
       <p className="proof-story__kicker">{story.title}</p>
       <ResultDisplay result={story.result} />
       <p>{story.summary}</p>
@@ -191,6 +191,7 @@ function ProofStoryArticle({ story, reverse }: { story: ProofStory; reverse: boo
           <p className="proof-story__label">The result</p>
           <p className="proof-story__summary">{story.interpretation}</p>
         </div>
+        <Link className="case-study-permalink" href={`/our-work/${story.id}`}>Case study permalink</Link>
       </div>
     </article>
   );
@@ -529,4 +530,16 @@ export function ContactPage() {
       </section>
     </PageShell>
   );
+}
+
+export function CaseStudyPage({ story }: { story: ProofStory }) {
+  return <PageShell>
+    <PageHero eyebrow="Our Work / Case Study" title={story.title} paragraphs={[story.summary]}
+      actions={<a className="button button--primary" href={getContactMailtoHref(`WideOrder ${story.title} enquiry`)}>Discuss a Challenge</a>}
+      support={<ResultDisplay result={story.result} />} />
+    <section className="site-section site-section--surface"><div className="container container--wide">
+      <ProofStoryArticle story={story} reverse={false} />
+      <div className="cta-row"><Link className="button button--secondary" href="/our-work">Explore all case studies</Link></div>
+    </div></section>
+  </PageShell>;
 }

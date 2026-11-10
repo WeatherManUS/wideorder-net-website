@@ -26,6 +26,9 @@
 - `/our-work` - preserved case studies with supported figures and detailed writeups
 - `/our-approach` - inSITU, existing-environment assessment, and value philosophy
 - `/contact` - direct email CTA and conversation prompts
+- `/our-work/[slug]` - individually shareable case studies using the existing approved titles, summaries, narratives, and result figures; existing `/our-work#id` anchors remain available.
+- `/privacy` - operational privacy information and tracking choices. Explain essential contact/security services, optional consent-gated analytics/advertising, 180-day local consent storage, 30-minute session attribution, browser privacy signals, and privacy requests to `info@wideorder.net`. Do not claim qualified leads from clicks, send form content to analytics, or claim legal certification.
+- Marketing system labels: `From complexity to clarity`, `Before`, `After`, `Tracking preferences`, and `Case study permalink` are presentation/navigation labels, not new service or performance claims.
 
 ## Navigation
 

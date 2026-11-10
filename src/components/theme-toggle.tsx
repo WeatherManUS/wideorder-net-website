@@ -10,11 +10,11 @@ const MEDIA_QUERY = "(prefers-color-scheme: dark)";
 const isTheme = (value: string | null): value is Theme => themes.some((theme) => theme === value);
 const getResolvedTheme = (): Theme => {
   const explicit = document.documentElement.getAttribute("data-theme");
-  return isTheme(explicit) ? explicit : window.matchMedia(MEDIA_QUERY).matches ? "dark" : "light";
+  return isTheme(explicit) ? explicit : window.matchMedia(MEDIA_QUERY).matches ? "option3-dark" : "option3-light";
 };
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState<Theme>("light");
+  const [theme, setTheme] = useState<Theme>("option3-light");
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(MEDIA_QUERY);
@@ -24,7 +24,7 @@ export function ThemeToggle() {
       if (isTheme(stored)) {
         document.documentElement.setAttribute("data-theme", stored);
       } else {
-        document.documentElement.removeAttribute("data-theme");
+        document.documentElement.setAttribute("data-theme", mediaQuery.matches ? "option3-dark" : "option3-light");
       }
       setTheme(getResolvedTheme());
     };

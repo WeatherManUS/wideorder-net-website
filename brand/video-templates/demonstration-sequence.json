@@ -1,0 +1,13 @@
+﻿{
+  "id": "demonstration-sequence",
+  "caseStudyId": "month-end-reporting",
+  "source": "src/content/home.ts: ourWork.stories[month-end-reporting]",
+  "segments": [
+    { "fromSeconds": 0, "toSeconds": 3, "role": "problem", "preset": "youtube-title-card", "instruction": "Use the approved challenge, no client-identifying footage without permission." },
+    { "fromSeconds": 3, "toSeconds": 10, "role": "demonstration", "preset": "youtube-screen-overlay", "instruction": "Insert a real, authorized screen recording with sensitive data removed." },
+    { "fromSeconds": 10, "toSeconds": 14, "role": "outcome", "preset": "youtube-title-card", "result": "~1,200 minutes -> ~10 minutes" },
+    { "fromSeconds": 14, "toSeconds": 18, "role": "call_to_action", "preset": "youtube-end-screen", "destination": "https://wideorder.net/our-work/month-end-reporting" }
+  ],
+  "transition": { "kind": "cut_or_fade", "durationMs": 320 },
+  "note": "Timings are editorial guidance, not a measurement of the underlying business process. No video is encoded or published."
+}

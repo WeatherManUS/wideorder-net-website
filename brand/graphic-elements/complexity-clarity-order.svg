@@ -1,0 +1,11 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" width="960" height="600" viewBox="0 0 480 300" role="img" aria-labelledby="title desc">
+  <title id="title">From complexity to clarity</title>
+  <desc id="desc">Intersecting paths become selected aligned tracks, then a precise three-by-three grid.</desc>
+  <style>:root{--before:#6E6780;--after:#5746C7;--detail:#B64048;--rule:#DDD6EC}</style>
+  <g fill="none" stroke="var(--rule)"><path d="M0 60H480M0 150H480M0 240H480M80 0V300M240 0V300M400 0V300"/></g>
+  <g fill="none" stroke="var(--before)" stroke-width="2"><path d="M24 96L131 206L37 183L125 76L62 222L24 96L141 137L37 183M62 222L83 81L131 206M24 96L125 76"/></g>
+  <path d="M147 150H184M289 150H326" fill="none" stroke="var(--before)" stroke-dasharray="3 5"/>
+  <g fill="none" stroke="var(--after)" stroke-width="2"><path d="M200 105H278M200 135H255M200 165H278M200 195H255M200 96V204"/></g>
+  <g fill="var(--after)"><rect x="348" y="99" width="29" height="29"/><rect x="384" y="99" width="29" height="29"/><rect x="420" y="99" width="29" height="29"/><rect x="348" y="135" width="29" height="29"/><rect x="384" y="135" width="29" height="29"/><rect x="420" y="135" width="29" height="29"/><rect x="348" y="171" width="29" height="29"/><rect x="384" y="171" width="29" height="29"/><rect x="420" y="171" width="29" height="29"/></g>
+  <path d="M348 223H449" stroke="var(--detail)" stroke-width="3"/>
+</svg>

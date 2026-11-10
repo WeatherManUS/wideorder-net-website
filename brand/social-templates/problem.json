@@ -1,0 +1,7 @@
+{
+  "label": "The problem",
+  "headline": "A report that takes hours",
+  "body": "Clients engage WideOrder when something needs addressing, improving, implementing, coordinating or managing.",
+  "cta": "Discuss a challenge → wideorder.net/contact",
+  "source": "src/content/home.ts: home.hero"
+}

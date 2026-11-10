@@ -1,0 +1,14 @@
+{
+  "date": "2026-11-10",
+  "primaryAssets": 49,
+  "darkVariations": 3,
+  "formatChecks": 119,
+  "staticPreviews": 10,
+  "caseStudyResultQualifierChecks": 4,
+  "textCanvasOverflow": [],
+  "textOverlap": [],
+  "logoClearSpaceChecks": 52,
+  "logoClearSpaceRule": "half the rendered logo total height on every side",
+  "minimumRenderedLogoWidthPx": 168,
+  "transparentOverlayFormatsVerified": true
+}

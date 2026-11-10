@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE_PATH || "playwright");
 const baseURL = process.env.QA_BASE_URL || "http://localhost:3100";
-const directory = new URL("../docs/qa/editorial-redesign/", import.meta.url);
+const directory = new URL(process.env.QA_OUTPUT_DIRECTORY || "../docs/qa/editorial-redesign/", import.meta.url);
 await mkdir(directory, { recursive: true });
 const routes = ["/", "/what-we-do", "/how-we-work", "/our-work", "/our-approach", "/contact"];
 const themes = ["light", "dark", "option3-light", "option3-dark"];
@@ -87,6 +87,8 @@ try {
 
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, colorScheme: "light" });
   await page.goto(baseURL);
+  await page.evaluate(() => localStorage.setItem("wideorder-theme", "light"));
+  await page.reload();
   await page.locator(".theme-toggle").click();
   for (const expected of ["dark", "option3-light", "option3-dark", "light"]) {
     assert.equal(await page.locator("html").getAttribute("data-theme"), expected);
@@ -101,8 +103,8 @@ try {
   await page.getByRole("link", { name: /Explore Our Work/ }).click();
   await page.waitForURL("**/our-work");
   await page.locator(".summary-card").first().click();
-  await page.waitForURL("**/our-work#retail-pricing");
-  report.interactions.push("Hero email/work CTAs and case-study anchor navigation");
+  await page.waitForURL("**/our-work/retail-pricing");
+  report.interactions.push("Hero email/work CTAs and case-study landing-page navigation");
   await page.setViewportSize({ width: 390, height: 844 });
   const menu = page.getByRole("button", { name: "Open navigation menu" });
   await menu.click();

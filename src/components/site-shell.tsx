@@ -6,6 +6,8 @@ import { siteContent } from "@/content/home";
 import { BrandMark } from "@/components/brand-mark";
 import { SiteHeader } from "@/components/site-header";
 import { SectionMotion } from "@/components/section-motion";
+import { MarketingRuntime, TrackingPreferencesButton } from "@/components/marketing-runtime";
+import { getSocialProfiles } from "@/config/marketing";
 
 export function SectionLabel({ children }: { children: React.ReactNode }) {
   return <p className="section-label">{children}</p>;
@@ -31,6 +33,11 @@ function SiteFooter() {
             </Link>{" "}
             {year} WideOrder Resolve. All rights reserved.
           </p>
+          <p><Link href="/privacy">Privacy information</Link></p>
+          <TrackingPreferencesButton />
+          {getSocialProfiles().length ? <nav aria-label="WideOrder social profiles" className="social-links">
+            {getSocialProfiles().map((profile) => <a key={profile.platform} href={profile.url} data-social-platform={profile.platform} target="_blank" rel="noopener noreferrer">{({ linkedin: "LinkedIn", youtube: "YouTube", facebook: "Facebook", instagram: "Instagram", x: "X" })[profile.platform]}</a>)}
+          </nav> : null}
         </div>
         <nav className="site-footer__nav" aria-label="Footer navigation">
           <ul>
@@ -63,6 +70,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
       </main>
       <SectionMotion />
       <SiteFooter />
+      <MarketingRuntime />
     </div>
   );
 }

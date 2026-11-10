@@ -1,0 +1,20 @@
+{
+  "fonts": [
+    {
+      "family": "Inter",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/Inter%5Bopsz%2Cwght%5D.ttf",
+      "sha256": "29160a80ff49ddcab2c97711247e08b1fab27a484a329ce8b813d820dc559031",
+      "license": "Inter-OFL.txt",
+      "licenseURL": "https://raw.githubusercontent.com/google/fonts/main/ofl/inter/OFL.txt",
+      "retrieved": "2026-11-10"
+    },
+    {
+      "family": "Manrope",
+      "source": "https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/Manrope%5Bwght%5D.ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+      "license": "Manrope-OFL.txt",
+      "licenseURL": "https://raw.githubusercontent.com/google/fonts/main/ofl/manrope/OFL.txt",
+      "retrieved": "2026-11-10"
+    }
+  ]
+}

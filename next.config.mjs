@@ -8,6 +8,10 @@ const nextConfig = {
     WIDEORDER_RELEASE_BUILD_ID: identity.buildId,
     WIDEORDER_RELEASE_ID: identity.releaseId,
   },
+  outputFileTracingIncludes: {
+    '/version.json': ['./.release/release.json'],
+    '/api/release-publication': ['./.release/release.json'],
+  },
   agentRules: false,
   reactStrictMode: true,
   async headers() {

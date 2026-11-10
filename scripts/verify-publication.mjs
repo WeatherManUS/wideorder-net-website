@@ -1,7 +1,9 @@
 import { sourceFingerprint } from "./release-context.mjs";
+import { execFileSync } from "node:child_process";
 
 const origin = "https://wideorder.net";
 const sourceHash = sourceFingerprint();
+const commit = execFileSync("git", ["rev-parse", "HEAD"], { encoding: "utf8" }).trim();
 const maximumWait = 25 * 60 * 1000;
 const started = Date.now();
 const wait = (duration) => new Promise((resolve) => setTimeout(resolve, duration));
@@ -11,7 +13,7 @@ while (Date.now() - started < maximumWait) {
     const response = await fetch(`${origin}/version.json?verification=${Date.now()}`, { cache: "no-store", redirect: "error", headers: { "Cache-Control": "no-cache, no-store" }, signal: AbortSignal.timeout(15000) });
     if (!response.ok || !response.headers.get("cache-control")?.includes("no-store")) throw new Error("Version endpoint not ready or cache headers missing.");
     const live = await response.json();
-    if (!live.buildId?.endsWith(sourceHash.slice(0, 16)) || live.environment !== "production" || !live.releaseId) throw new Error("The previous release is still serving.");
+    if (!(live.buildId?.startsWith(`${commit.slice(0, 12)}-`) || live.buildId === `source-${sourceHash.slice(0, 16)}`) || live.environment !== "production" || !live.releaseId) throw new Error("The previous release is still serving.");
     const tokenUrl = new URL(process.env.ACTIONS_ID_TOKEN_REQUEST_URL || "https://invalid.invalid");
     if (tokenUrl.protocol !== "https:" || !process.env.ACTIONS_ID_TOKEN_REQUEST_TOKEN) throw new Error("GitHub Actions OIDC permission is required.");
     tokenUrl.searchParams.set("audience", "wideorder-release-publication");
@@ -21,7 +23,7 @@ while (Date.now() - started < maximumWait) {
     if (typeof token !== "string") throw new Error("GitHub deployment identity missing.");
     const confirmed = await fetch(`${origin}/api/release-publication`, {
       method: "POST", redirect: "error", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-      body: JSON.stringify({ releaseId: live.releaseId, sourceHash }), signal: AbortSignal.timeout(45000),
+      body: JSON.stringify({ releaseId: live.releaseId, sourceHash, commit }), signal: AbortSignal.timeout(45000),
     });
     if (!confirmed.ok) throw new Error(`Publication confirmation returned HTTP ${confirmed.status}.`);
     const recorded = await confirmed.json();

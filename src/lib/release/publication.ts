@@ -6,6 +6,10 @@ import { PUBLIC_ORIGIN, readPublication, releaseDirectory, type BuildRecord, typ
 const ISSUER = "https://token.actions.githubusercontent.com";
 const REPOSITORY = "WeatherManUS/wideorder-net-website";
 export const OIDC_AUDIENCE = "wideorder-release-publication";
+export function matchesBuildSource(build: BuildRecord, expected: { commit?: string; sourceHash?: string }) {
+  if (build.commit) return /^[a-f\d]{40,64}$/.test(build.commit) && build.commit === expected.commit;
+  return build.sourceHash === expected.sourceHash;
+}
 type Claims = { iss: string; aud: string; repository: string; repository_id: string; repository_owner_id: string; ref: string; workflow_ref: string; event_name: string; run_id: string; run_attempt: string; iat: number; nbf: number; exp: number };
 type SigningKey = webcrypto.JsonWebKey & { kid?: string; alg?: string };
 let keys: SigningKey[] = [];

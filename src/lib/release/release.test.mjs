@@ -6,7 +6,7 @@ import os from "node:os";
 import { generateKeyPairSync, sign } from "node:crypto";
 import { sourceFingerprint, createBuildContext } from "../../../scripts/release-context.mjs";
 import { publicRelease, readBuildRecord, readPublication } from "./metadata.ts";
-import { authenticatePublication, confirmPublicRelease, htmlReleaseIdentity, recordPublication, validateClaims } from "./publication.ts";
+import { authenticatePublication, confirmPublicRelease, htmlReleaseIdentity, recordPublication, validateClaims, matchesBuildSource } from "./publication.ts";
 
 const record = { application: "WideOrder", version: "0.1.0", buildId: "012345abcdef-0123456789abcdef", releaseId: "10000000-0000-4000-8000-000000000001", sourceHash: "0".repeat(64), buildStartedAt: "2026-11-10T17:30:00.000Z", buildTime: "2026-11-10T17:31:00.000Z" };
 async function cleanup(directory) {
@@ -58,6 +58,12 @@ test("completed artifact identity is required, and public JSON never exposes pri
     await writeFile(path.join(directory, "BUILD_ID"), "wrong-artifact");
     assert.throws(() => readBuildRecord(directory), /mismatch/);
   } finally { await cleanup(directory); }
+});
+test("provider-generated packaging changes do not replace the committed source identity", () => {
+  const commit = "1".repeat(40);
+  assert.equal(matchesBuildSource({ ...record, commit }, { commit, sourceHash: "provider-different-inputs" }), true);
+  assert.equal(matchesBuildSource({ ...record, commit }, { commit: "2".repeat(40), sourceHash: record.sourceHash }), false);
+  assert.equal(matchesBuildSource(record, { sourceHash: record.sourceHash }), true);
 });
 test("publication is a distinct success observation, atomically idempotent and preserved on rollback/restart", async () => {
   const directory = await artifact();

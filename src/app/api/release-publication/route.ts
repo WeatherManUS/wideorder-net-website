@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { authenticatePublication, confirmPublicRelease, recordPublication } from "@/lib/release/publication";
+import { authenticatePublication, confirmPublicRelease, recordPublication, matchesBuildSource } from "@/lib/release/publication";
 import { deploymentEnvironment, publicRelease, readBuildRecord, RELEASE_HEADERS } from "@/lib/release/metadata";
 
 export const runtime = "nodejs";
@@ -19,13 +19,13 @@ export async function POST(request: Request) {
       if (size > 2048) { await reader.cancel(); return reply({ error: "invalid_request" }, 413); }
       chunks.push(value);
     }
-    let body: { releaseId?: string; sourceHash?: string };
+    let body: { releaseId?: string; sourceHash?: string; commit?: string };
     try { body = JSON.parse(Buffer.concat(chunks).toString("utf8")); } catch { return reply({ error: "invalid_request" }, 400); }
     let verificationId: string;
     try { verificationId = await authenticatePublication(request.headers.get("authorization")?.replace(/^Bearer /, "") ?? ""); }
     catch { return reply({ error: "unauthorized" }, 401); }
     const build = readBuildRecord();
-    if (body?.releaseId !== build.releaseId || body?.sourceHash !== build.sourceHash) return reply({ error: "release_mismatch" }, 409);
+    if (body?.releaseId !== build.releaseId || !matchesBuildSource(build, body)) return reply({ error: "release_mismatch" }, 409);
     await confirmPublicRelease(build);
     const publication = await recordPublication(build, verificationId);
     return reply(publicRelease(build, publication, "production"));

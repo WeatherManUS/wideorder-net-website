@@ -93,3 +93,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.2.0002 — verifying** (2026-11-11T06:00:21.043Z)
   Fix mobile menu viewport alignment and add safe mail diagnostics
   Commit: `ae4c5d0738231d47feea28a6a6359adcd9cbb90a`; previous: 0.2.0001; artifact: e6d7a5ba-d37b-4c99-93ab-af123ca5dfff; rollback: none.
+
+- **v0.2.0002 — published** (2026-11-11T06:08:53.703Z)
+  Fix mobile menu viewport alignment and add safe mail diagnostics
+  Commit: `ae4c5d0738231d47feea28a6a6359adcd9cbb90a`; previous: 0.2.0001; artifact: e6d7a5ba-d37b-4c99-93ab-af123ca5dfff; rollback: none.

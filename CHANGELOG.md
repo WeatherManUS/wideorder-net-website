@@ -41,3 +41,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.1.0004 — published** (2026-11-11T03:42:17.455Z)
   Add secure SMTP settings and durable native inquiries
   Commit: `bc0815e78e7556bedb8835c9f06cbb1699d4e3ec`; previous: 0.1.0003; artifact: 5dd2641e-9864-4bb5-927f-1ae258dc7205; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-11T04:05:13.907Z)
+  Validate Turnstile contact action and hostname on every submission
+  Commit: `9da653a4716754de79170c724cc583f9f355bc99`; previous: 0.1.0004; artifact: not built; rollback: none.

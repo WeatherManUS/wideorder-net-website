@@ -8,7 +8,7 @@ export async function inquiryById(id: string) {
   return (await (await getManagedConfigStore()).execute("SELECT * FROM wideorder_inquiries WHERE id = ?", [id])).rows[0] as InquiryRow | undefined;
 }
 export async function recentInquiries() {
-  return (await (await getManagedConfigStore()).execute("SELECT id, created_at, stage, status, attempts, accepted_at, last_error FROM wideorder_inquiries ORDER BY created_at DESC LIMIT 30")).rows;
+  return (await (await getManagedConfigStore()).execute("SELECT id, created_at, stage, status, attempts, accepted_at, last_error, next_attempt_at FROM wideorder_inquiries ORDER BY created_at DESC LIMIT 30")).rows;
 }
 export async function takeRequestSlot(scope: string, limit = 5, windowMs = 600000) {
   const store = await getManagedConfigStore();

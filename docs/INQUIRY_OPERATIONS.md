@@ -35,7 +35,15 @@ Only authenticated administrators can view decrypted inquiries. Retention/deleti
 - Start `node scripts/start-inquiry-qa.mjs`, then run `node scripts/inquiry-admin-qa.mjs` with `PLAYWRIGHT_MODULE_PATH` pointing to an existing Playwright installation. The audit exercises an isolated development server/database on port 3105 with ephemeral administrator credentials. It must not run against production.
 - Existing release, appearance, marketing and case-study audits remain available. Live mailbox delivery must be reported pending until account credentials are configured and actual inbox arrival is checked.
 
-The Turnstile test key is intentionally retained at the user's instruction. It does not establish real production abuse protection; replace it with production keys before formal launch.
+Production Turnstile credentials are managed in Settings. Isolated browser tests use a guarded development-only verifier fixture; they do not establish production abuse protection or real mail delivery.
+
+## v0.2.0002 diagnostics
+
+Settings shows configuration completeness, saved notification destination, acknowledgment setting, last connection test, latest internal SMTP acceptance, queue counts and worker health. Administrators can look up a reference or review the newest 30 inquiries. Inquiry detail includes safe operation history. All administrator timestamps use the browser's local time with a zone label; hover shows the original UTC instant. Initial HTML uses America/Chicago until browser hydration.
+
+New operation history retains 90 days of timestamps, operation/outcome, allowlisted failure codes, numeric SMTP replies and command names. Internal/test destinations are encrypted at rest. Raw SMTP responses, credentials and inquiry content are excluded. History starts with this release; missing historical events cannot establish whether an older inquiry was attempted. Diagnostic write failures cannot trigger a resend. Known failures before transport creation completes may retry; ambiguous send outcomes remain quarantined.
+
+For a missing notification, match the queue's receipt time and reference, inspect its stage/status/error and acceptance timestamp, then inspect operation history and the saved recipient. Test connectivity separately from sending a test. Verify actual arrival in Inbox or Spam/Junk before reporting delivery; a 250 acceptance is not inbox proof. Do not enable acknowledgments as part of troubleshooting unless explicitly requested.
 
 ## Production Turnstile verification
 

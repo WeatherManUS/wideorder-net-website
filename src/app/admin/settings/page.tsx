@@ -1,3 +1,7 @@
+import { LocalTime } from "@/components/local-time";
+import { MailDiagnostics } from "@/components/admin-mail-diagnostics";
+import { mailDiagnostics } from "@/lib/inquiries/diagnostics";
+import { inquiryById } from "@/lib/inquiries/store";
 import Link from "next/link";
 import { currentRelease } from "@/lib/release/server";
 import { getSmtpConfig, type AdminSettingView } from "@/lib/managed-config/service";
@@ -87,8 +91,12 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
   let smtpReady = false;
   try { smtpReady = validateSmtpConfig(config, false); } catch { /* Invalid saved host remains unavailable. */ }
   const release = await currentRelease();
-  const inquiries = await recentInquiries();
   const params = (await searchParams) ?? {};
+  const reference = typeof params.reference === "string" ? params.reference.trim() : "";
+  const validReference = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(reference);
+  const selected = validReference ? await inquiryById(reference) : undefined;
+  const inquiries = reference ? (selected ? [selected] : []) : await recentInquiries();
+  const diagnostics = await mailDiagnostics(validReference ? reference : undefined);
   const statusKey = typeof params.status === "string" ? params.status : "";
   const errorKey = typeof params.error === "string" ? params.error : "";
   const statusMessage = statusMessages[statusKey] ?? "";
@@ -122,7 +130,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
           </div>
           <div>
             <dt>Session expires</dt>
-            <dd>{new Date(admin.expiresAt).toLocaleString()}</dd>
+            <dd><LocalTime value={admin.expiresAt} /></dd>
           </div>
           <div>
             <dt>Persistence</dt>
@@ -149,14 +157,14 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
           <input type="hidden" name="action" value="save_settings" />
           <section className="admin-section">
             <h2>Email / SMTP</h2>
-            <p className="admin-copy">{smtpReady ? "SMTP configured ? use the tests below to verify connection and acceptance." : "SMTP not configured"}</p>
+            <p className="admin-copy">{smtpReady ? "SMTP configured - use the tests below to verify connection and acceptance." : "SMTP not configured"}</p>
             <p className="admin-copy">Hostinger defaults: smtp.hostinger.com, port 465, SSL/TLS, authentication enabled. Credentials and destination mailboxes are supplied by the administrator.</p>
             <p className="admin-copy">Allowed hosts: {allowedSmtpHosts().join(", ")}. Additional hosts require the server-managed WIDEORDER_SMTP_ALLOWED_HOSTS allowlist. Only SSL/TLS on 465 or STARTTLS on 587 is supported.</p>
             {smtpViews.map(view => <SettingField key={view.key} view={view} />)}
           </section>
           <section className="admin-section">
             <h2>Website configuration</h2>
-            <p className="admin-copy">Abuse protection for the inquiry form. Test Turnstile keys remain in use until production credentials are supplied.</p>
+            <p className="admin-copy">Abuse protection for the inquiry form. Uses the saved Turnstile site key and matching secret for server-side validation.</p>
             {websiteViews.map(view => <SettingField key={view.key} view={view} />)}
           </section>
 
@@ -167,6 +175,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
           </div>
         </form>
 
+        <MailDiagnostics data={diagnostics} recipient={config.recipient} sender={config.from} acknowledgment={config.acknowledgment} configured={smtpReady} />
         <section className="admin-section">
           <h2>SMTP tests</h2>
           <p className="admin-copy">Tests use saved settings. Test emails go only to the saved notification recipient.</p>
@@ -178,21 +187,24 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
         <section className="admin-section">
           <h2>Inquiry delivery queue</h2>
           <p className="admin-copy">Inquiries are encrypted in durable storage. Pending notifications retry every minute when due and configured. Accepted means SMTP acceptance, not confirmed inbox delivery. Uncertain delivery requires mailbox review and is not automatically resent.</p>
+          <form method="get" action="/admin/settings" className="admin-form"><label className="admin-field"><span>Find inquiry by reference</span><input name="reference" defaultValue={reference} maxLength={64} /></label><button className="button button--secondary">Find inquiry</button><Link href="/admin/settings">Show recent inquiries</Link></form>
+          <p className="admin-copy">Without a reference, review the 30 most recent inquiries below by submission time. Times use your browser’s local time zone, which is included. Hover over a time to see UTC.</p>
           <form method="post" action="/api/admin/smtp"><button className="button button--secondary" name="action" value="retry_queue">Process due notifications</button></form>
           <ul className="admin-audit-list">{inquiries.map(row => <li key={String(row.id)}>
             <Link href={`/admin/inquiries/${row.id}`}>{String(row.id)}</Link>
-            <span>{String(row.created_at)}</span><span>{String(row.stage)}: {String(row.status)}</span>
-            <span>{row.accepted_at ? "Internal notification accepted" : "Notification pending"}</span>
+            <span>Received: <LocalTime value={row.created_at} /></span><span>{String(row.stage)}: {String(row.status)}</span>
+            <span>{row.accepted_at ? <>Internal SMTP acceptance: <LocalTime value={row.accepted_at} />; inbox delivery unverified</> : "No internal SMTP acceptance recorded"}</span>
+            <span>Attempts in current stage: {String(row.attempts)}. {row.status === "pending" ? <>Next attempt: <LocalTime value={row.next_attempt_at} /></> : ""}</span>
             {row.last_error ? <span>{String(row.last_error)}</span> : null}
             {row.status === "review" && ["temporary_rejection", "permanent_rejection", "connection_failed"].includes(String(row.last_error)) ?
               <form method="post" action="/api/admin/smtp"><input type="hidden" name="reference" value={String(row.id)} /><button className="button button--secondary" name="action" value="retry_inquiry">Retry notification</button></form> : null}
           </li>)}</ul>
-          {!inquiries.length ? <p className="admin-copy">No inquiries received yet.</p> : null}
+          {!inquiries.length ? <p className="admin-copy">{reference ? "No inquiry found for that reference." : "No inquiries received yet."}</p> : null}
         </section>
         <section className="admin-section">
           <h2>Version and deployment information</h2>
           <p className="admin-copy">Version: {release.version}. Status: {"deploymentStatus" in release ? release.deploymentStatus : "development"}.</p>
-          <p className="admin-copy">Published: {release.publishedAt ?? "Not confirmed"}. Build: {release.buildId}.</p>
+          <p className="admin-copy">Published: <LocalTime value={release.publishedAt} />. Build: {release.buildId}.</p>
           <p className="admin-copy">Artifact: {release.releaseId}.</p>
         </section>
         <section className="admin-section"><h2>Future integrations</h2><p className="admin-copy">Reserved for Phase 0.4. No integration controls are enabled here.</p></section>
@@ -207,7 +219,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
             </div>
             <div>
               <dt>Last rotated</dt>
-              <dd>{credentialSummary.passwordUpdatedAt ? new Date(credentialSummary.passwordUpdatedAt).toLocaleString() : "Not yet set"}</dd>
+              <dd><LocalTime value={credentialSummary.passwordUpdatedAt} /></dd>
             </div>
             <div>
               <dt>Updated by</dt>
@@ -245,7 +257,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
                 <li key={entry.id}>
                   <span>{entry.settingKey}</span>
                   <span>{entry.category}</span>
-                  <span>{new Date(entry.changedAt).toLocaleString()}</span>
+                  <span><LocalTime value={entry.changedAt} /></span>
                   <span>{entry.adminIdentity}</span>
                 </li>
               ))}

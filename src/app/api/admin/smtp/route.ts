@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
-import { randomUUID } from "node:crypto";
 import { ADMIN_NO_STORE_HEADERS, buildTrustedAdminUrl, getAuthenticatedAdminFromRequest, isTrustedAdminOrigin } from "@/lib/managed-config/admin";
 import { getSmtpConfig } from "@/lib/managed-config/service";
 import { validateSmtpConfig } from "@/lib/smtp/config";
-import { createSmtpTransport } from "@/lib/smtp/transport";
+import { runSmtpTest } from "@/lib/inquiries/smtp-tests";
 import { drainInquiryQueue, retryInquiry } from "@/lib/inquiries/queue";
 import { takeRequestSlot } from "@/lib/inquiries/store";
 export const runtime = "nodejs";
@@ -23,16 +22,9 @@ export async function POST(request: Request) {
       return redirect(changed ? "retry_scheduled" : "retry_blocked", !changed);
     }
     const config = await getSmtpConfig();
-    if (!validateSmtpConfig(config, false)) return redirect("smtp_not_configured", true);
-    if (action === "retry_queue") { await drainInquiryQueue(); return redirect("queue_processed"); }
+    if (action === "retry_queue") { if (!validateSmtpConfig(config, false)) return redirect("smtp_not_configured", true); await drainInquiryQueue(); return redirect("queue_processed"); }
     if (!["test_connection", "send_test"].includes(String(action))) return redirect("invalid_setting", true);
-    const transport = await createSmtpTransport(config);
-    try {
-      if (action === "test_connection") { await transport.verify(); return redirect("connection_verified"); }
-      const result = await transport.sendMail({ from: { name: config.fromName || "WideOrder", address: config.from }, to: { address: config.recipient },
-        envelope: { from: config.from, to: [config.recipient] }, subject: "WideOrder SMTP test", text: `Administrator-requested SMTP test. Reference: ${randomUUID()}. Check this mailbox to confirm arrival.`, html: "<p>Administrator-requested WideOrder SMTP test.</p><p>Receiving this message confirms arrival in this mailbox.</p>" });
-      if (!result.accepted?.some(value => value.toLowerCase() === config.recipient.toLowerCase())) throw new Error("not_accepted");
-      return redirect("test_accepted");
-    } finally { transport.close(); }
+    const result = await runSmtpTest(config, action === "test_connection" ? "connection_test" : "test_email");
+    return redirect(result.key, result.error);
   } catch { return redirect("smtp_test_failed", true); }
 }

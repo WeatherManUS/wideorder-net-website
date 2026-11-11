@@ -107,3 +107,58 @@ test("a crashed worker lease is quarantined rather than causing duplicate delive
   const row = await inquiryById(result.body.reference);
   assert.equal(row.status, "review"); assert.equal(row.last_error, "delivery_uncertain");
 });
+
+test("DNS/transport preparation failures retry safely before any SMTP send", async () => {
+  const result = await submitInquiry(payload(), "dns-check", deps);
+  await deliverInquiry(result.body.reference, { getConfig: async () => config, createTransport: async () => { throw new Error("smtp_dns_timeout"); } });
+  const row = await inquiryById(result.body.reference);
+  assert.equal(row.status, "pending"); assert.equal(row.last_error, "connection_failed");
+  assert.equal(row.accepted_at, null);
+});
+
+test("persistent diagnostics preserve safe codes, encrypt destination and exclude secret-bearing responses", async () => {
+  const { mailDiagnostics, recordMailEvent, recordWorkerHealth, smtpDiagnostic } = await import('./diagnostics.ts');
+  await recordMailEvent({ operation: 'connection_test', outcome: 'failed', code: 'connection_failed', recipient: config.recipient,
+    error: { responseCode: 535, command: 'AUTH', response: 'SENSITIVE_PROVIDER_RESPONSE', message: config.password } });
+  await recordWorkerHealth('ok');
+  const view = await mailDiagnostics();
+  assert.equal(view.lastTest.outcome, 'failed'); assert.equal(view.lastTest.smtp_code, 535);
+  assert.equal(view.worker.status, 'ok'); assert.ok(Number(view.summary.pending) > 0);
+  const rows = (await store.execute('SELECT * FROM wideorder_mail_events')).rows;
+  assert.ok(!JSON.stringify(rows).includes(config.recipient));
+  assert.ok(!JSON.stringify(rows).includes(config.password));
+  assert.ok(!JSON.stringify(view).includes('SENSITIVE_PROVIDER_RESPONSE'));
+  assert.ok(!JSON.stringify(view).includes('PRIVATE_INQUIRY_MARKER'));
+  assert.deepEqual(smtpDiagnostic({ command: 'AUTH secret', responseCode: NaN }), { smtpCode: null, smtpCommand: null });
+});
+
+test("connection/test-email operations persist results without claiming inbox delivery", async () => {
+  const { runSmtpTest } = await import('./smtp-tests.ts');
+  const { mailDiagnostics } = await import('./diagnostics.ts');
+  let sends = 0;
+  const transport = async () => ({ verify: async () => true, sendMail: async () => { sends++; return { accepted: [config.recipient], response: '250 2.0.0 Queued PRIVATE_PROVIDER_TEXT' }; }, close() {} });
+  assert.deepEqual(await runSmtpTest(config, 'connection_test', transport), { key: 'connection_verified', error: false });
+  assert.equal(sends, 0);
+  assert.deepEqual(await runSmtpTest(config, 'test_email', transport), { key: 'test_accepted', error: false });
+  assert.equal(sends, 1);
+  const view = await mailDiagnostics();
+  assert.equal(view.lastTest.outcome, 'verified');
+  assert.ok(view.events.some(row => row.operation === 'test_email' && row.outcome === 'accepted' && row.smtp_code === 250));
+  assert.ok(!JSON.stringify(view).includes('PRIVATE_PROVIDER_TEXT'));
+  assert.deepEqual(await runSmtpTest({ ...config, password: '' }, 'connection_test', transport), { key: 'smtp_not_configured', error: true });
+  assert.equal(sends, 1);
+});
+
+test("diagnostic-storage failure cannot cause an accepted notification to be resent", async () => {
+  const result = await submitInquiry(payload(), "diagnostics-outage", deps);
+  const original = store.execute.bind(store);
+  let sends = 0;
+  store.execute = async (sql, values) => { if (sql.startsWith('INSERT INTO wideorder_mail_events')) throw new Error('fixture diagnostic outage'); return original(sql, values); };
+  try {
+    const delivery = { getConfig: async () => ({ ...config, acknowledgment: false }), createTransport: async () => ({ sendMail: async o => { sends++; return { accepted: o.envelope.to }; }, close() {} }) };
+    await deliverInquiry(result.body.reference, delivery);
+    await deliverInquiry(result.body.reference, delivery);
+    assert.equal(sends, 1);
+    assert.equal((await inquiryById(result.body.reference)).status, 'done');
+  } finally { store.execute = original; }
+});

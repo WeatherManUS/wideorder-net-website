@@ -114,6 +114,14 @@ type LoginAttemptRow = {
   blocked_until: string | null;
 };
 
+const MAIL_EVENT_SCHEMA = `CREATE TABLE IF NOT EXISTS wideorder_mail_events (
+  id VARCHAR(64) PRIMARY KEY, inquiry_id VARCHAR(64), event_at VARCHAR(64) NOT NULL,
+  operation VARCHAR(32) NOT NULL, outcome VARCHAR(32) NOT NULL,
+  error_code VARCHAR(64), smtp_code INTEGER, smtp_command VARCHAR(32), recipient TEXT
+)`;
+const MAIL_HEALTH_SCHEMA = `CREATE TABLE IF NOT EXISTS wideorder_mail_health (
+  id VARCHAR(32) PRIMARY KEY, checked_at VARCHAR(64) NOT NULL, status VARCHAR(32) NOT NULL
+)`;
 const LIMIT_SCHEMA = `CREATE TABLE IF NOT EXISTS wideorder_request_limits (
   scope_key VARCHAR(191) PRIMARY KEY, uses INTEGER NOT NULL, expires_at VARCHAR(64) NOT NULL
 )`;
@@ -274,6 +282,8 @@ class SqliteManagedConfigStore implements ManagedConfigStore {
     this.database.exec(SQLITE_SCHEMA);
     this.database.exec(INQUIRY_SCHEMA);
     this.database.exec(LIMIT_SCHEMA);
+    this.database.exec(MAIL_EVENT_SCHEMA);
+    this.database.exec(MAIL_HEALTH_SCHEMA);
     this.database.exec("PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;");
     this.summary = {
       engine: "sqlite",
@@ -655,7 +665,7 @@ async function createMysqlStore() {
 
   const pool = createPool(mysqlConfig.options);
 
-  for (const statement of [...MYSQL_SCHEMA, INQUIRY_SCHEMA, LIMIT_SCHEMA]) {
+  for (const statement of [...MYSQL_SCHEMA, INQUIRY_SCHEMA, LIMIT_SCHEMA, MAIL_EVENT_SCHEMA, MAIL_HEALTH_SCHEMA]) {
     await pool.query(statement);
   }
 

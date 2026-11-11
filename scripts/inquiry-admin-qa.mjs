@@ -7,6 +7,7 @@ const base = "http://localhost:3105";
 const { password } = JSON.parse(readFileSync(new URL("../.release/inquiry-qa-credentials.json", import.meta.url)));
 const browser = await chromium.launch();
 const context = await browser.newContext();
+await context.route('https://challenges.cloudflare.com/turnstile/v0/api.js*', route => route.fulfill({ contentType: 'application/javascript', body: `let cb;window.turnstile={render:(el,o)=>{cb=o.callback;queueMicrotask(()=>{window.__qaToken='fixture-'+crypto.randomUUID();cb(window.__qaToken)});return 'fixture-widget'},reset:()=>queueMicrotask(()=>{window.__qaToken='fixture-'+crypto.randomUUID();cb(window.__qaToken)}),remove:()=>{}};` }));
 const page = await context.newPage();
 const errors = []; page.on("pageerror", e => errors.push(e.message));
 const post = (path, form, headers = {}) => context.request.post(base + path, { form, headers: { Origin: base, ...headers }, maxRedirects: 0 });
@@ -33,11 +34,19 @@ try {
   await page.getByLabel("Name", { exact: true }).fill("Browser QA inquiry");
   await page.getByLabel("Email", { exact: true }).fill("qa@example.test");
   await page.getByLabel("Business challenge", { exact: true }).fill("Isolated local durability test; no email delivery configured.");
-  await page.waitForFunction(() => document.querySelector('[name="cf-turnstile-response"]')?.value, { timeout: 20000 });
+  await page.waitForFunction(() => !!window.__qaToken);
+  const requestPromise = page.waitForRequest(request => request.url().endsWith('/api/contact') && request.method() === 'POST');
   await page.getByRole("button", { name: /^Send enquiry/ }).click();
+  const submitted = (await requestPromise).postDataJSON();
   await page.getByText(/Inquiry received. Reference:/).waitFor();
   assert.match(await page.locator('.form-status').innerText(), /notification is pending/);
+  const replay = await context.request.post(base + '/api/contact', { data: submitted, headers: { Origin: base } });
+  assert.equal(replay.status(), 400);
+  assert.equal((await replay.json()).error, 'security_verification_failed');
   await page.goto(base + "/admin/settings");
+  await page.getByRole('heading', { name: 'Mail delivery diagnostics' }).waitFor();
+  assert.match(await page.locator('.admin-summary').allTextContents().then(v => v.join(' ')), /Customer acknowledgments\s*Disabled/);
+  assert.match(await page.locator('.admin-summary').allTextContents().then(v => v.join(' ')), /smtp_not_configured/);
   const inquiry = page.locator('a[href^="/admin/inquiries/"]').first(); await inquiry.click();
   await page.getByText("Isolated local durability test; no email delivery configured.", { exact: true }).waitFor();
   const ref = page.url();
@@ -46,7 +55,7 @@ try {
   // Simulated transport outage must retain visitor-entered information.
   await page.route('**/api/contact', route => route.fulfill({ status: 503, json: { ok: false, error: "service_unavailable" } }));
   await page.goto(base + "/contact"); await page.getByLabel("Name", { exact: true }).fill("Keep this name"); await page.getByLabel("Email", { exact: true }).fill("keep@example.test"); await page.getByLabel("Business challenge", { exact: true }).fill("Keep this message");
-  await page.waitForFunction(() => document.querySelector('[name="cf-turnstile-response"]')?.value);
+  await page.waitForFunction(() => !!window.__qaToken);
   await page.getByRole("button", { name: /^Send enquiry/ }).click(); await page.locator('.form-status[data-state="error"]').waitFor();
   assert.equal(await page.getByLabel("Business challenge", { exact: true }).inputValue(), "Keep this message");
   for (const theme of ["light", "dark", "option3-light", "option3-dark"]) {
@@ -57,11 +66,11 @@ try {
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     }
   }
-  await page.goto(base); const primary = page.getByRole("link", { name: /^Discuss a Challenge/ }); assert.equal(await primary.getAttribute('href'), '/contact#inquiry-form');
+  await page.goto(base); const primary = page.getByRole("link", { name: /^Discuss a Challenge/ }).first(); assert.equal(await primary.getAttribute('href'), '/contact#inquiry-form');
   for (let i = 0; i < 6; i++) {
     const r = await post("/api/admin/login", { password: "incorrect-fixture-password" }, { "X-Forwarded-For": "198.51.100.200" });
     if (i === 5) assert.ok(r.headers()["location"].includes("throttled"));
   }
   assert.deepEqual(errors, []);
-  console.log('PASS: administrator login/logout, unauthorized access, CSRF, SMTP settings save/masking, unconfigured tests, SSRF validation, real local durable form capture, protected inquiry detail, retained fields on failure, eight theme/viewport checks, native CTA. No email sent.');
+  console.log('PASS: administrator login/logout, unauthorized access, CSRF, SMTP settings save/masking, unconfigured tests, SSRF validation, local durable form capture with isolated verifier fixture, replay rejection and persisted diagnostics, protected inquiry detail, retained fields on failure, eight theme/viewport checks, native CTA. No email sent.');
 } finally { await browser.close(); }

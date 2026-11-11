@@ -49,3 +49,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.1.0005 — verifying** (2026-11-11T04:05:13.907Z)
   Validate Turnstile contact action and hostname on every submission
   Commit: `9da653a4716754de79170c724cc583f9f355bc99`; previous: 0.1.0004; artifact: 6078e2df-0494-4c5e-ac2d-6166bacd9d38; rollback: none.
+
+- **v0.1.0005 — published** (2026-11-11T04:13:32.092Z)
+  Validate Turnstile contact action and hostname on every submission
+  Commit: `9da653a4716754de79170c724cc583f9f355bc99`; previous: 0.1.0004; artifact: 6078e2df-0494-4c5e-ac2d-6166bacd9d38; rollback: none.

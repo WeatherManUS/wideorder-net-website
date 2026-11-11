@@ -74,11 +74,12 @@ try {
   report.interactions.push("No optional requests/storage before consent or after rejection; analytics-only loads only GA4, with one manual initial page view");
 
   // The comparison emits only the allowlisted case identifier and interaction.
-  if (await page.locator('.flagship-story').count()) {
-    await page.locator('.flagship-story').getByRole('button', { name: 'After', exact: true }).click();
+  if (await page.locator('.comparison').count()) {
+    await page.locator('.comparison summary').last().click();
+    await page.waitForFunction(() => (window.dataLayer || []).some(item => item?.[0] === 'event' && item?.[1] === 'case_study_interaction'));
     const comparisons = (await commands(page)).filter(command => command[0] === 'event' && command[1] === 'case_study_interaction');
     assert.equal(comparisons.length, 1);
-    assert.equal(comparisons[0][2].case_study_id, 'retail-pricing');
+    assert.equal(comparisons[0][2].case_study_id, 'month-end-reporting');
     assert.equal(comparisons[0][2].interaction_type, 'comparison_toggle');
   }
 

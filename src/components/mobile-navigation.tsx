@@ -16,6 +16,8 @@ export function MobileNavigation({ navItems, cta }: MobileNavigationProps) {
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
   const panelId = useId();
+  const rootRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
@@ -29,15 +31,20 @@ export function MobileNavigation({ navItems, cta }: MobileNavigationProps) {
       }
     };
 
+    const frame = window.requestAnimationFrame(() => panelRef.current?.querySelector<HTMLAnchorElement>("a")?.focus());
+    const outside = (event: PointerEvent) => { if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false); };
+    const media = window.matchMedia("(min-width: 1200px)");
+    const resize = () => { if (media.matches) { setIsOpen(false); document.querySelector<HTMLAnchorElement>(".primary-nav a")?.focus(); } };
     document.addEventListener("keydown", handleKeyDown);
-
-    return () => document.removeEventListener("keydown", handleKeyDown);
+    document.addEventListener("pointerdown", outside);
+    media.addEventListener("change", resize);
+    return () => { window.cancelAnimationFrame(frame); document.removeEventListener("keydown", handleKeyDown); document.removeEventListener("pointerdown", outside); media.removeEventListener("change", resize); };
   }, [isOpen]);
 
   const closeMenu = () => setIsOpen(false);
 
   return (
-    <div className="mobile-navigation">
+    <div className="mobile-navigation" ref={rootRef} onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget)) setIsOpen(false); }}>
       <button
         ref={buttonRef}
         type="button"
@@ -52,7 +59,7 @@ export function MobileNavigation({ navItems, cta }: MobileNavigationProps) {
           <span />
         </span>
       </button>
-      <div id={panelId} className="mobile-navigation__panel" data-state={isOpen ? "open" : "closed"} aria-hidden={!isOpen}>
+      <div ref={panelRef} id={panelId} inert={!isOpen} className="mobile-navigation__panel" data-state={isOpen ? "open" : "closed"} aria-hidden={!isOpen}>
         <nav aria-label="Mobile navigation" className="mobile-navigation__nav">
           <ul className="mobile-navigation__list">
             {navItems.map((item) => (

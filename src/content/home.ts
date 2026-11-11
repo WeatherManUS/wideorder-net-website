@@ -71,10 +71,10 @@ export const siteContent = {
     hero: {
       serviceName: "WideOrder Resolve",
       brandPromise: "There is a better way.",
-      headline: "Solve the problems holding your business back.",
+      headline: "Your business shouldn't have to work this hard.",
       statement: "WideOrder solves problems for businesses.",
       supportingCopy:
-        "Clients engage WideOrder when something needs addressing, improving, implementing, coordinating or managing.",
+        "We find what is slowing you down, work out what needs to change, and help make it happen.",
       secondaryCopy:
         "Sometimes the problem is clear. Sometimes it is only clear that something is not working as it should. WideOrder investigates, works out a sensible path, and helps get the right work done.",
       primaryCtaLabel: "Discuss a Challenge",

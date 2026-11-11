@@ -13,22 +13,19 @@ try {
     page.on('pageerror', error => errors.push(error.message));
     for (const slug of ['retail-pricing', 'technology-deployment', 'remote-infrastructure-printing', 'month-end-reporting']) {
       await page.goto(`${base}/our-work/${slug}`);
-      const comparison = page.locator('.case-comparison');
-      await comparison.scrollIntoViewIfNeeded();
-      const before = await comparison.locator('p').innerText();
-      const after = comparison.getByRole('button', { name: 'After', exact: true });
-      if (touch) await after.tap(); else { await after.focus(); await after.press('Enter'); }
-      assert.equal(await after.getAttribute('aria-pressed'), 'true');
-      assert.notEqual(await comparison.locator('p').innerText(), before);
-      const reset = comparison.getByRole('button', { name: 'Before', exact: true });
-      if (touch) await reset.tap(); else { await reset.focus(); await reset.press('Space'); }
-      assert.equal(await comparison.locator('p').innerText(), before);
+      const comparison = page.locator('.comparison');
+      assert.equal(await comparison.locator('.comparison__panel').count(), 2);
+      for (const summary of await comparison.locator('summary').all()) {
+        if (touch) await summary.tap(); else { await summary.focus(); await summary.press('Enter'); }
+        assert.equal(await summary.evaluate(el => el.parentElement.open), true);
+        if (touch) await summary.tap(); else await summary.press('Space');
+        assert.equal(await summary.evaluate(el => el.parentElement.open), false);
+      }
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     }
     await page.goto(base);
-    assert.equal(await page.locator('h1').innerText(), 'Solve the problems holding your business back.');
-    await page.locator('.flagship-story').getByRole('button', { name: 'After', exact: true }).click();
-    assert.equal(await page.locator('.flagship-story [aria-pressed="true"]').innerText(), 'After');
+    assert.equal(await page.locator('h1').innerText(), "Your business shouldn't have to work this hard.");
+    assert.equal(await page.locator('.comparison[data-story="month-end-reporting"]').count(), 1);
     await context.close();
   }
   const context = await browser.newContext({ javaScriptEnabled: false });

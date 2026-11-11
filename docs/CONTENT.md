@@ -229,3 +229,41 @@
 - SMTP acceptance is not proof of inbox arrival. Optional acknowledgments confirm receipt without response-time promises.
 - Privacy information explains encrypted inquiry storage, SMTP delivery, queued notifications, and consent-permitted campaign labels in internal notifications.
 - Preserve current case-study content and visual direction; Phase 0.2 redesign is documentation only.
+
+## Phase 0.2 approved experience (v0.2.0001)
+
+The November 10, 2026 Phase 0.2 implementation brief supersedes earlier layout and homepage copy guidance. Existing detailed material above remains the source for progressive disclosures. No business positioning change is authorized.
+
+### Homepage
+- Brand promise: **There is a better way.**
+- Headline: **Your business shouldn't have to work this hard.**
+- Supporting statement: **We find what is slowing you down, work out what needs to change, and help make it happen.**
+- Primary invitation: Discuss a Challenge. Secondary: See the outcomes.
+- Signature progression: Complexity (disconnected tasks and repeated effort), Clarity (understand the connections and choose what matters), Order (simpler flow and clear responsibilities).
+- Problem: recurring work, stalled change and disconnected systems. Recover skilled time, get stalled work moving, make existing systems work better.
+- Flagship: Month-End Reporting. Days of repetition. Minutes of preparation.
+- Before **20 hours**, after **10 minutes**, approximately **99.2% less active human preparation time**. Independent background computer processing is separate; these are not total elapsed times or a universal guarantee. This approved baseline supersedes imprecise historical person-day descriptions in primary presentation; deeper historical context remains available.
+- Approach: Understand. Decide. Deliver. Paid Discovery establishes what is worth changing, followed by agreement on delivery.
+- Closing invitation: What should be easier?
+
+### Primary pages and retained detail
+- What We Do: Work that needs a better way. Investigate, improve, implement, coordinate and manage. Group problems into time lost to repetition, stalled change, systems that almost work, and work that needs ownership. Retain direct execution, managed implementation, ongoing service, specialist boundaries and value details.
+- How We Work: Clarity first. Progress with purpose. Paid Discovery may conclude that no further engagement is justified. Show all five approved stages. Keep detailed Discovery scope/outcomes and the three commercial engagement models in expandable sections. Further work requires a worthwhile case, agreed scope and credible value.
+- Our Work: Different challenges. Measurably better outcomes. Use concise linked previews; full accounts belong on individual routes.
+- Our Approach: The tool isn't the product. The better outcome is. Retain inSITU and Keep / Change / Replace / Build, plus Simple / Integrated / Trusted / Used. Keep detailed practical and commercial principles available.
+- Contact: What should be easier? A few lines about the challenge are enough to start. Form first, email secondary. Preserve all validation/privacy language.
+
+### Comparisons
+Both BEFORE and AFTER must be visible without interaction. Expandable detail contains the existing challenge and implementation explanation. Workflow steps are explanatory diagrams, not additional measured results.
+- Retail: a full-time burden to approximately 20 minutes across the business; do not calculate a percentage from an ongoing-role baseline.
+- Deployment: a growing backlog to up to 16 machines prepared simultaneously; do not invent baseline throughput.
+- Remote infrastructure: approximately 30 minutes to zero of the previous interruption-related downtime burden; not an uptime guarantee.
+
+### Optional customer acknowledgment
+Thanks for getting in touch.
+
+We've received your message and will review it.
+
+If we need any additional information, we'll be in touch.
+
+Do not include customer-visible UUIDs or raw timestamps. Keep acknowledgments disabled by default; preserve the administrator's existing setting. Internal notifications retain visitor details, challenge, reference, localized submission time and consent-permitted attribution.

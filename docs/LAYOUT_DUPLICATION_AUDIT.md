@@ -18,3 +18,14 @@ Scope: functional foundation only. Editorial restructuring and large visual chan
 ## Intentional branding repetition
 
 The approved logo, ?There is a better way.? promise, WideOrder Resolve identity, inSITU language, shared header/footer and four theme palettes are intentional. They remain unchanged. Case-study summaries linking to full accounts are also a purposeful overview/detail relationship; repeating entire narratives on both surfaces is the separate Phase 0.2 review item.
+
+
+## Phase 0.2 actions
+
+- Removed complete case-study narratives from the gallery; detail routes share the comparison component.
+- One homepage flagship (Month-End Reporting); case previews share a compact renderer.
+- Replaced repeated large motifs with one homepage interactive diagram.
+- Shared page intro, section, disclosure and closing invitation components.
+- Consolidated philosophy on Our Approach and detailed commercial material on How We Work.
+- Contact now leads with the existing form; one secondary email option follows it on mobile.
+- Preserved separate responsive navigation structures and shared theme selector.

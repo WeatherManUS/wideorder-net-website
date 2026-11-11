@@ -1,548 +1,96 @@
-import { InquiryLink } from "@/components/inquiry-link";
 import Link from "next/link";
-
-import { getContactMailtoHref, siteConfig } from "@/config/site";
-import { siteContent, type DeliveryMode, type EngagementModel, type PrincipleCard, type ProcessStage, type ProofStory } from "@/content/home";
-
+import { InquiryLink } from "@/components/inquiry-link";
+import { siteConfig, getContactMailtoHref } from "@/config/site";
+import { siteContent, type ProofStory } from "@/content/home";
+import { comparisons } from "@/content/comparisons";
 import { ContactForm } from "@/components/contact-form";
 import { CaseStudyComparison } from "@/components/case-study-comparison";
-import { ProofResultAnimator } from "@/components/proof-result-animator";
+import { ClarityDiagram } from "@/components/clarity-diagram";
 import { PageShell, SectionLabel } from "@/components/site-shell";
-import { OrderMotif } from "@/components/order-motif";
-import { ResultDisplay } from "@/components/result-display";
 
-function PageHero({
-  eyebrow,
-  title,
-  paragraphs,
-  actions,
-  support,
-}: {
-  eyebrow: string;
-  title: string;
-  paragraphs: readonly string[];
-  actions?: React.ReactNode;
-  support?: React.ReactNode;
-}) {
-  return (
-    <section className="page-hero site-section site-section--muted">
-      <div className="container container--wide page-hero__grid">
-        <div className="page-hero__main">
-          <SectionLabel>{eyebrow}</SectionLabel>
-          <h1 className="section-title">{title}</h1>
-          <div className="page-hero__copy">
-            {paragraphs.map((paragraph) => (
-              <p key={paragraph} className="section-copy">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-          {actions ? <div className="cta-row">{actions}</div> : null}
-        </div>
-        <div className="page-hero__support">{support ?? <OrderMotif />}</div>
-      </div>
-    </section>
-  );
+function Section({ children, surface = false, id }: { children: React.ReactNode; surface?: boolean; id?: string }) {
+  return <section id={id} className={`experience-section${surface ? " experience-section--surface" : ""}`}><div className="container container--wide">{children}</div></section>;
 }
-
-function HomeHeroSection() {
-
-  return (
-    <section className="hero anchor-section">
-      <div className="container container--wide hero__grid">
-        <div className="hero__content">
-          <p className="hero__service-name">{siteContent.home.hero.serviceName}</p>
-          <h1 id="hero-title" className="hero__title">
-            {siteContent.home.hero.headline}
-          </h1>
-          <p className="hero__statement">{siteContent.home.hero.brandPromise} {siteContent.home.hero.statement}</p>
-          <p className="hero__copy">{siteContent.home.hero.supportingCopy}</p>
-          <p className="hero__copy">{siteContent.home.hero.secondaryCopy}</p>
-          <div className="hero__actions cta-row">
-            <InquiryLink>{siteContent.home.hero.primaryCtaLabel}</InquiryLink>
-            <Link className="button button--secondary" href={siteContent.home.hero.secondaryCta.href}>
-              {siteContent.home.hero.secondaryCta.label}
-            </Link>
-          </div>
-        </div>
-        <div className="hero__visual"><OrderMotif /></div>
-        <div className="hero__examples">
-          <ul className="hero__list">
-            {siteContent.home.hero.examples.map((example) => (
-              <li key={example} className="hero__pill">
-                {example}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </div>
-    </section>
-  );
+function PageHero({ label, title, copy }: { label: string; title: string; copy?: string }) {
+  return <section className="experience-intro"><div className="container container--wide"><SectionLabel>{label}</SectionLabel><h1>{title}</h1>{copy ? <p>{copy}</p> : null}</div></section>;
 }
-
-function ProcessStageCard({ stage, index }: { stage: ProcessStage; index: number }) {
-  const isDiscovery = stage.title === "Discovery";
-
-  return (
-    <li className={["process__stage", isDiscovery ? "process__stage--discovery" : ""].filter(Boolean).join(" ")}>
-      <div className="process__stage-badge" aria-hidden="true">
-        {String(index + 1).padStart(2, "0")}
-      </div>
-      <div className="process__stage-body">
-        <h3>{stage.title}</h3>
-        {stage.paragraphs.map((paragraph) => (
-          <p key={paragraph}>{paragraph}</p>
-        ))}
-        {stage.outcomes ? (
-          <ul className="process__outcomes">
-            {stage.outcomes.map((outcome) => (
-              <li key={outcome}>{outcome}</li>
-            ))}
-          </ul>
-        ) : null}
-      </div>
-    </li>
-  );
+function Detail({ title, children, id }: { title: string; children: React.ReactNode; id?: string }) {
+  return <details className="disclosure editorial-detail" id={id}><summary>{title}</summary><div className="detail-copy">{children}</div></details>;
 }
-
-function DeliveryCard({ mode }: { mode: DeliveryMode | EngagementModel }) {
-  return (
-    <article className="engagement__model">
-      <h3>{mode.title}</h3>
-      <p>{mode.body}</p>
-    </article>
-  );
+function Invitation() {
+  return <Section><div className="invitation"><div><SectionLabel>There is a better way.</SectionLabel><h2>What should be easier?</h2></div><InquiryLink>Discuss a Challenge</InquiryLink></div></Section>;
 }
-
-function PrincipleCardGrid({ principles }: { principles: readonly PrincipleCard[] }) {
-  return (
-    <div className="insitu__cards">
-      {principles.map((principle) => (
-        <article key={principle.title} className="insitu__card">
-          <h3>{principle.title}</h3>
-          <p>{principle.body}</p>
-        </article>
-      ))}
-    </div>
-  );
+function CasePreview({ story }: { story: ProofStory }) {
+  const data = comparisons[story.id];
+  return <Link href={`/our-work/${story.id}`} className="case-preview" data-story={story.id}>
+    <div className="case-preview__graphic" aria-hidden="true"><span>{data.before}</span><i>→</i><strong>{data.after}</strong></div>
+    <div className="case-preview__body"><SectionLabel>Business outcomes</SectionLabel><h2>{story.title}</h2><p>{story.summary}</p><span className="teaser-link">Explore the case study</span></div>
+  </Link>;
 }
-
-function ContactCard({
-  subject,
-  showFormLink = true,
-}: {
-  subject: string;
-  showFormLink?: boolean;
-}) {
-  const emailHref = getContactMailtoHref(subject);
-
-  return (
-    <div className="engagement__support contact-card">
-      <p className="engagement__support-lead">{siteContent.contact.emailLabel}</p>
-      <p className="contact-card__email">
-        <a href={emailHref}>{siteConfig.contact.publicMailbox}</a>
-      </p>
-      <p className="contact-card__copy">Prefer email? Use this address as an alternative to the website inquiry form.</p>
-      {showFormLink ? <div className="contact-card__actions"><InquiryLink /></div> : null}
-      <ul className="contact-card__questions">
-        {siteContent.contact.prompts.map((prompt) => (
-          <li key={prompt}>{prompt}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
-
-function ProofStorySummaryCard({ story }: { story: ProofStory }) {
-  return (
-    <Link className="engagement__model summary-card interactive-card" href={`/our-work/${story.id}`}>
-      <p className="proof-story__kicker">{story.title}</p>
-      <ResultDisplay result={story.result} />
-      <p>{story.summary}</p>
-      <span className="teaser-link">Read the case study</span>
-    </Link>
-  );
-}
-
-function ProofStoryArticle({ story, reverse }: { story: ProofStory; reverse: boolean }) {
-  return (
-    <article id={story.id} className={["proof-story", reverse ? "proof-story--reverse" : ""].filter(Boolean).join(" ")}>
-      <div className="proof-story__result">
-        <p className="proof-story__kicker">{story.title}</p>
-        <p className="proof-story__label">The result</p>
-        <ProofResultAnimator title={story.title} result={story.result} />
-        <CaseStudyComparison story={story} />
-      </div>
-      <div className="proof-story__body">
-        <h3>{story.title}</h3>
-        <div className="proof-story__narrative-block">
-          <p className="proof-story__label">The challenge</p>
-          <p>{story.challenge}</p>
-        </div>
-        <div className="proof-story__narrative-block">
-          <p className="proof-story__label">The better way</p>
-          <p>{story.betterWay}</p>
-        </div>
-        <div className="proof-story__narrative-block">
-          <p className="proof-story__label">The result</p>
-          <p className="proof-story__summary">{story.interpretation}</p>
-        </div>
-        <Link className="case-study-permalink" href={`/our-work/${story.id}`}>Case study permalink</Link>
-      </div>
-    </article>
-  );
-}
+const flagship = siteContent.ourWork.stories.find(story => story.id === "month-end-reporting")!;
 
 export function HomePage() {
-  return (
-    <PageShell>
-      <HomeHeroSection />
-      <section className="site-section home-section home-section--overview">
-        <div className="container container--wide">
-          <div className="home-section__heading">
-            <SectionLabel>What WideOrder Does</SectionLabel>
-            <h2 className="section-title section-title--wide">{siteContent.home.overview.statement}</h2>
-          </div>
-          <div className="engagement__models engagement__models--triple">
-            {siteContent.home.overview.cards.map((card) => (
-              <article key={card.title} className="engagement__model">
-                <h3>{card.title}</h3>
-                <p>{card.body}</p>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="site-section site-section--contrast principle-band positioning-band">
-        <div className="container container--wide principle-band__inner">
-          <SectionLabel>Positioning</SectionLabel>
-          <h2 className="principle-band__line">{siteContent.home.positioning.lineOne}</h2>
-          <p className="principle-band__line principle-band__line--second">{siteContent.home.positioning.lineTwo}</p>
-          <p className="principle-band__body">{siteContent.home.positioning.body}</p>
-        </div>
-      </section>
-      <section className="site-section site-section--surface home-section home-section--work">
-        <div className="container container--wide">
-          <div className="home-section__heading">
-            <SectionLabel>Our Work</SectionLabel>
-            <h2 className="section-title section-title--wide">{siteContent.home.workPreview.statement}</h2>
-            <p className="section-copy proof__intro">{siteContent.home.workPreview.introduction}</p>
-          </div>
-          <div className="engagement__models results-index">
-            <article className="engagement__model flagship-story">
-              <SectionLabel>Featured case study / Retail Pricing</SectionLabel>
-              <h3>From a full-time pricing burden to approximately 20 minutes.</h3>
-              <p>{siteContent.ourWork.stories[0].betterWay}</p>
-              <CaseStudyComparison story={siteContent.ourWork.stories[0]} />
-              <Link className="teaser-link" href="/our-work/retail-pricing">Read the Retail Pricing case study</Link>
-            </article>
-            {siteContent.ourWork.stories.slice(1).map((story) => (
-              <ProofStorySummaryCard key={story.id} story={story} />
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="site-section home-section home-section--explore">
-        <div className="container container--wide">
-          <div className="home-section__heading">
-            <SectionLabel>Explore</SectionLabel>
-            <h2 className="section-title section-title--wide">Move from a short introduction to the detail you need.</h2>
-          </div>
-          <div className="engagement__models explore-index">
-            {siteContent.home.detailLinks.map((item) => (
-              <Link key={item.href} className="engagement__model teaser-card interactive-card" href={item.href}>
-                <h3>{item.label}</h3>
-                <p>{item.body}</p>
-                <span className="teaser-link">
-                  Go to {item.label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="site-section site-section--muted">
-        <div className="container container--wide contact__grid">
-          <div className="contact__intro">
-            <SectionLabel>Contact</SectionLabel>
-            <h2 className="section-title">{siteContent.contact.title}</h2>
-            {siteContent.contact.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="section-copy">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-          <ContactCard subject="WideOrder enquiry" />
-        </div>
-      </section>
-    </PageShell>
-  );
+  return <PageShell>
+    <section className="experience-hero"><div className="container container--wide experience-hero__grid">
+      <div><SectionLabel>{siteContent.home.hero.brandPromise}</SectionLabel><h1>{siteContent.home.hero.headline}</h1><p className="experience-hero__copy">{siteContent.home.hero.supportingCopy}</p>
+      <div className="cta-row"><InquiryLink>Discuss a Challenge</InquiryLink><Link href="/our-work" className="button button--secondary">See the outcomes</Link></div></div>
+      <ClarityDiagram />
+    </div></section>
+    <Section surface><div className="section-heading"><div><SectionLabel>Less effort. Better outcomes.</SectionLabel><h2>Make room for the work that matters.</h2></div><p>Recurring work, stalled change, disconnected systems. Start with the constraint. Find a practical way forward.</p></div>
+      <div className="problem-strip">{["Recover skilled time", "Get stalled work moving", "Make existing systems work better"].map((text, i) => <div key={text}><span>0{i + 1}</span><h3>{text}</h3></div>)}</div>
+    </Section>
+    <Section><div className="section-heading"><div><SectionLabel>Featured outcome / Month-End Reporting</SectionLabel><h2>Days of repetition.<br />Minutes of preparation.</h2></div><Link href="/our-work/month-end-reporting" className="text-link">Explore the full case study ↗</Link></div>
+      <CaseStudyComparison story={flagship} />
+    </Section>
+    <Section surface><div className="section-heading"><div><SectionLabel>How we work</SectionLabel><h2>Understand. Decide. Deliver.</h2></div><p>Paid Discovery establishes what is worth changing. Then we agree the right way to deliver it.</p></div><Link className="text-link" href="/how-we-work#discovery">Explore Discovery and engagement →</Link></Section>
+    <Invitation />
+  </PageShell>;
 }
 
 export function WhatWeDoPage() {
-  return (
-    <PageShell>
-      <PageHero
-        eyebrow={siteContent.whatWeDo.pageLabel}
-        title={siteContent.whatWeDo.title}
-        paragraphs={siteContent.whatWeDo.paragraphs}
-        actions={<InquiryLink>{"Let's talk"}</InquiryLink>}
-        support={
-          <div className="engagement__support">
-            <p className="engagement__support-lead">What makes WideOrder different</p>
-            <p>WideOrder stays focused on the problem, then helps get the right work done.</p>
-          </div>
-        }
-      />
-      <section className="site-section">
-        <div className="container container--wide challenge__layout">
-          <div>
-            <SectionLabel>Problems We Address</SectionLabel>
-            <h2 className="section-title">Businesses rarely need just one type of help.</h2>
-            <p className="section-copy">WideOrder is deliberately broad in scope because operational problems do not arrive in neat categories.</p>
-          </div>
-          <ul className="challenge__list">
-            {siteContent.whatWeDo.problemExamples.map((item) => (
-              <li key={item} className="challenge__item">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-      <section className="site-section site-section--surface">
-        <div className="container container--wide">
-          <SectionLabel>Delivery Options</SectionLabel>
-          <h2 className="section-title">WideOrder can stay close to the work in different ways.</h2>
-          <p className="section-copy engagement__intro">{siteContent.whatWeDo.deliveryStatement}</p>
-          <div className="engagement__models engagement__models--triple">
-            {siteContent.whatWeDo.deliveryModes.map((mode) => (
-              <DeliveryCard key={mode.title} mode={mode} />
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="site-section">
-        <div className="container container--wide challenge__layout">
-          <div>
-            <SectionLabel>Positioning</SectionLabel>
-            <h2 className="section-title">{siteContent.whatWeDo.positioning.statement}</h2>
-            <p className="section-copy">{siteContent.whatWeDo.positioning.body}</p>
-          </div>
-          <div className="engagement__support boundary-card">
-            <h2>{siteContent.whatWeDo.boundaryTitle}</h2>
-            <p>{siteContent.whatWeDo.boundaryBody}</p>
-          </div>
-        </div>
-      </section>
-      <section className="site-section site-section--muted">
-        <div className="container container--wide challenge__layout">
-          <div>
-            <SectionLabel>Value</SectionLabel>
-            <h2 className="section-title">Work should create a credible benefit relative to its cost.</h2>
-            <p className="section-copy">WideOrder does not rely on exaggerated promises. The case for action should be commercially sensible and materially worthwhile.</p>
-          </div>
-          <ul className="challenge__list">
-            {siteContent.whatWeDo.valuePoints.map((point) => (
-              <li key={point} className="challenge__item">
-                {point}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-    </PageShell>
-  );
+  const content = siteContent.whatWeDo;
+  return <PageShell><PageHero label="What We Do" title="Work that needs a better way." copy="We investigate, improve, implement, coordinate and manage. The business problem determines the solution." />
+    <Section><div className="problem-grid">{[
+      ["Time lost to repetition", "Recurring tasks, fragile handovers and the same work entered twice."],
+      ["Change that has stalled", "An implementation needs direction, coordination or hands-on delivery."],
+      ["Systems that almost work", "Existing tools and processes leave gaps that people keep working around."],
+      ["Work that needs ownership", "An ongoing operational burden needs to be handled reliably."],
+    ].map(([title, body], index) => <article key={title}><span className="sequence-number">0{index + 1}</span><h2>{title}</h2><p>{body}</p></article>)}</div></Section>
+    <Section surface><div className="section-heading"><div><SectionLabel>From diagnosis to delivery</SectionLabel><h2>The right involvement for the work.</h2></div></div><div className="delivery-grid">{content.deliveryModes.map(mode => <article key={mode.title}><h3>{mode.title}</h3><Detail title="What this includes"><p>{mode.body}</p></Detail></article>)}</div>
+      <Detail title="Scope, specialist boundaries and value"><p>{content.positioning.body}</p><p>{content.boundaryBody}</p><ul>{content.valuePoints.map(point => <li key={point}>{point}</li>)}</ul></Detail>
+    </Section><Invitation /></PageShell>;
 }
 
 export function HowWeWorkPage() {
-  return (
-    <PageShell>
-      <PageHero eyebrow={siteContent.howWeWork.pageLabel} title={siteContent.howWeWork.title} paragraphs={siteContent.howWeWork.paragraphs} support={<ContactCard subject="WideOrder Discovery enquiry" />} />
-      <section className="site-section">
-        <div className="container container--wide">
-          <SectionLabel>Process</SectionLabel>
-          <h2 className="section-title">A straightforward progression.</h2>
-          <ol className="process__list">
-            {siteContent.howWeWork.stages.map((stage, index) => (
-              <ProcessStageCard key={stage.title} stage={stage} index={index} />
-            ))}
-          </ol>
-        </div>
-      </section>
-      <section className="site-section site-section--surface">
-        <div className="container container--wide">
-          <SectionLabel>Engagement Models</SectionLabel>
-          <h2 className="section-title">{siteContent.howWeWork.engagementStatement}</h2>
-          <p className="section-copy engagement__intro">{siteContent.howWeWork.engagementIntroduction}</p>
-          <div className="engagement__models engagement__models--triple">
-            {siteContent.howWeWork.engagementModels.map((model) => (
-              <DeliveryCard key={model.title} mode={model} />
-            ))}
-          </div>
-          <div className="engagement__support">
-            <p className="engagement__support-lead">{siteContent.howWeWork.supportLead}</p>
-            <h3>{siteContent.howWeWork.supportHeading}</h3>
-            <p>{siteContent.howWeWork.supportBody}</p>
-            <p>{siteContent.howWeWork.supportConclusion}</p>
-          </div>
-        </div>
-      </section>
-    </PageShell>
-  );
+  const content = siteContent.howWeWork;
+  const summaries = ["Show us what keeps getting in the way.", "A paid professional engagement to understand the challenge.", "Establish the effort, cost and credible benefit.", "Choose the practical response. No predetermined tool.", "Implement, test and establish the solution."];
+  return <PageShell><PageHero label="How We Work" title="Clarity first. Progress with purpose." copy="Discovery is paid professional work. It may conclude that no further engagement is justified. That is a valid outcome." />
+    <Section><ol className="process-timeline">{content.stages.map((stage, index) => <li key={stage.title}><span className="sequence-number">0{index + 1}</span><h2>{stage.title}</h2><p>{summaries[index]}</p><Link href={index === 1 ? "#discovery" : `#process-detail-${index}`} className="text-link">Explore stage</Link></li>)}</ol>
+    <div className="process-details">{content.stages.map((stage, index) => <Detail key={stage.title} id={index === 1 ? "discovery" : `process-detail-${index}`} title={index === 1 ? "Discovery: scope and outcomes" : stage.title}>{stage.paragraphs.map(p => <p key={p}>{p}</p>)}{"outcomes" in stage && <ul>{stage.outcomes.map(o => <li key={o}>{o}</li>)}</ul>}</Detail>)}</div></Section>
+    <Section surface id="engagement"><SectionLabel>After Discovery</SectionLabel><h2 className="experience-heading">Agree the engagement that fits.</h2><div className="delivery-grid">{content.engagementModels.map(model => <article key={model.title}><h3>{model.title}</h3><Detail title="How this works"><p>{model.body}</p></Detail></article>)}</div><p className="commercial-note">Further work depends on a worthwhile case for action, an agreed scope and the value being created.</p><Detail title="Continuous improvement and ongoing service"><p>{content.supportLead}</p><p>{content.supportBody}</p><p>{content.supportConclusion}</p></Detail></Section><Invitation /></PageShell>;
 }
 
 export function OurWorkPage() {
-  return (
-    <PageShell>
-      <PageHero
-        eyebrow={siteContent.ourWork.pageLabel}
-        title={siteContent.ourWork.title}
-        paragraphs={siteContent.ourWork.paragraphs}
-        actions={<InquiryLink>{"Let's talk"}</InquiryLink>}
-      />
-      <section className="site-section">
-        <div className="container container--wide">
-          <SectionLabel>Case Study Summaries</SectionLabel>
-          <h2 className="section-title">{siteContent.ourWork.statement}</h2>
-          <p className="section-copy proof__intro">{siteContent.ourWork.introduction}</p>
-          <div className="engagement__models results-index">
-            {siteContent.ourWork.stories.map((story) => (
-              <ProofStorySummaryCard key={story.id} story={story} />
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="site-section site-section--surface">
-        <div className="container container--wide">
-          <SectionLabel>Detailed Accounts</SectionLabel>
-          <div className="proof__stories">
-            {siteContent.ourWork.stories.map((story, index) => (
-              <ProofStoryArticle key={story.id} story={story} reverse={index % 2 === 1} />
-            ))}
-          </div>
-        </div>
-      </section>
-    </PageShell>
-  );
+  return <PageShell><PageHero label="Our Work" title="Different challenges. Measurably better outcomes." copy="Real business problems, solved in the environments where the work happens." />
+    <Section><div className="case-gallery">{[flagship, ...siteContent.ourWork.stories.filter(s => s.id !== flagship.id)].map(story => <CasePreview key={story.id} story={story} />)}</div></Section><Invitation /></PageShell>;
 }
 
 export function OurApproachPage() {
-  return (
-    <PageShell>
-      <PageHero
-        eyebrow={siteContent.ourApproach.pageLabel}
-        title={siteContent.ourApproach.title}
-        paragraphs={siteContent.ourApproach.paragraphs}
-      />
-      <section className="site-section site-section--contrast principle-band">
-        <div className="container container--wide principle-band__inner">
-          <SectionLabel>Core Principle</SectionLabel>
-          <h2 className="principle-band__line">{siteContent.ourApproach.corePrinciple.lineOne}</h2>
-          <p className="principle-band__line principle-band__line--second">{siteContent.ourApproach.corePrinciple.lineTwo}</p>
-          <p className="principle-band__body">{siteContent.ourApproach.corePrinciple.body}</p>
-        </div>
-      </section>
-      <section className="site-section site-section--surface">
-        <div className="container container--wide insitu__grid">
-          <div>
-            <SectionLabel>inSITU</SectionLabel>
-            <h2 className="section-title">{siteContent.ourApproach.insitu.statement}</h2>
-            {siteContent.ourApproach.insitu.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="section-copy">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-          <PrincipleCardGrid principles={siteContent.ourApproach.insitu.principles} />
-        </div>
-        <div className="container container--wide">
-          <div className="insitu__callout">
-            <h3>{siteContent.ourApproach.insitu.callout}</h3>
-            <p>{siteContent.ourApproach.insitu.calloutBody}</p>
-          </div>
-        </div>
-      </section>
-      <section className="site-section">
-        <div className="container container--wide environment__grid">
-          <div className="environment__intro">
-            <SectionLabel>Existing Environment</SectionLabel>
-            <h2 className="section-title">{siteContent.ourApproach.existingEnvironment.statement}</h2>
-            {siteContent.ourApproach.existingEnvironment.paragraphs.map((paragraph) => (
-              <p key={paragraph} className="section-copy">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-          <div className="environment__model">
-            <div className="environment__assessment">{siteContent.ourApproach.existingEnvironment.assess}</div>
-            <div className="environment__options">
-              {siteContent.ourApproach.existingEnvironment.decisions.map((decision) => (
-                <div key={decision} className="environment__option">
-                  {decision}
-                </div>
-              ))}
-            </div>
-            <div className="environment__outcome">
-              <p>{siteContent.ourApproach.existingEnvironment.conclusionOne}</p>
-              <p>{siteContent.ourApproach.existingEnvironment.conclusionTwo}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section className="site-section site-section--muted">
-        <div className="container container--wide challenge__layout">
-          <div>
-            <SectionLabel>Value</SectionLabel>
-            <h2 className="section-title">{siteContent.ourApproach.value.statement}</h2>
-            <p className="section-copy">{siteContent.ourApproach.value.introduction}</p>
-          </div>
-          <ul className="challenge__list">
-            {siteContent.ourApproach.value.points.map((point) => (
-              <li key={point} className="challenge__item">
-                {point}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-    </PageShell>
-  );
+  const content = siteContent.ourApproach;
+  return <PageShell><PageHero label="Our Approach / inSITU" title="The tool isn't the product. The better outcome is." copy="Start with the real environment. Understand what works, what gets in the way and what is worth changing." />
+    <Section><div className="approach-decisions">{content.existingEnvironment.decisions.map((decision, i) => <div key={decision}><span className="sequence-number">0{i + 1}</span><h2>{decision}</h2></div>)}</div><Detail title="Working inSITU">{content.insitu.paragraphs.map(p => <p key={p}>{p}</p>)}</Detail></Section>
+    <Section surface><SectionLabel>Designed for real use</SectionLabel><h2 className="experience-heading">Simple. Integrated. Trusted. Used.</h2><div className="principle-grid">{content.insitu.principles.map(p => <article key={p.title}><h3>{p.title}</h3><p>{p.body}</p></article>)}</div><Detail title="Commercial value and practical adoption"><p>{content.insitu.calloutBody}</p><p>{content.value.introduction}</p><ul>{content.value.points.map(p => <li key={p}>{p}</li>)}</ul></Detail></Section><Invitation /></PageShell>;
 }
 
 export function ContactPage() {
-  return (
-    <PageShell>
-      <PageHero eyebrow={siteContent.contact.pageLabel} title={siteContent.contact.title} paragraphs={siteContent.contact.paragraphs} />
-      <section className="site-section site-section--surface">
-        <div className="container container--wide contact__grid contact-page__grid">
-          <ContactCard subject="WideOrder contact enquiry" showFormLink={false} />
-          <div className="contact-page__form-shell">
-            <SectionLabel>Website Form</SectionLabel>
-            <h2 className="section-title section-title--wide contact-page__form-heading">{siteContent.contact.formTitle}</h2>
-            <ContactForm
-              fields={siteContent.contact.fields}
-              messageLabel={siteContent.contact.messageLabel}
-              helperText={siteContent.contact.helperText}
-              exampleText={siteContent.contact.exampleText}
-              privacyText={siteContent.contact.privacyText}
-              submitLabel={siteContent.contact.submitLabel}
-            />
-          </div>
-        </div>
-      </section>
-    </PageShell>
-  );
+  const c = siteContent.contact;
+  return <PageShell><PageHero label="Contact" title="What should be easier?" copy="A few lines about the challenge are enough to start." />
+    <Section><div className="contact-experience"><div className="contact-experience__form"><ContactForm fields={c.fields} messageLabel={c.messageLabel} helperText={c.helperText} exampleText={c.exampleText} privacyText={c.privacyText} submitLabel={c.submitLabel} /></div><aside><SectionLabel>Prefer email?</SectionLabel><a className="text-link" href={getContactMailtoHref("WideOrder enquiry")}>{siteConfig.contact.publicMailbox}</a><p>Tell us what is happening, what keeps consuming time, or what should already be working.</p></aside></div></Section>
+  </PageShell>;
 }
 
 export function CaseStudyPage({ story }: { story: ProofStory }) {
-  return <PageShell>
-    <PageHero eyebrow="Our Work / Case Study" title={story.title} paragraphs={[story.summary]}
-      actions={<InquiryLink>Discuss a Challenge</InquiryLink>}
-      support={<ResultDisplay result={story.result} />} />
-    <section className="site-section site-section--surface"><div className="container container--wide">
-      <ProofStoryArticle story={story} reverse={false} />
-      <div className="cta-row"><Link className="button button--secondary" href="/our-work">Explore all case studies</Link></div>
-    </div></section>
+  return <PageShell><PageHero label="Our Work / Case Study" title={story.title} copy={story.summary} />
+    <Section><CaseStudyComparison story={story} /><Detail title="The outcome in context"><p>{story.interpretation}</p></Detail><div className="case-study-actions"><Link href="/our-work" className="text-link">← All case studies</Link><InquiryLink>Discuss a similar challenge</InquiryLink></div></Section>
   </PageShell>;
 }

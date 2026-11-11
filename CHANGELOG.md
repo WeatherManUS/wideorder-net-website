@@ -69,3 +69,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.2.0001 — verifying** (2026-11-11T04:54:39.733Z)
   Launch Phase 0.2 visual experience and mobile-first case studies
   Commit: `f5c11e48ac3efdced5c7a8bd07c3e760718284a2`; previous: 0.1.0005; artifact: a53f667a-0f13-4c47-8ec2-eeab3780c9be; rollback: none.
+
+- **v0.2.0001 — failed** (2026-11-11T04:59:22.883Z)
+  Launch Phase 0.2 visual experience and mobile-first case studies
+  Commit: `f5c11e48ac3efdced5c7a8bd07c3e760718284a2`; previous: 0.1.0005; artifact: a53f667a-0f13-4c47-8ec2-eeab3780c9be; rollback: none.

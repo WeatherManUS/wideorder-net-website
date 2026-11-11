@@ -1,3 +1,4 @@
+import { verifyContactTurnstile } from "./turnstile.ts";
 import { randomUUID } from "node:crypto";
 import { validateContactSubmission } from "../contact.ts";
 import { mailbox } from "../smtp/config.ts";
@@ -10,12 +11,7 @@ import { deliverInquiry } from "./queue.ts";
 
 export async function submitInquiry(body: unknown, clientIp: string, dependencies = {
   security: getInquirySecurityConfig, smtp: getSmtpConfig, deliver: deliverInquiry,
-  verify: async (token: string, secret: string) => {
-    const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", signal: AbortSignal.timeout(10000), headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams({ secret, response: token }) });
-    if (!response.ok) return false;
-    const result = await response.json();
-    return result.success === true;
-  },
+  verify: verifyContactTurnstile,
 }) {
   const { data, fieldErrors } = validateContactSubmission(body);
   if (!data) return { status: 400, body: { ok: false, error: "validation_error", fieldErrors } };
@@ -27,11 +23,11 @@ export async function submitInquiry(body: unknown, clientIp: string, dependencie
     if (!await takeRequestSlot(`inquiry:${clientIp}`)) return { status: 429, body: { ok: false, error: "rate_limited" } };
     const contact = { name: data.name, company: data.company, email: data.email, phone: data.phone, message: data.message };
     const fingerprint = privateHash(JSON.stringify(contact));
-    const existing = await inquiryByKey(record.requestKey);
-    if (existing) return existing.fingerprint === fingerprint ? { status: 200, body: inquiryResult(existing) } : { status: 409, body: { ok: false, error: "invalid_request" } };
     const security = await dependencies.security();
     if (!security.secretKey || !security.siteKey) return { status: 503, body: { ok: false, error: "service_unavailable" } };
     if (!data.turnstileToken || data.turnstileToken.length > 2048 || !await dependencies.verify(data.turnstileToken, security.secretKey)) return { status: 400, body: { ok: false, error: "security_verification_failed" } };
+    const existing = await inquiryByKey(record.requestKey);
+    if (existing) return existing.fingerprint === fingerprint ? { status: 200, body: inquiryResult(existing) } : { status: 409, body: { ok: false, error: "invalid_request" } };
     const config = await dependencies.smtp();
     const inquiry: Inquiry = { reference: randomUUID(), submittedAt: new Date().toISOString(), contact, ...inquiryContext(record), acknowledgment: config.acknowledgment };
     const store = await getManagedConfigStore();

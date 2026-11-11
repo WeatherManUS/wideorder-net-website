@@ -52,7 +52,8 @@ test("durable unconfigured receipt, encrypted content, consent filtering and ide
   const child = execFileSync(process.execPath, ["--experimental-transform-types", "--import", loader, "--input-type=module", "-e", `import { inquiryById } from ${JSON.stringify(storeUrl)}; const row = await inquiryById(${JSON.stringify(row.id)}); if (row?.status !== 'pending') process.exit(1); console.log('durable');`], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] });
   assert.match(child, /durable/);
   const inquiry = JSON.parse(decryptSecretValue(row.payload)); assert.equal(inquiry.contact.message, body.message); assert.equal(inquiry.campaign.utm_campaign, "release_check"); assert.equal(inquiry.campaign.email, undefined);
-  const again = await submitInquiry(body, "capture", { ...deps, verify: async () => { throw new Error("Should not verify again"); } });
+  assert.equal((await submitInquiry(body, "capture", { ...deps, verify: async () => false })).status, 400);
+  const again = await submitInquiry(body, "capture", deps);
   assert.equal(again.body.reference, result.body.reference);
   assert.equal((await submitInquiry({ ...body, message: "different" }, "capture", deps)).status, 409);
   const rejectedConsent = await submitInquiry({ ...payload(), analyticsConsent: false }, "no-consent", deps);

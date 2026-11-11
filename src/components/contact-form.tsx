@@ -53,6 +53,7 @@ type TurnstileApi = {
     container: HTMLElement,
     options: {
       sitekey: string;
+      action: string;
       theme: ThemeMode;
       callback: (token: string) => void;
       "expired-callback": () => void;
@@ -182,6 +183,7 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
 
     turnstileWidgetIdRef.current = window.turnstile.render(turnstileContainerRef.current, {
       sitekey: turnstileSiteKey,
+      action: "contact",
       theme: getResolvedTheme() ?? theme,
       callback: (token) => {
         setTurnstileToken(token);
@@ -307,6 +309,7 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
       setSubmissionState("error");
       setStatusMessage(CONTACT_ERROR_MESSAGE);
     } finally {
+      resetTurnstile();
       inFlightRef.current = false;
     }
   };

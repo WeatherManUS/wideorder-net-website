@@ -36,3 +36,11 @@ Only authenticated administrators can view decrypted inquiries. Retention/deleti
 - Existing release, appearance, marketing and case-study audits remain available. Live mailbox delivery must be reported pending until account credentials are configured and actual inbox arrival is checked.
 
 The Turnstile test key is intentionally retained at the user's instruction. It does not establish real production abuse protection; replace it with production keys before formal launch.
+
+## Production Turnstile verification
+
+The contact widget uses action `contact`. The server requires a successful Siteverify response for that action and hostname `wideorder.net` or `www.wideorder.net`; localhost is accepted only outside production. Test-key responses (`example.com`, without an action) are intentionally rejected. Use mocked verifier responses in isolated tests, not a production bypass.
+
+The existing managed Settings fields remain the credential destination. No credentials are embedded in source. Every request, including an idempotent retry, needs a fresh token. The browser resets its widget after each submission attempt. With a fresh valid token, repeating the same request key still returns the existing inquiry without sending a duplicate notification.
+
+Release validation: lint, typecheck, production build and nine inquiry/Turnstile tests passed. Live real-token success and replay rejection must be verified after deployment; mocked tests do not establish that the saved widget secret matches the site key.

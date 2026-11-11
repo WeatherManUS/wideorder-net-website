@@ -109,3 +109,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.2.0003 — published** (2026-11-11T13:15:35.868Z)
   Prepare approved search indexing and distinguish unverified crawler probes
   Commit: `5df74161764948a423bf65fb4b64f0814652d8c7`; previous: 0.2.0002; artifact: fa1ac686-3636-4ead-b5fe-240a3fee13e8; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-11T18:22:23.587Z)
+  Add transitional passkey administration and controlled recovery for phase 0.3
+  Commit: `139547ba66f252d4bcb229317000fbff08262bf9`; previous: 0.2.0003; artifact: not built; rollback: none.

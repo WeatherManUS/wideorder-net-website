@@ -37,3 +37,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.1.0004 — verifying** (2026-11-11T03:33:58.171Z)
   Add secure SMTP settings and durable native inquiries
   Commit: `bc0815e78e7556bedb8835c9f06cbb1699d4e3ec`; previous: 0.1.0003; artifact: 5dd2641e-9864-4bb5-927f-1ae258dc7205; rollback: none.
+
+- **v0.1.0004 — published** (2026-11-11T03:42:17.455Z)
+  Add secure SMTP settings and durable native inquiries
+  Commit: `bc0815e78e7556bedb8835c9f06cbb1699d4e3ec`; previous: 0.1.0003; artifact: 5dd2641e-9864-4bb5-927f-1ae258dc7205; rollback: none.

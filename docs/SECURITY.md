@@ -1,5 +1,11 @@
 # Security Baseline
 
+## Phase 0.3 authentication checkpoint
+
+The [passkey architecture and recovery runbook](PASSKEY_SECURITY.md) supersedes historical password-reset guidance after passkey cutover. Never restore password authentication or a pre-cutover database to recover access. Deployment initially retains transitional password access; physical enrollment and explicit owner cutover remain pending.
+
+WebAuthn uses pinned `@simplewebauthn/server@14.1.0` and `@simplewebauthn/browser@14.0.0`. The November 11, 2026 production dependency audit (`npm audit --omit=dev`) reported zero vulnerabilities. Historical findings below describe earlier checkpoints.
+
 ## Audit checkpoint
 
 - Date: `2026-10-10`

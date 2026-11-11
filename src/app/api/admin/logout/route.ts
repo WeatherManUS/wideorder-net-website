@@ -6,7 +6,7 @@ import {
   buildTrustedAdminUrl,
   clearAdminSession,
   getAdminSessionTokenFromRequest,
-  getAuthenticatedAdminFromRequest,
+  getEnrollmentAdminFromRequest,
   isTrustedAdminOrigin,
 } from "@/lib/managed-config/admin";
 
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     });
   }
 
-  const admin = await getAuthenticatedAdminFromRequest(request);
+  const admin = await getEnrollmentAdminFromRequest(request);
 
   if (!admin) {
     const response = NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/login"), {

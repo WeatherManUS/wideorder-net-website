@@ -1,5 +1,6 @@
+import { readAccessState, updateAccessState, sessionLive, securityEvent, type AccessSession } from "../access/state.ts";
 import { takeRequestSlot } from "../inquiries/store.ts";
-﻿import { randomBytes } from "node:crypto";
+import { randomBytes, randomUUID } from "node:crypto";
 
 import { cookies } from "next/headers";
 
@@ -21,6 +22,8 @@ const ADMIN_PASSWORD_MAX_LENGTH = 128;
 export type AuthenticatedAdmin = {
   email: string;
   expiresAt: string;
+  sessionId: string;
+  method: AccessSession["method"];
 };
 
 export type AdminCredentialSource = "managed" | "bootstrap" | "missing";
@@ -152,99 +155,65 @@ export function buildTrustedAdminUrl(request: Request, path: string) {
   return buildTrustedPublicUrl(request, path);
 }
 
-async function createSession(adminEmail: string) {
-  const store = await getManagedConfigStore();
+export async function createAdminSession(request: Request, method: AccessSession["method"], credentialRef?: string) {
   const issuedAt = new Date();
-  const expiresAt = new Date(issuedAt.getTime() + SESSION_TTL_MS);
+  const expiresAt = new Date(issuedAt.getTime() + (method === "recovery" ? 30 * 60000 : SESSION_TTL_MS)).toISOString();
   const token = randomBytes(32).toString("base64url");
-
-  await store.purgeExpiredSessions(issuedAt.toISOString());
-  await store.upsertSession({
-    sessionIdHash: hashToken(token),
-    adminEmail,
-    createdAt: issuedAt.toISOString(),
-    expiresAt: expiresAt.toISOString(),
-    lastSeenAt: issuedAt.toISOString(),
+  const hash = hashToken(token);
+  const oldHash = hashToken(getAdminSessionTokenFromRequest(request));
+  const ua = request.headers.get("user-agent") || "";
+  const browser = /Edg\//.test(ua) ? "Edge" : /Firefox\//.test(ua) ? "Firefox" : /Chrome\//.test(ua) ? "Chrome" : /Safari\//.test(ua) ? "Safari" : "Browser";
+  const platform = /Android/.test(ua) ? "Android" : /iPhone|iPad/.test(ua) ? "Apple mobile" : /Windows/.test(ua) ? "Windows" : /Macintosh/.test(ua) ? "Mac" : "device";
+  await updateAccessState(state => {
+    if (method === "password" && state.mode !== "transitional") throw new Error("password_disabled");
+    if (method === "recovery" ? state.mode !== "recovery" : state.mode === "recovery") throw new Error("recovery_restricted");
+    if (credentialRef && !state.credentials.some(key => key.ref === credentialRef && !key.revokedAt)) throw new Error("credential_revoked");
+    state.sessions = state.sessions.filter(session => session.hash !== oldHash).slice(-19);
+    const session: AccessSession = { id: randomUUID(), hash, method, credentialRef, createdAt: issuedAt.toISOString(), lastSeenAt: issuedAt.toISOString(), expiresAt, label: `${browser} on ${platform}` };
+    state.sessions.push(session);
+    securityEvent(state, "sign_in", "success", { sessionId: session.id, credentialRef });
   });
-
-  return {
-    token,
-    expiresAt: expiresAt.toISOString(),
-  };
+  return { token, expiresAt };
 }
 
 export async function clearAdminSession(token: string) {
-  if (!token) {
-    return;
-  }
-
-  const store = await getManagedConfigStore();
-  await store.deleteSession(hashToken(token));
+  if (!token) return;
+  const hash = hashToken(token);
+  await updateAccessState(state => {
+    const session = state.sessions.find(item => item.hash === hash);
+    state.sessions = state.sessions.filter(item => item.hash !== hash);
+    if (session) securityEvent(state, "session_revoked", "success", { sessionId: session.id });
+  });
+  await (await getManagedConfigStore()).deleteSession(hash);
 }
 
 export function getAdminSessionTokenFromRequest(request: Request) {
   return getSessionCookieValue(request.headers.get("cookie"));
 }
 
-export async function getAuthenticatedAdminFromRequest(request: Request): Promise<AuthenticatedAdmin | null> {
-  const token = getAdminSessionTokenFromRequest(request);
-
-  if (!token) {
-    return null;
-  }
-
-  const store = await getManagedConfigStore();
-  const nowIso = new Date().toISOString();
-
-  await store.purgeExpiredSessions(nowIso);
-
-  const session = await store.getSession(hashToken(token));
-
-  if (!session || session.adminEmail !== ADMIN_EMAIL || session.expiresAt <= nowIso) {
-    if (session) {
-      await store.deleteSession(session.sessionIdHash);
-    }
-
-    return null;
-  }
-
-  await store.touchSession(session.sessionIdHash, nowIso);
-
-  return {
-    email: session.adminEmail,
-    expiresAt: session.expiresAt,
-  };
+async function authenticateSessionToken(token: string): Promise<AuthenticatedAdmin | null> {
+  if (!/^[A-Za-z0-9_-]{43}$/.test(token)) return null;
+  const hash = hashToken(token);
+  return updateAccessState(state => {
+    const session = state.sessions.find(item => item.hash === hash && sessionLive(state, item));
+    if (!session) return null;
+    session.lastSeenAt = new Date().toISOString();
+    return { email: ADMIN_EMAIL, expiresAt: session.expiresAt, sessionId: session.id, method: session.method };
+  });
 }
-
+export async function getAuthenticatedAdminFromRequest(request: Request): Promise<AuthenticatedAdmin | null> {
+  const admin = await authenticateSessionToken(getAdminSessionTokenFromRequest(request));
+  return admin?.method === "recovery" ? null : admin;
+}
+export async function getEnrollmentAdminFromRequest(request: Request) {
+  return authenticateSessionToken(getAdminSessionTokenFromRequest(request));
+}
 export async function getAuthenticatedAdminFromCookies(): Promise<AuthenticatedAdmin | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value ?? "";
-
-  if (!token) {
-    return null;
-  }
-
-  const store = await getManagedConfigStore();
-  const nowIso = new Date().toISOString();
-
-  await store.purgeExpiredSessions(nowIso);
-
-  const session = await store.getSession(hashToken(token));
-
-  if (!session || session.adminEmail !== ADMIN_EMAIL || session.expiresAt <= nowIso) {
-    if (session) {
-      await store.deleteSession(session.sessionIdHash);
-    }
-
-    return null;
-  }
-
-  await store.touchSession(session.sessionIdHash, nowIso);
-
-  return {
-    email: session.adminEmail,
-    expiresAt: session.expiresAt,
-  };
+  const admin = await authenticateSessionToken((await cookies()).get(SESSION_COOKIE_NAME)?.value ?? "");
+  return admin?.method === "recovery" ? null : admin;
+}
+export async function getEnrollmentAdminFromCookies() {
+  return authenticateSessionToken((await cookies()).get(SESSION_COOKIE_NAME)?.value ?? "");
 }
 
 export async function getAdminCredentialSummary(): Promise<AdminCredentialSummary> {
@@ -260,6 +229,7 @@ export async function getAdminCredentialSummary(): Promise<AdminCredentialSummar
 }
 
 export async function authenticateAdmin(request: Request, password: string) {
+  if ((await readAccessState()).mode !== "transitional") return { ok: false as const, error: "password_disabled" };
   const state = await getAdminPasswordState();
   const adminPasswordHash = state.activeHash;
 
@@ -288,6 +258,7 @@ export async function authenticateAdmin(request: Request, password: string) {
   const isValid = verifyAdminPassword(password, adminPasswordHash);
 
   if (!isValid) {
+    await updateAccessState(state => securityEvent(state, "sign_in", "failure"));
     const withinWindow = attempt && new Date(attempt.firstFailedAt).getTime() >= now.getTime() - LOGIN_FAILURE_WINDOW_MS;
     const nextFailCount = withinWindow ? (attempt?.failCount ?? 0) + 1 : 1;
     const firstFailedAt = withinWindow && attempt ? attempt.firstFailedAt : nowIso;
@@ -309,7 +280,7 @@ export async function authenticateAdmin(request: Request, password: string) {
 
   await store.deleteLoginAttempt(scopeKey);
 
-  const session = await createSession(ADMIN_EMAIL);
+  const session = await createAdminSession(request, "password");
 
   return {
     ok: true as const,
@@ -355,6 +326,12 @@ export async function changeAdminPassword({
   }
 
   const nowIso = new Date().toISOString();
+
+  await updateAccessState(access => {
+    if (access.mode !== "transitional" || access.credentials.length) throw new Error("password_change_disabled");
+    access.sessions = [];
+    securityEvent(access, "password_changed", "success");
+  });
 
   await state.store.upsertAdminCredential({
     adminEmail: ADMIN_EMAIL,

@@ -1,0 +1,70 @@
+# Phase 0.3 security architecture and operations
+
+## Pre-implementation audit
+
+Actual baseline: v0.2.0003. The supplied brief's v0.2.0002 baseline predates approved search activation. Preserve the deployed indexing setting and public design.
+
+Existing administration is one fixed account (info@wideorder.net), with a managed scrypt password and environment bootstrap hash. Sessions use 256-bit random tokens, store only token hashes in MySQL, expire after 12 hours, and use HttpOnly, SameSite=Strict, Secure-in-production cookies. Existing sessions have last-seen timestamps but no idle enforcement, authentication-method attribution or fresh-verification grants. Password rotation deletes sessions. Administrative mutations check trusted Origin/Referer and authorization. Login limits are persistent, including an account-wide bound; forwarded IP metadata must not be considered authenticated identity.
+
+Settings and inquiry data use the existing MySQL adapter in production (SQLite for local tests). Secrets are AES-256-GCM encrypted using the infrastructure-held encryption key. Settings edits have a names-only audit trail, but security events, credentials and recovery need separate records. SMTP and inquiry APIs already perform server authorization and origin checks. No production hosting secret or private database session is available to this agent.
+
+Risks to address before cutover: legacy-password rollback could restore weaker authentication; copied/synced credentials do not prove independent backup; total loss recovery needs separately authenticated infrastructure access; sessions need idle limits and server-side step-up; challenge consumption and credential changes must be atomic across application instances. Physical authenticator enrollment cannot be performed by automated tests on behalf of the owner.
+
+## Implementation design
+
+Use maintained SimpleWebAuthn server/browser packages for WebAuthn ceremonies and cryptographic verification. Require discoverable credentials, user presence and user verification, fixed production origin https://wideorder.net and RP ID wideorder.net. Local development uses localhost only. No production origin derives from untrusted Host or forwarded headers.
+
+Store a bounded, versioned single-administrator security record in the existing database. Compare-and-swap updates make challenge consumption, credential state, session grants and security audit entries atomic across processes. No private authenticator keys or biometrics reach the server. Credential IDs/public keys are server-only; the interface uses unrelated UUID references and user-defined labels. Audits never include challenge values, session secrets, SMTP settings or inquiry content.
+
+Initial enrollment preserves password access. Require a fresh password session for the first registration, then passkey step-up for further registration and sensitive operations. Register and authenticate with two different credentials, including at least one device-bound authenticator; the owner must confirm independent recovery and review the recovery procedure before cutover. A synced copy of the same credential is one credential, not a backup.
+
+Passkey-only cutover must disable the bootstrap environment password, replace the managed password hash with an unknowable random value, invalidate legacy sessions, and retain a durable mode guard. A failed cutover stays locked against password access; never automatically restore passwords. Rollback after cutover must use a passkey-capable build and preserve the current database. Never restore an older credential database snapshot as routine application rollback.
+
+Deployment installs infrastructure in transitional mode. Actual enrollment, physical-device checks, backup confirmation and explicit cutover remain administrator actions. Do not report migration complete from virtual-authenticator testing.
+
+## Owner enrollment and cutover
+
+1. Use a trusted browser at `https://wideorder.net/admin/login` and sign in with the existing administrator password. Deployment invalidates legacy sessions, so sign in again. Open Settings → Security & Access within five minutes of sign-in for initial registration.
+2. Register and name the primary passkey. Assign a recovery group describing its actual dependency (for example, a particular synced provider). Use its Test control and complete user verification.
+3. Register an independent backup using fresh verification with the first key. Prefer an offline FIDO2 hardware key stored separately. The server requires two tested credentials in distinct recovery groups, including at least one device-bound credential. Labels alone cannot prove independence: the owner must verify the devices/providers actually differ. Hardware identity is not attested.
+4. Test the backup explicitly. Check access from each intended physical platform/browser and a fresh browser session. Windows Hello, Android, Apple, synced credentials and compatible FIDO2 keys use the standard platform chooser; support is implemented, but physical compatibility is not certified by virtual-browser tests.
+5. Review the total-loss procedure below and confirm separately protected hosting/database access is available. Do not cut over if that procedure cannot be executed by a trusted operator.
+6. Only after both authenticators work, remove `WIDEORDER_ADMIN_PASSWORD_HASH` from hosting environment configuration. This is an owner-controlled hosting change, not performed by the infrastructure deployment. If applying that change creates a new production artifact, coordinate it under the next release number and verify publication. Managed transitional password access remains until explicit cutover.
+7. Confirm independent recovery and review, type `ENABLE PASSKEY ONLY`, and complete fresh passkey verification. The application disables passwords durably, erases their usable managed hash, and invalidates sessions. Sign in from a fresh browser using each key. Do not report migration complete until these real-device checks succeed.
+
+After the first credential exists, sensitive Settings/SMTP operations also require a fresh, action-specific, single-use passkey grant. Canceling verification cancels the mutation. Before enrollment, those operations require a password session less than five minutes old.
+
+## Lost device or provider compromise
+
+Use a surviving independent key to sign in. Add and test a replacement before revoking a key if revocation would otherwise leave fewer than two independently tested recovery credentials. Revoke the lost phone, laptop or hardware key in Security & Access; its sessions are invalidated. Revoke all other sessions as well when compromise is suspected.
+
+For a compromised synced provider, use a key outside that provider, replace affected credentials, and revoke every credential dependent on that provider. A copied synced credential is not a separate recovery method. Secure the provider account separately. If no trusted credential survives, use total-loss recovery.
+
+## Total-authenticator-loss recovery: infrastructure only
+
+This is a manually authorized incident operation, not routine login. There is no web endpoint that issues recovery authorization, password fallback, email recovery or SMS recovery. The recovery page accepts only an infrastructure-issued, random, one-time authorization.
+
+1. The owner and trusted infrastructure operator establish authorization using separately authenticated hosting/database access, protected with MFA independent of the lost passkey provider. Record a non-sensitive incident/approval reference and identity verification in the operator's protected incident record. Possession of email or the old website password is insufficient. The CLI flag records the operator's assertion; the application cannot verify the external human approval process.
+2. Review access logs, contain any suspected compromise, and securely preserve current database evidence and the managed-configuration encryption key. Restrict database credentials to the operator and app. Do not restore an old access-state snapshot to bypass revocations.
+3. In a trusted interactive terminal on the current release source with Node 24 and installed dependencies, load the existing production database and configuration environment through the protected hosting secret mechanism. Do not paste credentials into command arguments, source files, screenshots or diagnostic logs. Verify the bootstrap password variable is absent.
+4. Run `node --experimental-transform-types scripts/admin-recovery.mjs begin-total-loss --owner-authorized AUTHORIZATION-REFERENCE`. Replace the last argument with the recorded 8–80 character reference (letters, digits, dots, underscores or hyphens). The command refuses redirected stdout. It revokes all credentials and sessions, tombstones passwords, and prints a 256-bit authorization valid for 15 minutes once. Only its hash is stored. Do not run with terminal recording or share the token by email/chat. Audit records contain the approval reference, never the token.
+5. The authorized owner enters the value at `https://wideorder.net/admin/recovery` in a trusted browser. Redemption is single-use and opens a restricted, 30-minute enrollment session. Settings, SMTP and ordinary login remain unavailable. Register and test two independent replacement credentials, review recovery, and explicitly cut over again. Then test fresh passkey login. If authorization expires or enrollment is interrupted beyond its session, repeat the manually authorized infrastructure operation; no automatic bypass is provided.
+6. Close the incident only after reviewing security events, revoking unnecessary infrastructure sessions and confirming production access. Clear sensitive terminal scrollback according to operator procedures. A failed command may leave recovery mode locked; rerun only through the same authorized process.
+
+The production operator's ability to execute this runbook remains an enrollment prerequisite. Local automated tests verify the application mechanics, not Hostinger shell availability or the owner's infrastructure MFA.
+
+## Sessions, storage, retention and rollback
+
+Normal sessions expire after 12 hours or 30 minutes idle. Authentication rotates opaque session tokens; only hashes are stored. Cookies are HttpOnly, SameSite Strict and Secure in production. The interface exposes approximate browser/OS labels, not fingerprints or tokens. At most 20 sessions, 20 active credentials, 200 historical credential records and 100 outstanding ceremonies are retained. Challenges and sensitive-action grants expire after two minutes.
+
+Security events retain up to the latest 1,000 entries and 365 days, pruned on updates. The interface shows the latest 40. Only authorized administration can read events; no application route edits or deletes them. The database operator can alter them, so these records are not an immutable forensic ledger. Use separately access-controlled database backups and infrastructure logging for stronger evidence retention. Database backups contain public credential material and secret hashes, plus separately encrypted managed settings; protect them and the encryption key independently.
+
+The security table is additive and does not replace inquiry/settings records. Before cutover, any rollback requires careful review of newly registered keys and sessions. After cutover or recovery begins, deploy only a passkey-capable build that honors the durable mode and current schema. Never roll back to a password-only application or restore an earlier security-state snapshot. An interrupted cutover stays password-disabled and can be completed using a registered passkey.
+
+## Reproducible local validation
+
+- `npm run lint`, `npm run typecheck`, `npm run build`.
+- `node --experimental-transform-types --import ./scripts/test-register.mjs --test src/**/*.test.mjs src/**/**/*.test.mjs src/**/**/**/*.test.mjs` (73 tests at this checkpoint).
+- Start `node --experimental-transform-types scripts/start-security-qa.mjs`, then set `PLAYWRIGHT_MODULE_PATH` to the existing Playwright installation and run `node --experimental-transform-types scripts/passkey-qa.mjs`. Follow with `node --experimental-transform-types --import ./scripts/test-register.mjs scripts/recovery-qa.mjs` against that same isolated fixture. Restart the launcher for a new full run.
+- Virtual Chromium authenticators exercise actual signed WebAuthn ceremonies, invalid origin/RP/challenge/signature/ownership/UV, replay, explicit cutover, Settings step-up, revocation, sessions, lost-key replacement and restricted total-loss recovery. No production enrollment or real mail delivery is performed by these fixtures.
+- QA databases live in the OS temporary directory to avoid development hot reloads caused by database writes. Generated credentials and screenshots under ignored `.release/` are not release source; remove the temporary credentials after validation.

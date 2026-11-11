@@ -1,3 +1,5 @@
+import { SecurityAccess, SensitiveAdminForm } from "@/components/admin-access";
+import { accessView } from "@/lib/access/webauthn";
 import { LocalTime } from "@/components/local-time";
 import { MailDiagnostics } from "@/components/admin-mail-diagnostics";
 import { mailDiagnostics } from "@/lib/inquiries/diagnostics";
@@ -51,7 +53,10 @@ const errorMessages: Record<string, string> = {
   password_strength: "Use 12-128 characters and include at least three of: lowercase, uppercase, number, symbol.",
   password_confirmation_mismatch: "The new password confirmation does not match.",
   password_reuse: "Choose a password different from the current password.",
-  bootstrap_missing: "Bootstrap recovery credentials are not configured yet.",
+  bootstrap_missing: "Bootstrap credentials are not configured yet.",
+  fresh_verification_required: "Verify your passkey before changing settings.",
+  fresh_login_required: "Sign in again before changing settings.",
+  password_change_disabled: "Password changes are disabled after passkey enrollment begins.",
 };
 
 export default async function AdminSettingsPage({ searchParams }: SettingsPageProps) {
@@ -85,6 +90,8 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
     redirect("/admin/login?error=service_unavailable");
   }
 
+  const access = await accessView(admin.sessionId);
+  const stepUpRequired = access.credentials.some(key => !key.revokedAt);
   const smtpViews = views.filter(view => view.key.startsWith("SMTP_"));
   const websiteViews = views.filter(view => ["NEXT_PUBLIC_TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY"].includes(view.key));
   const config = await getSmtpConfig();
@@ -141,21 +148,23 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
             <dd>{persistence.detail}</dd>
           </div>
           <div>
-            <dt>Admin auth source</dt>
-            <dd>{credentialSummary.effectiveSource}</dd>
+            <dt>Session authentication</dt>
+            <dd>{admin.method}</dd>
           </div>
           <div>
-            <dt>Bootstrap recovery hash</dt>
-            <dd>{credentialSummary.bootstrapConfigured ? "Configured" : "Missing"}</dd>
+            <dt>Legacy bootstrap password</dt>
+            <dd>{credentialSummary.bootstrapConfigured ? "Configured — remove after testing passkeys, before cutover" : "Not configured"}</dd>
           </div>
         </dl>
 
         {statusMessage ? <p className="admin-alert admin-alert--success">{statusMessage}</p> : null}
         {errorMessage ? <p className="admin-alert admin-alert--error">{errorMessage}</p> : null}
 
-        <form className="admin-form admin-form--stacked" method="post" action="/api/admin/settings">
+        <nav aria-label="Settings sections" className="admin-actions"><a href="#security-access">Security &amp; Access</a><a href="#communications">Communications</a><a href="#general-settings">General</a></nav>
+        <SecurityAccess view={access} />
+        <SensitiveAdminForm className="admin-form admin-form--stacked" action="/api/admin/settings" grant="settings" required={stepUpRequired}>
           <input type="hidden" name="action" value="save_settings" />
-          <section className="admin-section">
+          <section id="communications" className="admin-section">
             <h2>Email / SMTP</h2>
             <p className="admin-copy">{smtpReady ? "SMTP configured - use the tests below to verify connection and acceptance." : "SMTP not configured"}</p>
             <p className="admin-copy">Hostinger defaults: smtp.hostinger.com, port 465, SSL/TLS, authentication enabled. Credentials and destination mailboxes are supplied by the administrator.</p>
@@ -173,23 +182,23 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
               Save settings
             </button>
           </div>
-        </form>
+        </SensitiveAdminForm>
 
         <MailDiagnostics data={diagnostics} recipient={config.recipient} sender={config.from} acknowledgment={config.acknowledgment} configured={smtpReady} />
         <section className="admin-section">
           <h2>SMTP tests</h2>
           <p className="admin-copy">Tests use saved settings. Test emails go only to the saved notification recipient.</p>
-          <form method="post" action="/api/admin/smtp" className="admin-actions">
+          <SensitiveAdminForm action="/api/admin/smtp" grant="smtp" required={stepUpRequired} className="admin-actions">
             <button className="button button--secondary" name="action" value="test_connection">Test connection</button>
             <button className="button button--secondary" name="action" value="send_test">Send test email</button>
-          </form>
+          </SensitiveAdminForm>
         </section>
         <section className="admin-section">
           <h2>Inquiry delivery queue</h2>
           <p className="admin-copy">Inquiries are encrypted in durable storage. Pending notifications retry every minute when due and configured. Accepted means SMTP acceptance, not confirmed inbox delivery. Uncertain delivery requires mailbox review and is not automatically resent.</p>
           <form method="get" action="/admin/settings" className="admin-form"><label className="admin-field"><span>Find inquiry by reference</span><input name="reference" defaultValue={reference} maxLength={64} /></label><button className="button button--secondary">Find inquiry</button><Link href="/admin/settings">Show recent inquiries</Link></form>
           <p className="admin-copy">Without a reference, review the 30 most recent inquiries below by submission time. Times use your browser’s local time zone, which is included. Hover over a time to see UTC.</p>
-          <form method="post" action="/api/admin/smtp"><button className="button button--secondary" name="action" value="retry_queue">Process due notifications</button></form>
+          <SensitiveAdminForm action="/api/admin/smtp" grant="smtp" required={stepUpRequired}><button className="button button--secondary" name="action" value="retry_queue">Process due notifications</button></SensitiveAdminForm>
           <ul className="admin-audit-list">{inquiries.map(row => <li key={String(row.id)}>
             <Link href={`/admin/inquiries/${row.id}`}>{String(row.id)}</Link>
             <span>Received: <LocalTime value={row.created_at} /></span><span>{String(row.stage)}: {String(row.status)}</span>
@@ -197,7 +206,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
             <span>Attempts in current stage: {String(row.attempts)}. {row.status === "pending" ? <>Next attempt: <LocalTime value={row.next_attempt_at} /></> : ""}</span>
             {row.last_error ? <span>{String(row.last_error)}</span> : null}
             {row.status === "review" && ["temporary_rejection", "permanent_rejection", "connection_failed"].includes(String(row.last_error)) ?
-              <form method="post" action="/api/admin/smtp"><input type="hidden" name="reference" value={String(row.id)} /><button className="button button--secondary" name="action" value="retry_inquiry">Retry notification</button></form> : null}
+              <SensitiveAdminForm action="/api/admin/smtp" grant="smtp" required={stepUpRequired}><input type="hidden" name="reference" value={String(row.id)} /><button className="button button--secondary" name="action" value="retry_inquiry">Retry notification</button></SensitiveAdminForm> : null}
           </li>)}</ul>
           {!inquiries.length ? <p className="admin-copy">{reference ? "No inquiry found for that reference." : "No inquiries received yet."}</p> : null}
         </section>
@@ -207,8 +216,9 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
           <p className="admin-copy">Published: <LocalTime value={release.publishedAt} />. Build: {release.buildId}.</p>
           <p className="admin-copy">Artifact: {release.releaseId}.</p>
         </section>
-        <section className="admin-section"><h2>Future integrations</h2><p className="admin-copy">Reserved for Phase 0.4. No integration controls are enabled here.</p></section>
+        <section id="general-settings" className="admin-section"><h2>Settings roadmap</h2><p className="admin-copy">General, Communications and Security &amp; Access use the existing settings. Branding &amp; Appearance, Marketing &amp; Social, Integrations and Advanced are reserved for later phases; no publishing controls are enabled here.</p></section>
 
+        {access.mode === "transitional" && access.credentials.length === 0 && <>
         <section className="admin-section">
           <h2>{passwordHeading}</h2>
           <p className="admin-copy">{passwordCopy}</p>
@@ -248,6 +258,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
             </div>
           </form>
         </section>
+        </>}
 
         <section className="admin-section">
           <h2>Recent audit</h2>

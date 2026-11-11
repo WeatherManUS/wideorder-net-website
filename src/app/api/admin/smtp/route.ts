@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import { boundedAdminForm } from "@/lib/access/request";
+import { consumeSensitiveGrant, auditSecurity } from "@/lib/access/state";
 import { ADMIN_NO_STORE_HEADERS, buildTrustedAdminUrl, getAuthenticatedAdminFromRequest, isTrustedAdminOrigin } from "@/lib/managed-config/admin";
 import { getSmtpConfig } from "@/lib/managed-config/service";
 import { validateSmtpConfig } from "@/lib/smtp/config";
@@ -13,9 +15,11 @@ export async function POST(request: Request) {
   try {
     const admin = await getAuthenticatedAdminFromRequest(request);
     if (!admin) return NextResponse.json({ error: "unauthenticated" }, { status: 401, headers: ADMIN_NO_STORE_HEADERS });
+    try { await consumeSensitiveGrant(admin.sessionId, "smtp"); } catch { return redirect("fresh_verification_required", true); }
     if (!await takeRequestSlot(`smtp:${admin.email}`, 3, 60000)) return redirect("rate_limited", true);
-    const form = await request.formData();
+    const form = await boundedAdminForm(request);
     const action = form.get("action");
+    await auditSecurity("smtp_operation_authorized", "success", { sessionId: admin.sessionId });
     if (action === "retry_inquiry") {
       const reference = String(form.get("reference") || "");
       const changed = await retryInquiry(reference);

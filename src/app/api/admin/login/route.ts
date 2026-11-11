@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { boundedAdminForm } from "@/lib/access/request";
 
 import { authenticateAdmin, buildSessionCookie, buildTrustedAdminUrl, isTrustedAdminOrigin, ADMIN_NO_STORE_HEADERS } from "@/lib/managed-config/admin";
 
@@ -13,10 +14,11 @@ export async function POST(request: Request) {
     });
   }
 
-  const formData = await request.formData();
+  let formData;
+  try { formData = await boundedAdminForm(request); } catch { return NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/login?error=invalid_request"), { status: 303, headers: ADMIN_NO_STORE_HEADERS }); }
   const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
 
-  if (!password) {
+  if (!password || password.length > 128) {
     return NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/login?error=invalid_request"), {
       status: 303,
       headers: ADMIN_NO_STORE_HEADERS,

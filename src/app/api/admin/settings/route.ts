@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
   if (action === "change_password") {
     const result = await changeAdminPassword({
-      currentPassword: typeof formData.get("currentPassword") === "string" ? String(formData.get("currentPassword")).trim() : "",
+      currentPassword: typeof formData.get("currentPassword") === "string" ? String(formData.get("currentPassword")) : "",
       newPassword: typeof formData.get("newPassword") === "string" ? String(formData.get("newPassword")) : "",
       confirmNewPassword: typeof formData.get("confirmNewPassword") === "string" ? String(formData.get("confirmNewPassword")) : "",
       adminIdentity: admin.email,
@@ -59,7 +59,7 @@ export async function POST(request: Request) {
   }
 
   const inputs = Object.fromEntries(
-    MANAGED_SETTING_DEFINITIONS.map((definition) => [definition.key, typeof formData.get(definition.key) === "string" ? String(formData.get(definition.key)) : ""]),
+    MANAGED_SETTING_DEFINITIONS.filter(definition => formData.has(definition.key) && definition.key !== "RESEND_API_KEY").map((definition) => [definition.key, typeof formData.get(definition.key) === "string" ? String(formData.get(definition.key)) : ""]),
   );
 
   try {

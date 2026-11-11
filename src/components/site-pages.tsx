@@ -1,3 +1,4 @@
+import { InquiryLink } from "@/components/inquiry-link";
 import Link from "next/link";
 
 import { getContactMailtoHref, siteConfig } from "@/config/site";
@@ -45,7 +46,6 @@ function PageHero({
 }
 
 function HomeHeroSection() {
-  const emailHref = getContactMailtoHref("WideOrder challenge enquiry");
 
   return (
     <section className="hero anchor-section">
@@ -59,9 +59,7 @@ function HomeHeroSection() {
           <p className="hero__copy">{siteContent.home.hero.supportingCopy}</p>
           <p className="hero__copy">{siteContent.home.hero.secondaryCopy}</p>
           <div className="hero__actions cta-row">
-            <a className="button button--primary" href={emailHref}>
-              {siteContent.home.hero.primaryCtaLabel}
-            </a>
+            <InquiryLink>{siteContent.home.hero.primaryCtaLabel}</InquiryLink>
             <Link className="button button--secondary" href={siteContent.home.hero.secondaryCta.href}>
               {siteContent.home.hero.secondaryCta.label}
             </Link>
@@ -131,10 +129,10 @@ function PrincipleCardGrid({ principles }: { principles: readonly PrincipleCard[
 
 function ContactCard({
   subject,
-  buttonLabel = "Let's talk",
+  showFormLink = true,
 }: {
   subject: string;
-  buttonLabel?: string;
+  showFormLink?: boolean;
 }) {
   const emailHref = getContactMailtoHref(subject);
 
@@ -144,12 +142,8 @@ function ContactCard({
       <p className="contact-card__email">
         <a href={emailHref}>{siteConfig.contact.publicMailbox}</a>
       </p>
-      <p className="contact-card__copy">Use the address directly or start a draft with the button below.</p>
-      <div className="contact-card__actions">
-        <a className="button button--primary" href={emailHref}>
-          {buttonLabel}
-        </a>
-      </div>
+      <p className="contact-card__copy">Prefer email? Use this address as an alternative to the website inquiry form.</p>
+      {showFormLink ? <div className="contact-card__actions"><InquiryLink /></div> : null}
       <ul className="contact-card__questions">
         {siteContent.contact.prompts.map((prompt) => (
           <li key={prompt}>{prompt}</li>
@@ -292,7 +286,7 @@ export function WhatWeDoPage() {
         eyebrow={siteContent.whatWeDo.pageLabel}
         title={siteContent.whatWeDo.title}
         paragraphs={siteContent.whatWeDo.paragraphs}
-        actions={<a className="button button--primary" href={getContactMailtoHref("WideOrder enquiry")}>{"Let's talk"}</a>}
+        actions={<InquiryLink>{"Let's talk"}</InquiryLink>}
         support={
           <div className="engagement__support">
             <p className="engagement__support-lead">What makes WideOrder different</p>
@@ -405,7 +399,7 @@ export function OurWorkPage() {
         eyebrow={siteContent.ourWork.pageLabel}
         title={siteContent.ourWork.title}
         paragraphs={siteContent.ourWork.paragraphs}
-        actions={<a className="button button--primary" href={getContactMailtoHref("WideOrder case study enquiry")}>{"Let's talk"}</a>}
+        actions={<InquiryLink>{"Let's talk"}</InquiryLink>}
       />
       <section className="site-section">
         <div className="container container--wide">
@@ -522,7 +516,7 @@ export function ContactPage() {
       <PageHero eyebrow={siteContent.contact.pageLabel} title={siteContent.contact.title} paragraphs={siteContent.contact.paragraphs} />
       <section className="site-section site-section--surface">
         <div className="container container--wide contact__grid contact-page__grid">
-          <ContactCard subject="WideOrder contact enquiry" buttonLabel={siteContent.contact.buttonLabel} />
+          <ContactCard subject="WideOrder contact enquiry" showFormLink={false} />
           <div className="contact-page__form-shell">
             <SectionLabel>Website Form</SectionLabel>
             <h2 className="section-title section-title--wide contact-page__form-heading">{siteContent.contact.formTitle}</h2>
@@ -544,7 +538,7 @@ export function ContactPage() {
 export function CaseStudyPage({ story }: { story: ProofStory }) {
   return <PageShell>
     <PageHero eyebrow="Our Work / Case Study" title={story.title} paragraphs={[story.summary]}
-      actions={<a className="button button--primary" href={getContactMailtoHref(`WideOrder ${story.title} enquiry`)}>Discuss a Challenge</a>}
+      actions={<InquiryLink>Discuss a Challenge</InquiryLink>}
       support={<ResultDisplay result={story.result} />} />
     <section className="site-section site-section--surface"><div className="container container--wide">
       <ProofStoryArticle story={story} reverse={false} />

@@ -114,3 +114,7 @@
 - New persistent admin password hashes use stronger `scrypt` work factors plus an explicit memory limit, while older previously encoded hashes remain verifiable.
 - `GET /api/contact-config` now exposes only `{ turnstileSiteKey }` to the browser.
 - `SITE_INDEXABLE` remains `false`, and Resend transactional delivery remains pending live verification after domain setup and managed API-key configuration.
+
+## v0.1.0004 update
+
+The native inquiry system now uses the existing MySQL bootstrap and encryption key for durable capture and retries. `/admin/settings` supplies SMTP configuration and tests; new SMTP sender/recipient fields deliberately start blank. Production Hostinger credentials and inbox tests are administrator follow-up work. No hosting/DNS settings or indexing policy change is required. See [INQUIRY_OPERATIONS.md](INQUIRY_OPERATIONS.md) and [ROADMAP.md](ROADMAP.md). Earlier Resend-only operational notes are historical and superseded by the SMTP workflow.

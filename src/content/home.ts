@@ -407,7 +407,7 @@ export const siteContent = {
     messageLabel: "Business challenge",
     helperText: "A few clear sentences are enough to explain what is happening and where the friction is.",
     exampleText: "What is taking too long, what keeps going wrong, or what should already be working?",
-    privacyText: "Your submission is checked for abuse before delivery. We use it only to respond to your enquiry.",
+    privacyText: "Your submission is checked for abuse before delivery. We save it securely to handle your enquiry, including when its email notification is pending.",
     submitLabel: "Send enquiry",
     emailLabel: "Email",
     buttonLabel: "Compose an email",

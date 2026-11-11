@@ -207,3 +207,10 @@ export function clearOnConsentLoss() {
   if (!consent.analytics && !consent.marketing) clearLeadHistory();
 }
 export { CAMPAIGN_KEYS, publicPageId };
+
+/** Contact attribution is sent only with analytics consent and an enabled integration. */
+export function getInquiryAttribution() {
+  if (!config?.enabled || !getConsent().analytics || privacySignals().dnt) return { analyticsConsent: false };
+  const attribution = captureAttribution();
+  return { analyticsConsent: true, campaign: attribution?.last ?? {} };
+}

@@ -2,7 +2,7 @@ import { mkdirSync } from "node:fs";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 
-import { createPool, type Pool, type PoolOptions, type RowDataPacket } from "mysql2/promise";
+import { createPool, type Pool, type PoolOptions, type ResultSetHeader, type RowDataPacket } from "mysql2/promise";
 
 import type { ManagedSettingCategory, ManagedSettingKey } from "@/lib/managed-config/definitions";
 
@@ -54,6 +54,8 @@ export type PersistenceSummary = {
 
 export interface ManagedConfigStore {
   readonly summary: PersistenceSummary;
+  execute(sql: string, values?: (string | number | null)[]): Promise<{ rows: Record<string, unknown>[]; changes: number }>;
+  saveSettings(records: StoredSettingRecord[], audits: StoredAuditRecord[]): Promise<void>;
   listSettings(): Promise<StoredSettingRecord[]>;
   getSetting(key: ManagedSettingKey): Promise<StoredSettingRecord | null>;
   upsertSetting(record: StoredSettingRecord): Promise<void>;
@@ -112,6 +114,24 @@ type LoginAttemptRow = {
   blocked_until: string | null;
 };
 
+const LIMIT_SCHEMA = `CREATE TABLE IF NOT EXISTS wideorder_request_limits (
+  scope_key VARCHAR(191) PRIMARY KEY, uses INTEGER NOT NULL, expires_at VARCHAR(64) NOT NULL
+)`;
+const INQUIRY_SCHEMA = `CREATE TABLE IF NOT EXISTS wideorder_inquiries (
+  id VARCHAR(64) PRIMARY KEY,
+  request_key VARCHAR(64) NOT NULL UNIQUE,
+  fingerprint VARCHAR(64) NOT NULL,
+  payload TEXT NOT NULL,
+  created_at VARCHAR(64) NOT NULL,
+  stage VARCHAR(16) NOT NULL,
+  status VARCHAR(16) NOT NULL,
+  attempts INTEGER NOT NULL,
+  next_attempt_at VARCHAR(64) NOT NULL,
+  lease_token VARCHAR(64),
+  lease_until VARCHAR(64),
+  accepted_at VARCHAR(64),
+  last_error VARCHAR(64)
+)`;
 const SQLITE_SCHEMA = `
   CREATE TABLE IF NOT EXISTS wideorder_managed_settings (
     setting_key TEXT PRIMARY KEY,
@@ -252,10 +272,27 @@ class SqliteManagedConfigStore implements ManagedConfigStore {
     mkdirSync(path.dirname(filePath), { recursive: true });
     this.database = new DatabaseSync(filePath);
     this.database.exec(SQLITE_SCHEMA);
+    this.database.exec(INQUIRY_SCHEMA);
+    this.database.exec(LIMIT_SCHEMA);
+    this.database.exec("PRAGMA journal_mode=WAL; PRAGMA busy_timeout=5000;");
     this.summary = {
       engine: "sqlite",
       detail: `SQLite file at ${filePath}`,
     };
+  }
+
+  async execute(sql: string, values: (string | number | null)[] = []) {
+    const statement = this.database.prepare(sql);
+    if (/^\s*SELECT/i.test(sql)) return { rows: statement.all(...values) as Record<string, unknown>[], changes: 0 };
+    return { rows: [], changes: Number(statement.run(...values).changes) };
+  }
+  async saveSettings(records: StoredSettingRecord[], audits: StoredAuditRecord[]) {
+    this.database.exec("BEGIN IMMEDIATE");
+    try {
+      for (const record of records) await this.upsertSetting(record);
+      for (const audit of audits) await this.appendAudit(audit);
+      this.database.exec("COMMIT");
+    } catch (error) { this.database.exec("ROLLBACK"); throw error; }
   }
 
   async listSettings() {
@@ -408,6 +445,23 @@ class MysqlManagedConfigStore implements ManagedConfigStore {
       engine: "mysql",
       detail,
     };
+  }
+
+  async execute(sql: string, values: (string | number | null)[] = []) {
+    const [result] = await this.pool.query<RowDataPacket[] | ResultSetHeader>(sql, values);
+    return Array.isArray(result) ? { rows: result as Record<string, unknown>[], changes: 0 } : { rows: [], changes: result.affectedRows };
+  }
+  async saveSettings(records: StoredSettingRecord[], audits: StoredAuditRecord[]) {
+    const connection = await this.pool.getConnection();
+    try {
+      await connection.beginTransaction();
+      for (const r of records) await connection.query(`INSERT INTO wideorder_managed_settings (setting_key, category, stored_value, updated_at, updated_by)
+        VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE category=VALUES(category), stored_value=VALUES(stored_value), updated_at=VALUES(updated_at), updated_by=VALUES(updated_by)`,
+        [r.key, r.category, r.storedValue, r.updatedAt, r.updatedBy]);
+      for (const a of audits) await connection.query(`INSERT INTO wideorder_managed_settings_audit (id, setting_key, category, changed_at, admin_identity) VALUES (?, ?, ?, ?, ?)`,
+        [a.id, a.settingKey, a.category, a.changedAt, a.adminIdentity]);
+      await connection.commit();
+    } catch (error) { await connection.rollback(); throw error; } finally { connection.release(); }
   }
 
   async listSettings() {
@@ -601,7 +655,7 @@ async function createMysqlStore() {
 
   const pool = createPool(mysqlConfig.options);
 
-  for (const statement of MYSQL_SCHEMA) {
+  for (const statement of [...MYSQL_SCHEMA, INQUIRY_SCHEMA, LIMIT_SCHEMA]) {
     await pool.query(statement);
   }
 
@@ -634,5 +688,5 @@ export async function getManagedConfigStore() {
     })();
   }
 
-  return storePromise;
+  try { return await storePromise; } catch (error) { storePromise = null; throw error; }
 }

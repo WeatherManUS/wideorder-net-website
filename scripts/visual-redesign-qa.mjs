@@ -101,7 +101,7 @@ try {
   report.interactions.push("Four-theme appearance selection and reload persistence");
   await page.goto(baseURL);
   assert.equal(await page.locator(".hero__title").innerText(), "There is a better way.");
-  assert.match(await page.getByRole("link", { name: "Discuss a Challenge" }).getAttribute("href"), /^mailto:/);
+  assert.equal(await page.getByRole("link", { name: /^Discuss a Challenge/ }).getAttribute("href"), "/contact#inquiry-form");
   await page.getByRole("link", { name: /Explore Our Work/ }).click();
   await page.waitForURL("**/our-work");
   await page.locator(".summary-card").first().click();

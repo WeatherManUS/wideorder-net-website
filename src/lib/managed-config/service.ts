@@ -1,3 +1,4 @@
+import { validateSmtpConfig, type SmtpConfig } from "../smtp/config.ts";
 import type { ManagedSettingDefinition, ManagedSettingKey } from "@/lib/managed-config/definitions";
 import {
   MANAGED_SETTING_DEFINITIONS,
@@ -57,13 +58,21 @@ type ResolvedSettingValue = {
 
 type SettingsUpdateInput = Partial<Record<ManagedSettingKey, string>>;
 
+const defaults: Partial<Record<ManagedSettingKey, string>> = { SMTP_HOST: "smtp.hostinger.com", SMTP_PORT: "465", SMTP_SECURE: "true", SMTP_AUTH: "true", SMTP_FROM_NAME: "WideOrder", SMTP_ACKNOWLEDGMENT: "false" };
 function getBootstrapSettingValue(key: ManagedSettingKey) {
-  return process.env[getManagedSettingDefinition(key).envName]?.trim() ?? "";
+  return process.env[getManagedSettingDefinition(key).envName] ?? defaults[key] ?? "";
 }
 
 async function getStoredSettingsMap() {
   const store = await getManagedConfigStore();
   const storedSettings = await store.listSettings();
+  for (const record of storedSettings) {
+    if (record.key === "SMTP_USER" && record.category === "public") {
+      record.category = "secret";
+      record.storedValue = encryptSecretValue(record.storedValue);
+      await store.upsertSetting(record);
+    }
+  }
   return new Map(storedSettings.map((record) => [record.key, record]));
 }
 
@@ -101,7 +110,8 @@ async function resolveSettingValue(key: ManagedSettingKey, storedSettingsMap?: M
 }
 
 function normalizeManagedSettingInput(definition: ManagedSettingDefinition, value: string) {
-  const normalizedValue = value.trim();
+  const normalizedValue = definition.category === "secret" ? value : value.trim();
+  if (!normalizedValue && ["SMTP_FROM_EMAIL", "SMTP_RECIPIENT", "SMTP_USER", "SMTP_FROM_NAME"].includes(definition.key)) return "";
 
   switch (definition.inputKind) {
     case "email": {
@@ -114,7 +124,7 @@ function normalizeManagedSettingInput(definition: ManagedSettingDefinition, valu
     case "number": {
       const parsed = Number.parseInt(normalizedValue, 10);
 
-      if (!Number.isInteger(parsed) || parsed <= 0 || parsed > 65535) {
+      if (!/^\d+$/.test(normalizedValue) || !Number.isInteger(parsed) || parsed <= 0 || parsed > 65535) {
         throw new Error(`${definition.key.toLowerCase()}_invalid`);
       }
 
@@ -142,7 +152,7 @@ function normalizeManagedSettingInput(definition: ManagedSettingDefinition, valu
     }
     case "text":
     default: {
-      if (!normalizedValue || normalizedValue.length > 512) {
+      if (!normalizedValue || normalizedValue.length > 512 || /[\r\n\x00]/.test(normalizedValue)) {
         throw new Error(`${definition.key.toLowerCase()}_invalid`);
       }
 
@@ -198,37 +208,25 @@ export async function updateManagedSettings(inputs: SettingsUpdateInput, adminId
   const nowIso = new Date().toISOString();
   const touchedKeys: ManagedSettingKey[] = [];
 
+  const records: StoredSettingRecord[] = [];
+  const audits: StoredAuditRecord[] = [];
+  const stored = await getStoredSettingsMap();
   for (const definition of MANAGED_SETTING_DEFINITIONS) {
-    if (!(definition.key in inputs)) {
-      continue;
-    }
-
+    if (!(definition.key in inputs)) continue;
     const rawValue = inputs[definition.key] ?? "";
-
-    if (definition.category === "secret" && !rawValue.trim()) {
-      continue;
-    }
-
+    if (definition.category === "secret" && !rawValue) continue;
+    if (rawValue.length > 4096) throw new Error("invalid_setting");
     const normalizedValue = normalizeManagedSettingInput(definition, rawValue);
-
-    await store.upsertSetting({
-      key: definition.key,
-      category: definition.category,
+    const record = { key: definition.key, category: definition.category,
       storedValue: definition.category === "secret" ? encryptSecretValue(normalizedValue) : normalizedValue,
-      updatedAt: nowIso,
-      updatedBy: adminIdentity,
-    });
-
-    await store.appendAudit({
-      id: crypto.randomUUID(),
-      settingKey: definition.key,
-      category: definition.category,
-      changedAt: nowIso,
-      adminIdentity,
-    } satisfies StoredAuditRecord);
-
+      updatedAt: nowIso, updatedBy: adminIdentity };
+    records.push(record);
+    stored.set(definition.key, record);
+    audits.push({ id: crypto.randomUUID(), settingKey: definition.key, category: definition.category, changedAt: nowIso, adminIdentity });
     touchedKeys.push(definition.key);
   }
+  if (touchedKeys.some(key => key.startsWith("SMTP_"))) validateSmtpConfig(await resolveSmtpConfig(stored), false);
+  await store.saveSettings(records, audits);
 
   return touchedKeys;
 }
@@ -275,4 +273,18 @@ export async function getContactOperationalConfigStatus(): Promise<ContactOperat
 export async function getPublicSettingViews() {
   const allViews = await getAdminSettingViews();
   return allViews.filter((view) => PUBLIC_MANAGED_SETTING_KEYS.includes(view.key));
+}
+
+async function resolveSmtpConfig(stored = new Map<ManagedSettingKey, StoredSettingRecord>()): Promise<SmtpConfig> {
+  const value = async (key: ManagedSettingKey) => (await resolveSettingValue(key, stored)).value;
+  return { host: await value("SMTP_HOST"), port: Number(await value("SMTP_PORT")), secure: (await value("SMTP_SECURE")) === "true",
+    auth: (await value("SMTP_AUTH")) !== "false", username: await value("SMTP_USER"), password: await value("SMTP_PASSWORD"),
+    from: await value("SMTP_FROM_EMAIL"), fromName: await value("SMTP_FROM_NAME"), recipient: await value("SMTP_RECIPIENT"),
+    acknowledgment: (await value("SMTP_ACKNOWLEDGMENT")) === "true" };
+}
+export async function getSmtpConfig() { return resolveSmtpConfig(await getStoredSettingsMap()); }
+export async function getInquirySecurityConfig() {
+  const stored = await getStoredSettingsMap();
+  return { siteKey: (await resolveSettingValue("NEXT_PUBLIC_TURNSTILE_SITE_KEY", stored)).value,
+    secretKey: (await resolveSettingValue("TURNSTILE_SECRET_KEY", stored)).value };
 }

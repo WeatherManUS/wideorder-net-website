@@ -1,3 +1,4 @@
+import { INQUIRY_HREF } from "@/components/inquiry-link";
 import Link from "next/link";
 import { connection } from "next/server";
 
@@ -70,7 +71,7 @@ export async function SiteFooter({ utility = false }: { utility?: boolean } = {}
 export function PageShell({ children }: { children: React.ReactNode }) {
   const headerCta = {
     ...siteContent.shared.primaryCta,
-    href: getContactMailtoHref("WideOrder enquiry"),
+    href: INQUIRY_HREF,
   };
 
   return (

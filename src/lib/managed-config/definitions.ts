@@ -6,6 +6,11 @@ export type ManagedSettingKey =
   | "CONTACT_RECIPIENT_EMAIL"
   | "TRANSACTIONAL_FROM_EMAIL"
   | "RESEND_API_KEY"
+  | "SMTP_FROM_EMAIL"
+  | "SMTP_RECIPIENT"
+  | "SMTP_FROM_NAME"
+  | "SMTP_AUTH"
+  | "SMTP_ACKNOWLEDGMENT"
   | "SMTP_HOST"
   | "SMTP_PORT"
   | "SMTP_SECURE"
@@ -32,6 +37,13 @@ export const LOGIN_FAILURE_LIMIT = 5;
 export const LOGIN_BLOCK_MS = 1000 * 60 * 30;
 
 export const MANAGED_SETTING_DEFINITIONS: readonly ManagedSettingDefinition[] = [
+  ...([
+    ["SMTP_FROM_EMAIL", "email", "Sender email", "Verified domain mailbox used as the sender."],
+    ["SMTP_RECIPIENT", "email", "Inquiry notification recipient", "Mailbox receiving internal inquiry notifications and test messages."],
+    ["SMTP_FROM_NAME", "text", "Sender display name", "Display name on outgoing messages."],
+    ["SMTP_AUTH", "boolean", "Authentication", "Authenticate to the SMTP server."],
+    ["SMTP_ACKNOWLEDGMENT", "boolean", "Customer acknowledgment", "Send a separate receipt without promising a response time."],
+  ] as const).map(([key, inputKind, label, description]) => ({ key, envName: key, category: "public" as const, inputKind, label, description, required: false })),
   {
     key: "CONTACT_RECIPIENT_EMAIL",
     envName: "CONTACT_RECIPIENT_EMAIL",
@@ -73,15 +85,15 @@ export const MANAGED_SETTING_DEFINITIONS: readonly ManagedSettingDefinition[] = 
     envName: "SMTP_SECURE",
     category: "public",
     inputKind: "boolean",
-    label: "SMTP secure mode",
-    description: "Whether the SMTP transport uses an implicit TLS connection.",
+    label: "Encryption method",
+    description: "Implicit SSL/TLS or mandatory STARTTLS; unencrypted delivery is not supported.",
     required: true,
   },
   {
     key: "SMTP_USER",
     envName: "SMTP_USER",
-    category: "public",
-    inputKind: "email",
+    category: "secret",
+    inputKind: "text",
     label: "SMTP username",
     description: "Authenticated SMTP identity and From mailbox for website mail.",
     required: true,

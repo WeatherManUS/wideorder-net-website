@@ -4,7 +4,7 @@ import Script from "next/script";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { ContactField } from "@/content/home";
-import { trackMarketingEvent } from "@/lib/marketing/browser";
+import { getInquiryAttribution, trackMarketingEvent } from "@/lib/marketing/browser";
 import {
   CONTACT_ERROR_MESSAGE,
   CONTACT_SECURITY_MESSAGE,
@@ -34,7 +34,7 @@ type ContactApiErrorCode =
   | "method_not_allowed";
 
 type ContactApiResponse =
-  | { ok: true; conversionId?: string }
+  | { ok: true; conversionId?: string; reference?: string; delivery?: "queued" | "accepted" }
   | {
       ok: false;
       error: ContactApiErrorCode;
@@ -96,6 +96,7 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
   const formRef = useRef<HTMLFormElement>(null);
   const inFlightRef = useRef(false);
   const contactStartedRef = useRef(false);
+  const requestRef = useRef({ key: "", values: "" });
   const turnstileContainerRef = useRef<HTMLDivElement>(null);
   const turnstileWidgetIdRef = useRef<TurnstileInstanceId | null>(null);
 
@@ -228,6 +229,8 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
     }
 
     const formData = new FormData(form);
+    const values = JSON.stringify(["name", "company", "email", "phone", "message"].map(key => formData.get(key)));
+    if (!requestRef.current.key || requestRef.current.values !== values) requestRef.current = { key: crypto.randomUUID(), values };
     inFlightRef.current = true;
 
     setSubmissionState("submitting");
@@ -248,6 +251,9 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
           message: formData.get("message") ?? "",
           website: formData.get("website") ?? "",
           turnstileToken,
+          requestKey: requestRef.current.key,
+          sourcePage: window.location.pathname,
+          ...getInquiryAttribution(),
         }),
       });
 
@@ -258,7 +264,10 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
         formRef.current?.reset();
         resetTurnstile();
         setSubmissionState("success");
-        setStatusMessage(CONTACT_SUCCESS_MESSAGE);
+        requestRef.current = { key: "", values: "" };
+        setStatusMessage(result.reference
+          ? `Inquiry received. Reference: ${result.reference}. ${result.delivery === "accepted" ? "Notification accepted by our email service." : "The email notification is pending; your inquiry is safely saved."}`
+          : CONTACT_SUCCESS_MESSAGE);
         return;
       }
 
@@ -321,7 +330,8 @@ export function ContactForm({ fields, messageLabel, helperText, exampleText, pri
           onReady={() => renderTurnstile()}
         />
       ) : null}
-      <form ref={formRef} className="contact-form" aria-busy={submissionState === "submitting"} onSubmit={handleSubmit}
+      <noscript><p>The inquiry form requires JavaScript. You can also email <a href="mailto:info@wideorder.net">info@wideorder.net</a>.</p></noscript>
+      <form id="inquiry-form" ref={formRef} className="contact-form" aria-busy={submissionState === "submitting"} onSubmit={handleSubmit}
         onFocus={() => { if (!contactStartedRef.current && trackMarketingEvent("contact_start", { cta_position: "contact_form", interaction_type: "form_focus" })) contactStartedRef.current = true; }}>
         <div className="contact-form__grid">
           {fields.map((field) => (

@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData();
-  const password = typeof formData.get("password") === "string" ? String(formData.get("password")).trim() : "";
+  const password = typeof formData.get("password") === "string" ? String(formData.get("password")) : "";
 
   if (!password) {
     return NextResponse.redirect(buildTrustedAdminUrl(request, "/admin/login?error=invalid_request"), {

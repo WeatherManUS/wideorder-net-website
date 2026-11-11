@@ -1,3 +1,4 @@
+import { takeRequestSlot } from "../inquiries/store.ts";
 ﻿import { randomBytes } from "node:crypto";
 
 import { cookies } from "next/headers";
@@ -75,7 +76,7 @@ function getSessionCookieValue(cookieHeader: string | null) {
 
   for (const cookieEntry of cookiesMap) {
     if (cookieEntry.startsWith(`${SESSION_COOKIE_NAME}=`)) {
-      return decodeURIComponent(cookieEntry.slice(SESSION_COOKIE_NAME.length + 1));
+      try { return decodeURIComponent(cookieEntry.slice(SESSION_COOKIE_NAME.length + 1)); } catch { return ""; }
     }
   }
 
@@ -199,7 +200,7 @@ export async function getAuthenticatedAdminFromRequest(request: Request): Promis
 
   const session = await store.getSession(hashToken(token));
 
-  if (!session || session.expiresAt <= nowIso) {
+  if (!session || session.adminEmail !== ADMIN_EMAIL || session.expiresAt <= nowIso) {
     if (session) {
       await store.deleteSession(session.sessionIdHash);
     }
@@ -230,7 +231,7 @@ export async function getAuthenticatedAdminFromCookies(): Promise<AuthenticatedA
 
   const session = await store.getSession(hashToken(token));
 
-  if (!session || session.expiresAt <= nowIso) {
+  if (!session || session.adminEmail !== ADMIN_EMAIL || session.expiresAt <= nowIso) {
     if (session) {
       await store.deleteSession(session.sessionIdHash);
     }
@@ -282,6 +283,8 @@ export async function authenticateAdmin(request: Request, password: string) {
     };
   }
 
+  if (!await takeRequestSlot(`admin-login:${scopeKey}`, LOGIN_FAILURE_LIMIT, LOGIN_FAILURE_WINDOW_MS)
+    || !await takeRequestSlot(`admin-login-account:${ADMIN_EMAIL}`, 30, LOGIN_FAILURE_WINDOW_MS)) return { ok: false as const, error: "throttled" };
   const isValid = verifyAdminPassword(password, adminPasswordHash);
 
   if (!isValid) {

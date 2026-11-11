@@ -7,7 +7,7 @@
 - Source inputs are the approved WideOrder v2 redesign brief, the repository guidance, and the previously approved detailed WideOrder methodology and case-study content already in the repo history.
 - This revision intentionally shortens the homepage while preserving the detailed material across supporting pages.
 - Do not use the term `10x` in WideOrder branding, website copy, documentation, or marketing.
-- Direct email remains the primary CTA. The deployed `/contact` page also offers an abuse-checked enquiry form; delivery readiness must be verified independently.
+- Primary contact CTAs navigate to `/contact#inquiry-form`. Direct email remains a secondary method. Valid inquiries are encrypted and durably captured before SMTP delivery; show receipt separately from SMTP acceptance.
 - Keep indexing disabled unless `SITE_INDEXABLE=true` is explicitly set for an approved launch.
 
 ## Brand hierarchy
@@ -51,7 +51,7 @@
 - Brand promise: `There is a better way.`
 - Primary statement: `WideOrder solves problems for businesses.`
 - Homepage H1: `Solve the problems holding your business back.` Keep the brand promise and primary statement immediately below it.
-- Primary hero CTA: `Discuss a Challenge` (direct email).
+- Primary hero CTA: `Discuss a Challenge` (native inquiry form).
 - Secondary hero CTA: `Explore Our Work` (`/our-work`).
 - The decorative visual motif is labelled `Complexity → Clarity → Order`; it describes the design metaphor, not a new service or performance claim.
 - Supporting copy: `Clients engage WideOrder when something needs addressing, improving, implementing, coordinating or managing.`
@@ -221,3 +221,11 @@
 - Do not invent guarantees, unsupported metrics, client names, or testimonials.
 - Preserve detailed methodology and case-study substance even when the homepage stays concise.
 - Keep the site focused on the core concept: `WideOrder solves problems for businesses.`
+
+## Phase 0.1 native inquiry foundation (v0.1.0004)
+
+- Keep the existing five form fields and four themes.
+- Show ?Inquiry received? only after durable capture, with a unique reference. If email has not been accepted, say the notification is pending and the inquiry is safely saved.
+- SMTP acceptance is not proof of inbox arrival. Optional acknowledgments confirm receipt without response-time promises.
+- Privacy information explains encrypted inquiry storage, SMTP delivery, queued notifications, and consent-permitted campaign labels in internal notifications.
+- Preserve current case-study content and visual direction; Phase 0.2 redesign is documentation only.

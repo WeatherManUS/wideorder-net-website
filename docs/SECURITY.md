@@ -88,3 +88,12 @@
 - Changing the administrator password invalidates active admin sessions and requires a fresh sign-in.
 - Admin session records store only hashed session identifiers plus minimal timing and identity metadata in persistent SQLite/MySQL storage.
 - Recovery is explicit and documented: use root-of-trust database access to clear/reset the managed admin credential, then sign in with the bootstrap hash and create a new managed password.
+
+## v0.1.0004 inquiry and SMTP foundation
+
+- The native inquiry workflow supersedes the earlier Resend-only requirement. Resend reference code/settings remain dormant; active submissions use encrypted durable MySQL capture and configured SMTP only.
+- Nodemailer updated to 10.1.4 or later to fix the address-parser advisories. `npm audit --omit=dev` reports zero runtime vulnerabilities at this checkpoint; full development audit findings remain separate.
+- SMTP usernames and passwords are secret fields, encrypted at rest and never returned by Settings. Previously public managed SMTP usernames migrate to encrypted storage on read. Blank fields retain existing secrets.
+- SMTP requires certificate-validated TLS, a server-controlled hostname allowlist, public-IP checks and DNS pinning. Tests require authentication, origin validation and persistent limits, and send only to the configured recipient.
+- Inquiry data is encrypted before persistence; queue leases prevent concurrent sends. Unknown delivery outcomes are quarantined. Provider errors, credentials and inquiry bodies are never written to logs by the new workflow.
+- Details and operational limits: [INQUIRY_OPERATIONS.md](INQUIRY_OPERATIONS.md).

@@ -85,3 +85,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.2.0001 — published** (2026-11-11T05:02:25.284Z)
   Launch Phase 0.2 visual experience and mobile-first case studies
   Commit: `f5c11e48ac3efdced5c7a8bd07c3e760718284a2`; previous: 0.1.0005; artifact: a53f667a-0f13-4c47-8ec2-eeab3780c9be; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-11T06:00:21.043Z)
+  Fix mobile menu viewport alignment and add safe mail diagnostics
+  Commit: `ae4c5d0738231d47feea28a6a6359adcd9cbb90a`; previous: 0.2.0001; artifact: not built; rollback: none.

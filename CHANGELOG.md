@@ -105,3 +105,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.2.0003 — verifying** (2026-11-11T13:05:13.074Z)
   Prepare approved search indexing and distinguish unverified crawler probes
   Commit: `5df74161764948a423bf65fb4b64f0814652d8c7`; previous: 0.2.0002; artifact: fa1ac686-3636-4ead-b5fe-240a3fee13e8; rollback: none.
+
+- **v0.2.0003 — published** (2026-11-11T13:15:35.868Z)
+  Prepare approved search indexing and distinguish unverified crawler probes
+  Commit: `5df74161764948a423bf65fb4b64f0814652d8c7`; previous: 0.2.0002; artifact: fa1ac686-3636-4ead-b5fe-240a3fee13e8; rollback: none.

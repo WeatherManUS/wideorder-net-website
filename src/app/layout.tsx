@@ -2,6 +2,7 @@
 import { Inter, Manrope } from "next/font/google";
 
 import { isSiteIndexable, organizationStructuredData, siteConfig } from "@/config/site";
+import { indexingMetadata } from "@/config/indexing";
 import { themeStylesheet } from "@/theme/tokens";
 import { connection } from "next/server";
 import { currentRelease } from "@/lib/release/server";
@@ -66,10 +67,7 @@ export const metadata: Metadata = {
     ],
     apple: [{ url: "/icons/wideorder-w-180.png", sizes: "180x180", type: "image/png" }],
   },
-  robots: {
-    index: isSiteIndexable,
-    follow: isSiteIndexable,
-  },
+  robots: indexingMetadata(isSiteIndexable),
 };
 
 export default async function RootLayout({

@@ -3,6 +3,7 @@ import { htmlReleaseIdentity, verifyHtmlFooter } from "../src/lib/release/public
 import { utcTimestamp } from "../src/lib/release/metadata.ts";
 import { versionParts } from "../src/lib/release/ledger.ts";
 import { releaseRoutes } from "./release-routes.mjs";
+import { crawlerDiagnostic } from "./crawler-diagnostic.mjs";
 
 const origin = new URL(process.argv[2] || "https://wideorder.net");
 if (origin.username || origin.password || origin.search || origin.hash || origin.pathname !== "/" || !(origin.protocol === "https:" || (origin.protocol === "http:" && ["localhost", "127.0.0.1"].includes(origin.hostname)))) throw new Error("Supply an HTTPS origin or a localhost test origin.");
@@ -29,20 +30,16 @@ const html = await page.text();
 const tags = htmlReleaseIdentity(html);
 const footerVerified = verifyHtmlFooter(html, release);
 for (const path of releaseRoutes) {
-  for (const crawler of [false, true]) {
-    const response = await fetch(new URL(path, origin), { ...options, signal: AbortSignal.timeout(15000), headers: { ...options.headers, ...(crawler ? { 'User-Agent': 'Googlebot' } : {}) } });
-    if (crawler && response.status === 403) {
-      console.log(`Crawler retrieval blocked (HTTP 403): ${path}; no release HTML available for this user agent.`);
-      continue;
-    }
+    const response = await fetch(new URL(path, origin), { ...options, signal: AbortSignal.timeout(15000) });
     assert.equal(response.status, 200, path);
     for (const header of ['cache-control', 'cdn-cache-control', 'surrogate-control']) assert.match(response.headers.get(header) || '', /no-store/, `${path}: ${header}`);
     const source = await response.text();
     assert.deepEqual(htmlReleaseIdentity(source), tags, path);
     assert.equal(verifyHtmlFooter(source, release), true, path);
-  }
 }
-console.log(`Verified ${releaseRoutes.length} public routes; crawler restrictions reported separately.`);
+const crawlerDiagnostics = [];
+for (const path of [...releaseRoutes, '/robots.txt', '/sitemap.xml']) crawlerDiagnostics.push(await crawlerDiagnostic(new URL(path, origin)));
+console.log(`Verified ${releaseRoutes.length} public routes. Unverified crawler claims are separate diagnostics, not proof of genuine Googlebot access or indexing.`);
 assert.equal(tags["wideorder-version"], release.version);
 assert.equal(tags["wideorder-build"], release.buildId);
 assert.equal(tags["wideorder-release"], release.releaseId);
@@ -55,4 +52,4 @@ assert.equal(head.status, 200);
 assert.match(head.headers.get("cache-control") || "", /no-store/);
 const rejected = await fetch(new URL("/api/release-publication", origin), { ...options, method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
 assert.ok([401, 409].includes(rejected.status), "Anonymous publication must be rejected.");
-console.log(JSON.stringify({ result: "passed", version: release.version, buildId: release.buildId, releaseId: release.releaseId, buildTime: release.buildTime, publishedAt: release.publishedAt, environment: release.environment, footerVerified, checks: ["public JSON", "cache headers", "HTML agreement", "immutable repeated response", "HEAD", "anonymous publication rejected"] }, null, 2));
+console.log(JSON.stringify({ result: "passed", version: release.version, buildId: release.buildId, releaseId: release.releaseId, buildTime: release.buildTime, publishedAt: release.publishedAt, environment: release.environment, footerVerified, crawlerDiagnostics, checks: ["public JSON", "cache headers", "HTML agreement", "immutable repeated response", "HEAD", "anonymous publication rejected"] }, null, 2));

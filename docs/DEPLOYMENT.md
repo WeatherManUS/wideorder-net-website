@@ -1,5 +1,7 @@
 # Deployment Planning
 
+Current indexing activation and crawler-diagnostic procedure: [Search indexing](SEARCH_INDEXING.md). The owner authorized production indexing on November 11, 2026; earlier pre-activation restrictions below are historical. The production environment change and live verification remain required. A Googlebot user-agent probe is not verified Google crawler evidence.
+
 ## Production target
 
 - Production domain: `https://wideorder.net`

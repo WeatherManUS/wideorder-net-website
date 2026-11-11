@@ -50,6 +50,14 @@ const nextConfig = {
         ],
       },
       {
+        source: '/api/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+      {
+        source: '/version.json',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }],
+      },
+      {
         source: '/:path*',
         headers: [
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },

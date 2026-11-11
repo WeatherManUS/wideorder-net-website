@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getSocialProfiles } from "./marketing";
+import { indexingEnabled } from "./indexing";
 
 export const socialImage = (path: string) => {
   const name = path === "/" ? "home" : path.split("/").filter(Boolean).pop()!;
@@ -29,7 +30,7 @@ export const siteConfig = {
   },
 } as const;
 
-export const isSiteIndexable = process.env.SITE_INDEXABLE === "true";
+export const isSiteIndexable = indexingEnabled(process.env);
 
 export function getContactMailtoHref(subject = "WideOrder enquiry") {
   const params = new URLSearchParams({ subject });

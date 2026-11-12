@@ -173,3 +173,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **Unversioned attempt — waiting-for-hostinger** (2026-11-12T18:18:09.908Z)
   Security update
   Commit: `4f21d47b1c2bcbbf0a77b8ab6de9439afa893f91`; previous: 0.3.0003; artifact: not built; rollback: none.
+
+- **v0.4.0001 — verifying** (2026-11-12T18:18:09.908Z)
+  Security update
+  Commit: `4f21d47b1c2bcbbf0a77b8ab6de9439afa893f91`; previous: 0.3.0003; artifact: ce2fc089-a41c-4f6a-8ec7-a4c38882fffa; rollback: none.

@@ -3,6 +3,7 @@ import { ADMIN_NO_STORE_HEADERS, buildSessionCookie, buildClearedSessionCookie, 
 import { takeRequestSlot } from "@/lib/inquiries/store";
 import { accessView, ceremonyOptions, ceremonyVerify, manageAccess, redeemRecovery, relyingParty, FLOW_COOKIE } from "@/lib/access/webauthn";
 import { auditSecurity } from "@/lib/access/state";
+import { redeemHostingerRecovery } from "@/lib/access/hostinger-recovery";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 const safeErrors = new Set(["origin_rejected", "invalid_request", "unauthenticated", "recovery_restricted", "credential_limit", "credential_unknown", "credential_exists", "fresh_login_required", "fresh_verification_required", "state_changed", "challenge_rejected", "verification_failed", "confirmation_required", "remove_bootstrap_before_cutover", "backup_not_ready", "recovery_rejected", "rate_limited"]);
@@ -27,6 +28,12 @@ export async function POST(request: Request) {
     const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
     if (!await takeRequestSlot(`webauthn-ip:${ip}`, 80, 300000) || !await takeRequestSlot("webauthn-account", 200, 300000)) return json({ error: "rate_limited" }, 429);
     const input = await body(request);
+    if (input.operation === "hostinger_recovery") {
+      const session = await redeemHostingerRecovery(request, input.password, input.confirmed);
+      const response = json({ redirect: "/admin/enroll" });
+      response.cookies.set(buildSessionCookie(session.token, session.expiresAt));
+      return response;
+    }
     if (input.operation === "options") {
       const result = await ceremonyOptions(request, input);
       const response = json({ options: result.options, ceremonyId: result.ceremonyId });
@@ -55,6 +62,6 @@ export async function POST(request: Request) {
     return json({ error: "invalid_request" }, 400);
   } catch (error) {
     const code = error instanceof Error && safeErrors.has(error.message) ? error.message : "service_unavailable";
-    return json({ error: code }, code === "origin_rejected" ? 403 : code === "unauthenticated" ? 401 : code === "service_unavailable" ? 503 : 400);
+    return json({ error: code }, code === "rate_limited" ? 429 : code === "origin_rejected" ? 403 : code === "unauthenticated" ? 401 : code === "service_unavailable" ? 503 : 400);
   }
 }

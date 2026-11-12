@@ -1,0 +1,31 @@
+import assert from 'node:assert/strict';
+import { readFileSync, mkdirSync } from 'node:fs';
+import { createRequire } from 'node:module';
+const fixture=JSON.parse(readFileSync(new URL('../.release/security-qa.json',import.meta.url)));
+assert.ok(fixture.dbPath.includes('inquiry-qa-security-'));
+const {chromium}=createRequire(import.meta.url)(process.env.PLAYWRIGHT_MODULE_PATH||'playwright');
+const browser=await chromium.launch(); const context=await browser.newContext({viewport:{width:390,height:844}}); const page=await context.newPage();
+const base='http://localhost:3107'; const errors=[];page.on('pageerror',e=>errors.push(e.message));
+const post=data=>context.request.post(base+'/api/admin/access',{data,headers:{Origin:base}});
+try {
+  await page.goto(base+'/admin/login');assert.equal(await page.locator('input[name="password"]').count(),0);
+  const login=await context.request.post(base+'/api/admin/login',{form:{password:fixture.password},headers:{Origin:base},maxRedirects:0});assert.match(login.headers().location,/password_disabled/);
+  await page.goto(base+'/admin/recovery');
+  await page.getByLabel('Recovery password',{exact:true}).fill('wrong');
+  await page.getByRole('checkbox').check(); await page.getByRole('button',{name:'Begin Hostinger recovery'}).click();
+  await page.getByRole('status').filter({hasText:'not accepted'}).waitFor();
+  assert.equal(await page.getByLabel('Recovery password',{exact:true}).inputValue(),'');
+  await page.getByLabel('Recovery password',{exact:true}).fill(fixture.password);await page.getByRole('checkbox').check();
+  await page.getByRole('button',{name:'Begin Hostinger recovery'}).click();await page.waitForURL(base+'/admin/enroll');
+  const view=await (await context.request.get(base+'/api/admin/access')).json();assert.equal(view.recoveryOnly,true);assert.equal(view.bootstrapPresent,true);
+  assert.equal((await post({operation:'hostinger_recovery',password:fixture.password,confirmed:true})).status(),400);
+  for(const path of ['/admin/settings','/admin/inquiries/00000000-0000-4000-8000-000000000000']) assert.equal((await context.request.get(base+path,{maxRedirects:0})).status(),307);
+  const smtp=await context.request.post(base+'/api/admin/smtp',{form:{action:'send_test'},headers:{Origin:base},maxRedirects:0});assert.equal(smtp.status(),401);
+  assert.equal((await post({operation:'options',purpose:'login'})).status(),400);
+  mkdirSync('.release/hostinger-recovery-qa',{recursive:true});
+  await page.screenshot({path:'.release/hostinger-recovery-qa/restricted-enrollment.png'});
+  const logout=await context.request.post(base+'/api/admin/logout',{headers:{Origin:base},maxRedirects:0});assert.equal(logout.status(),303);
+  assert.equal((await context.request.get(base+'/api/admin/access')).status(),401);
+  assert.deepEqual(errors,[]);
+  console.log('PASS: Hostinger recovery UI, wrong-password rejection, cleared secret input, explicit confirmation, restricted session, replay rejection, Settings/inquiry/SMTP denial, password login disabled, logout. No production changes or mail.');
+} finally {await browser.close();}

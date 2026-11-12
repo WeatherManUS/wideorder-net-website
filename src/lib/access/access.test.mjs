@@ -60,13 +60,13 @@ test('challenge expiry, session binding and consume-before-verification reject r
   await assert.rejects(ceremonyVerify(request(active.token, flow), { ceremonyId: valid.id, response: {} }), /verification_failed/);
   await assert.rejects(ceremonyVerify(request(active.token, flow), { ceremonyId: valid.id, response: {} }), /challenge_rejected/);
 });
-test('cutover requires tested independent groups, a device-bound backup and bootstrap removal', async () => {
+test('cutover accepts independent synced passkeys but requires tests, distinct groups and bootstrap removal', async () => {
   const a = key(undefined, 'same', 'multiDevice'), b = key(undefined, 'same', 'multiDevice');
   await updateAccessState(state => { state.credentials = [a, b]; });
   assert.equal(recoveryReady(await readAccessState()), false);
   await updateAccessState(state => { state.credentials[1].recoveryGroup = 'independent'; });
-  assert.equal(recoveryReady(await readAccessState()), false);
-  await updateAccessState(state => { state.credentials[1].deviceType = 'singleDevice'; state.credentials[1].testedAt = null; });
+  assert.equal(recoveryReady(await readAccessState()), true);
+  await updateAccessState(state => { state.credentials[1].testedAt = null; });
   assert.equal(recoveryReady(await readAccessState()), false);
   await updateAccessState(state => { state.credentials[1].testedAt = new Date().toISOString(); });
   assert.equal(recoveryReady(await readAccessState()), true);
@@ -74,6 +74,14 @@ test('cutover requires tested independent groups, a device-bound backup and boot
   process.env.WIDEORDER_ADMIN_PASSWORD_HASH = 'configured';
   await assert.rejects(manageAccess(active.sessionId, { action: 'cutover', confirm: 'ENABLE PASSKEY ONLY', independentConfirmed: true, recoveryReviewed: true }), /remove_bootstrap/);
   assert.equal((await readAccessState()).mode, 'transitional');
+});
+
+test('readiness excludes revoked credentials and normalizes recovery-group labels', async () => {
+  const a = key(undefined, 'Google account', 'multiDevice'), b = key(undefined, '  GOOGLE ACCOUNT  ', 'multiDevice');
+  await updateAccessState(state => { state.credentials = [a, b]; });
+  assert.equal(recoveryReady(await readAccessState()), false);
+  await updateAccessState(state => { state.credentials[1].recoveryGroup = 'Separate provider'; state.credentials[1].revokedAt = new Date().toISOString(); });
+  assert.equal(recoveryReady(await readAccessState()), false);
 });
 test('interrupted cutover stays password-disabled and can resume with registered passkeys', async () => {
   const a = key(), b = key(); await updateAccessState(state => { state.mode = 'cutover'; state.credentials = [a, b]; });

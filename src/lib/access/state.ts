@@ -8,7 +8,7 @@ export type Passkey = { ref: string; id: string; publicKey: string; counter: num
 export type AccessSession = { id: string; hash: string; method: "password" | "passkey" | "recovery"; credentialRef?: string; createdAt: string; expiresAt: string; lastSeenAt: string; label: string; grant?: { action: string; expiresAt: string } };
 export type Ceremony = { id: string; challenge: string; binding: string; sessionId?: string; initialRegistration?: boolean; purpose: "register" | "login" | "verify"; action?: string; target?: string; name?: string; recoveryGroup?: string; origin: string; rpID: string; expiresAt: string };
 export type SecurityEvent = { id: string; type: string; at: string; result: "success" | "failure"; sessionId?: string; credentialRef?: string; reference?: string };
-export type AccessState = { schema: 1; userId: string; mode: AccessMode; credentials: Passkey[]; sessions: AccessSession[]; ceremonies: Ceremony[]; events: SecurityEvent[]; recoveryReviewedAt: string | null; recovery?: { hash: string; expiresAt: string; reference: string } };
+export type AccessState = { schema: 1; userId: string; mode: AccessMode; credentials: Passkey[]; sessions: AccessSession[]; ceremonies: Ceremony[]; events: SecurityEvent[]; recoveryReviewedAt: string | null; recovery?: { hash: string; expiresAt: string; reference: string }; hostRecoveryUses?: { id: string; expiresAt: string }[] };
 
 let schemaReady: Promise<unknown> | undefined;
 async function load() {
@@ -71,7 +71,7 @@ export function requireGrant(state: AccessState, sessionId: string, action: stri
 }
 export function recoveryReady(state: AccessState) {
   const tested = state.credentials.filter(key => !key.revokedAt && key.testedAt);
-  return tested.length >= 2 && new Set(tested.map(key => key.recoveryGroup.toLowerCase())).size >= 2 && tested.some(key => key.deviceType === "singleDevice");
+  return tested.length >= 2 && new Set(tested.map(key => key.recoveryGroup.trim().toLowerCase())).size >= 2;
 }
 export async function consumeSensitiveGrant(sessionId: string, action: string) {
   return updateAccessState(state => {

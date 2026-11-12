@@ -6,11 +6,11 @@ import type { accessView } from "@/lib/access/webauthn";
 import { LocalTime } from "./local-time";
 type View = Awaited<ReturnType<typeof accessView>>;
 const messages: Record<string, string> = {
-  remove_bootstrap_before_cutover: "Remove the bootstrap password hash from Hostinger only after both passkeys have been tested, then return here to finish cutover.",
-  backup_not_ready: "Keep two tested independent credentials, including a device-bound authenticator. Add and test a replacement before revoking a required backup.",
+  remove_bootstrap_before_cutover: "Remove WIDEORDER_ADMIN_PASSWORD_HASH and WIDEORDER_ADMIN_RECOVERY from Hostinger after both passkeys have been tested, then return here to finish cutover.",
+  backup_not_ready: "Keep two tested credentials in independent recovery groups. A hardware security key is optional. Add and test a replacement before revoking a required backup.",
   fresh_login_required: "Sign in again, then begin enrollment within five minutes.",
   fresh_verification_required: "Verify a passkey again before this change.",
-  rate_limited: "Too many authentication requests. Wait five minutes before trying again.",
+  rate_limited: "Too many authentication requests. Wait before trying again (up to 15 minutes for Hostinger recovery).",
   verification_failed: "Verification failed. Use the named passkey when testing a specific credential, then try again.",
   recovery_rejected: "The recovery authorization was not accepted or has expired. Contact your authorized infrastructure operator.",
   unauthenticated: "Your session has expired. Sign in again.",
@@ -48,6 +48,26 @@ export function SensitiveAdminForm({ children, action, grant, required, classNam
     catch (error) { setMessage(errorText(error)); setBusy(false); }
   }
   return <form method="post" action={action} className={className} onSubmit={submit} aria-busy={busy}>{children}<p role="status">{message || (busy ? "Verifying access…" : "")}</p></form>;
+}
+
+export function HostingerRecoveryLogin() {
+  const [message, setMessage] = useState(""), [busy, setBusy] = useState(false);
+  return <form className="admin-form" onSubmit={async event => {
+    event.preventDefault(); if (busy) return;
+    const form = event.currentTarget, data = new FormData(form);
+    setBusy(true); setMessage("");
+    try {
+      const result = await request({ operation: "hostinger_recovery", password: String(data.get("password") || ""), confirmed: data.get("confirmed") === "on" });
+      form.reset(); window.location.assign(result.redirect);
+    } catch (error) { form.reset(); setMessage(errorText(error)); setBusy(false); }
+  }}>
+    <h2>Hostinger-authorized recovery</h2>
+    <p>An authorized operator must first enable a one-hour-or-shorter recovery window in Hostinger. Enter the password corresponding to the temporarily restored hash, not the hash itself.</p>
+    <label className="admin-field"><span>Recovery password</span><input type="password" name="password" maxLength={128} autoComplete="off" required /></label>
+    <label><input type="checkbox" name="confirmed" required /> I authorize revoking all existing passkeys and sessions to enroll replacement passkeys.</label>
+    <button className="button button--primary" disabled={busy}>Begin Hostinger recovery</button>
+    <p role="status">{message}</p>
+  </form>;
 }
 
 export function RecoveryLogin() {
@@ -93,21 +113,22 @@ export function SecurityAccess({ view }: { view: View }) {
       }); }}>
         <label className="admin-field"><span>Passkey name</span><input name="name" maxLength={80} required placeholder="Office laptop or backup hardware key" /></label>
         <label className="admin-field"><span>Independent recovery group</span><input name="recoveryGroup" maxLength={80} required placeholder="Apple account, Google account, or separately stored key" /></label>
-        <p className="admin-copy">Use the same group for credentials depending on the same provider account. A synced copy is not an independent backup. Keep a device-bound backup separately secured.</p>
+        <p className="admin-copy">Use the same group for credentials depending on the same provider account. A synced copy is not an independent backup. A hardware security key is optional; independently recoverable synced passkeys are supported.</p>
         <button className="button button--primary">Add passkey</button>
       </form>
       <h3>Recovery readiness</h3>
-      <p>{view.backupReady ? "Two tested recovery groups and a device-bound credential are recorded. Your independence confirmation is still required at cutover." : "Before cutover: test two credentials in independent recovery groups, including at least one device-bound authenticator."}</p>
+      <p>{view.backupReady ? "Two tested recovery groups are recorded. Your independence confirmation is still required at cutover. A hardware security key is not required." : "Before cutover: test two credentials in independent recovery groups. A hardware security key is not required."}</p>
       <details><summary>Review loss and recovery procedure</summary>
         <ul><li>Lost phone, laptop or key: sign in with the independent backup, revoke the lost credential and its sessions, then add and test a replacement. Add the replacement first if revocation would leave fewer than two viable credentials.</li>
-          <li>Compromised sync provider: use a separately controlled device-bound backup, revoke every credential in the compromised provider group, revoke other sessions, and replace affected credentials.</li>
-          <li>Total loss: an authorized operator must use separately authenticated hosting and database access, record your manual authorization, and run the documented offline recovery command. It revokes existing credentials/sessions and issues a short-lived one-time enrollment authorization. Email, SMS and the old password cannot authorize recovery.</li>
+          <li>Compromised sync provider: use a credential controlled independently of that provider, revoke every credential in the compromised provider group, revoke other sessions, and replace affected credentials.</li>
+          <li>Total loss: use MFA-protected Hostinger access to enable the documented one-time recovery window and restore the password hash temporarily. The corresponding password grants restricted passkey replacement only. The hash alone does not enable recovery or ordinary password login. The offline infrastructure recovery command also remains available.</li>
           <li>Recovery access permits enrollment only. Register and test two new independent authenticators before explicitly returning to passkey-only mode. Keep the hosting/database recovery account protected by its own MFA and recovery material stored offline.</li>
         </ul><p>Operator runbook: docs/PASSKEY_SECURITY.md in the repository. Review this process and secure your infrastructure recovery access before cutover.</p>
       </details>
       {view.mode !== "passkey" && <form className="admin-form" onSubmit={event => { event.preventDefault(); const data = new FormData(event.currentTarget); void run(async () => { await verifyAccess("cutover"); const result = await request({ operation: "manage", action: "cutover", independentConfirmed: data.get("independent") === "on", recoveryReviewed: data.get("recovery") === "on", confirm: String(data.get("confirm")) }); window.location.assign(result.redirect); }); }}>
         <h3>Enable passkey-only login</h3>
-        {view.bootstrapPresent && <p className="admin-alert">After testing both passkeys, remove WIDEORDER_ADMIN_PASSWORD_HASH from Hostinger. Cutover is blocked while that bootstrap password is configured. Passkey login remains available during the transition.</p>}
+        {!view.backupReady && <p className="admin-alert">Cutover is unavailable until two active passkeys have been tested and assigned to distinct, genuinely independent recovery groups.</p>}
+        {view.bootstrapPresent && <p className="admin-alert">After testing both passkeys, remove WIDEORDER_ADMIN_PASSWORD_HASH and WIDEORDER_ADMIN_RECOVERY from Hostinger if configured. Cutover is blocked while either remains configured.</p>}
         <label><input type="checkbox" name="independent" required /> I have tested both credentials and confirmed that their recovery does not depend on the same provider account or lost device.</label>
         <label><input type="checkbox" name="recovery" required /> I reviewed total-loss recovery and secured separate MFA-protected hosting/database recovery access.</label>
         <label className="admin-field"><span>Type ENABLE PASSKEY ONLY</span><input name="confirm" required autoComplete="off" /></label>

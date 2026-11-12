@@ -1,5 +1,9 @@
 # Security Baseline
 
+## Restricted Hostinger recovery update
+
+The owner approved optional hardware keys and explicitly enabled, time-limited Hostinger recovery. Two tested credentials in independent recovery groups remain required. `WIDEORDER_ADMIN_RECOVERY` plus the temporarily restored bootstrap hash permits password verification for restricted replacement enrollment only. The hash alone does not restore password login. See [the recovery runbook](PASSKEY_SECURITY.md) for the exact setup, time limits, cleanup, and hosting-MFA requirement. No recovery setting is enabled by this deployment.
+
 ## Phase 0.3 authentication checkpoint
 
 The [passkey architecture and recovery runbook](PASSKEY_SECURITY.md) supersedes historical password-reset guidance after passkey cutover. Never restore password authentication or a pre-cutover database to recover access. Deployment initially retains transitional password access; physical enrollment and explicit owner cutover remain pending.

@@ -23,6 +23,7 @@ async function verify(action) {
 }
 try {
   await page.goto(base + '/admin/recovery');
+  await page.getByText('Offline operator recovery authorization', { exact: true }).click();
   await page.getByLabel('One-time infrastructure recovery authorization').fill(token);
   await page.getByRole('button', { name: 'Begin restricted recovery' }).click();
   await page.waitForURL(base + '/admin/enroll');

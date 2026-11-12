@@ -1,3 +1,5 @@
+> Current authentication policy: the [passkey and restricted Hostinger recovery runbook](PASSKEY_SECURITY.md) supersedes all historical bootstrap/break-glass instructions below. After cutover, never clear credentials or restore an older database to obtain password login. The restored hash alone cannot unlock the account; restricted recovery requires an explicit temporary window. Both recovery variables must be absent for cutover.
+
 # Deployment Planning
 
 Current indexing activation and crawler-diagnostic procedure: [Search indexing](SEARCH_INDEXING.md). The owner authorized production indexing on November 11, 2026; earlier pre-activation restrictions below are historical. The production environment change and live verification remain required. A Googlebot user-agent probe is not verified Google crawler evidence.

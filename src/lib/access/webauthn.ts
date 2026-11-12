@@ -146,7 +146,7 @@ export async function manageAccess(sessionId: string, input: Record<string, unkn
   const action = text(input.action, 100);
   if (action === "cutover") {
     if (input.independentConfirmed !== true || input.recoveryReviewed !== true || input.confirm !== "ENABLE PASSKEY ONLY") throw new Error("confirmation_required");
-    if (process.env.WIDEORDER_ADMIN_PASSWORD_HASH?.trim()) throw new Error("remove_bootstrap_before_cutover");
+    if (process.env.WIDEORDER_ADMIN_PASSWORD_HASH?.trim() || process.env.WIDEORDER_ADMIN_RECOVERY?.trim()) throw new Error("remove_bootstrap_before_cutover");
     await updateAccessState(state => {
       requireGrant(state, sessionId, "cutover");
       if (!recoveryReady(state)) throw new Error("backup_not_ready");
@@ -205,5 +205,5 @@ export async function redeemRecovery(request: Request, value: unknown) {
 export async function accessView(sessionId: string) {
   const state = await readAccessState();
   const session = requireSession(state, sessionId);
-  return { mode: state.mode, recoveryOnly: session.method === "recovery", backupReady: recoveryReady(state), bootstrapPresent: Boolean(process.env.WIDEORDER_ADMIN_PASSWORD_HASH?.trim()), credentials: state.credentials.map(({ ref, name, recoveryGroup, createdAt, lastUsedAt, testedAt, revokedAt, deviceType, backedUp }) => ({ ref, name, recoveryGroup, createdAt, lastUsedAt, testedAt, revokedAt, deviceType, backedUp })), sessions: state.sessions.filter(item => sessionLive(state, item)).map(({ id, label, method, createdAt, lastSeenAt, expiresAt }) => ({ id, label, method, createdAt, lastSeenAt, expiresAt, current: id === sessionId })), events: state.events.slice(-40).reverse() };
+  return { mode: state.mode, recoveryOnly: session.method === "recovery", backupReady: recoveryReady(state), bootstrapPresent: Boolean(process.env.WIDEORDER_ADMIN_PASSWORD_HASH?.trim() || process.env.WIDEORDER_ADMIN_RECOVERY?.trim()), credentials: state.credentials.map(({ ref, name, recoveryGroup, createdAt, lastUsedAt, testedAt, revokedAt, deviceType, backedUp }) => ({ ref, name, recoveryGroup, createdAt, lastUsedAt, testedAt, revokedAt, deviceType, backedUp })), sessions: state.sessions.filter(item => sessionLive(state, item)).map(({ id, label, method, createdAt, lastSeenAt, expiresAt }) => ({ id, label, method, createdAt, lastSeenAt, expiresAt, current: id === sessionId })), events: state.events.slice(-40).reverse() };
 }

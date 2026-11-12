@@ -94,9 +94,10 @@ try {
   const response = await signed(replay.options);
   const concurrent = await Promise.all([post({ operation: 'verify', ceremonyId: replay.ceremonyId, response }), post({ operation: 'verify', ceremonyId: replay.ceremonyId, response })]);
   assert.deepEqual(concurrent.map(r => r.status()).sort(), [200, 400]); results.push('single-use concurrent replay rejection');
-  await verify('register'); await device('backup'); await register('Backup key', 'Separate hardware');
+  await verify('register'); await device('backup', true); await register('Backup key', 'Independent synced provider');
   state = await view(); const backup = state.credentials.find(key => key.name === 'Backup key').ref;
   assert.equal(state.backupReady, false); await verify(`test:${backup}`); assert.equal((await view()).backupReady, true);
+  assert.ok((await view()).credentials.filter(key => !key.revokedAt).every(key => key.deviceType === 'multiDevice'));
   // No fresh grant: ordinary Settings and SMTP mutations remain blocked.
   for (const path of ['/api/admin/settings', '/api/admin/smtp']) {
     const blocked = await context.request.post(base + path, { form: { action: path.includes('smtp') ? 'test_connection' : 'save_settings' }, headers: { Origin: base }, maxRedirects: 0 });

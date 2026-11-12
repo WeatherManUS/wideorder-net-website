@@ -153,3 +153,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.3.0003 — published** (2026-11-12T11:46:34.743Z)
   Allow independent synced passkeys and restricted Hostinger recovery
   Commit: `b85a3dc784e53759320a5c5cc7ae5d9f7f4f7819`; previous: 0.3.0002; artifact: 6fbae8eb-aa07-405c-9e0b-2e1811dab988; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-12T17:02:21.845Z)
+  Organize administrator Settings into responsive categories for phase 0.4
+  Commit: `5faa5269717e0c75b9c95e6ed4fda5c31957d35b`; previous: 0.3.0003; artifact: not built; rollback: none.

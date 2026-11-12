@@ -149,3 +149,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.3.0003 — verifying** (2026-11-12T11:37:11.972Z)
   Allow independent synced passkeys and restricted Hostinger recovery
   Commit: `b85a3dc784e53759320a5c5cc7ae5d9f7f4f7819`; previous: 0.3.0002; artifact: 6fbae8eb-aa07-405c-9e0b-2e1811dab988; rollback: none.
+
+- **v0.3.0003 — published** (2026-11-12T11:46:34.743Z)
+  Allow independent synced passkeys and restricted Hostinger recovery
+  Commit: `b85a3dc784e53759320a5c5cc7ae5d9f7f4f7819`; previous: 0.3.0002; artifact: 6fbae8eb-aa07-405c-9e0b-2e1811dab988; rollback: none.

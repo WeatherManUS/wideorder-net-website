@@ -1,5 +1,5 @@
 const CANONICAL_PRODUCTION_ORIGIN = "https://wideorder.net";
-const PRODUCTION_ALLOWED_HOSTS = new Set(["wideorder.net", "www.wideorder.net"]);
+const PRODUCTION_ALLOWED_ORIGINS = new Set([CANONICAL_PRODUCTION_ORIGIN, "https://www.wideorder.net"]);
 const LOCAL_ALLOWED_HOSTS = new Set(["localhost", "127.0.0.1", "[::1]", "::1"]);
 
 type ParsedOrigin = {
@@ -59,7 +59,7 @@ function getHeaderOrigin(value: string | null) {
 }
 
 function isProductionOriginAllowed(origin: ParsedOrigin) {
-  return origin.protocol === "https:" && PRODUCTION_ALLOWED_HOSTS.has(origin.hostname);
+  return PRODUCTION_ALLOWED_ORIGINS.has(origin.origin);
 }
 
 function isLocalDevelopmentOriginAllowed(origin: ParsedOrigin) {

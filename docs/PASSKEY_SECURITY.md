@@ -24,6 +24,8 @@ Deployment installs infrastructure in transitional mode. Actual enrollment, phys
 
 ## Owner enrollment and cutover
 
+These steps apply to initial enrollment, not routine operation after cutover. During normal operation, use passkeys, keep both `WIDEORDER_ADMIN_PASSWORD_HASH` and `WIDEORDER_ADMIN_RECOVERY` absent, and retain separately protected infrastructure recovery access. Do not restore either variable merely to test readiness. Emergency procedures below require separate incident authorization.
+
 1. Use a trusted browser at `https://wideorder.net/admin/login` and sign in with the existing administrator password. Deployment invalidates legacy sessions, so sign in again. Open Settings → Security & Access within five minutes of sign-in for initial registration.
 2. Register and name the primary passkey. Assign a recovery group describing its actual dependency (for example, a particular synced provider). Use its Test control and complete user verification.
 3. Register an independent backup using fresh verification with the first key. The server requires two tested credentials in distinct recovery groups; no hardware key or device-bound credential is required. Labels alone cannot prove independence: the owner must verify the credentials have separate recovery dependencies. Calling a group Windows Hello does not establish where its credential is stored. The authenticator's backup flags remain accurately displayed, but are not an eligibility gate.
@@ -77,6 +79,18 @@ Security events retain up to the latest 1,000 entries and 365 days, pruned on up
 The security table is additive and does not replace inquiry/settings records. Before cutover, any rollback requires careful review of newly registered keys and sessions. After cutover or recovery begins, deploy only a passkey-capable build that honors the durable mode and current schema. Never roll back to a password-only application or restore an earlier security-state snapshot. An interrupted cutover stays password-disabled and can be completed using a registered passkey.
 
 ## Reproducible local validation
+
+### Phase 0.3 closeout review — November 12, 2026
+
+Acceptance remains blocked by the unresolved Batch B origin-validation finding: ordinary administrative forms accept unexpected HTTPS ports on approved hostnames. WebAuthn itself enforces the exact production origin. The smallest proposed correction is an explicit complete-origin allowlist for ordinary forms, with Origin/Referer and direct administrative request regression tests. No application correction or deployment was authorized during closeout.
+
+Batch B reran 20 isolated authentication, session and recovery tests successfully. Existing signed-WebAuthn browser evidence remains applicable; no relevant authentication code changed. Security events cover sign-in, credential management, cutover, session revocation, recovery, Settings changes and SMTP authorization. This is not a complete request-access log: early request rejections and some grant/challenge failures are not individually audited. Restricted enrollment can read the security view, including recent security events, but cannot access regular Settings, SMTP or inquiry data. Audit references are non-secret identifiers; passwords, tokens, private keys and inquiry content are excluded.
+
+The owner reports successful passkey authentication and Hostinger MFA. Exact persisted production mode, current tested independent credential readiness, absence of temporary recovery variables and practical infrastructure recovery access remain independently unverified. A hidden password form alone cannot distinguish completed cutover from the fail-closed intermediate cutover state.
+
+The read-only production check returned build `5faa5269717e-d5ef20b57e1792a3`, version `unallocated`, status `awaiting-allocation` and no publication timestamp. This is not a confirmed numbered release. Resolve publication separately under explicit authorization; do not treat build completion as release acceptance.
+
+Rollback must retain the current security database and use a passkey-capable application honoring its durable mode. Database restoration or older password-only binaries are not supported recovery methods. Deferred hardening includes separately protected audit export and broader rejection telemetry; historical platform/header hardening items in SECURITY.md require verification before being described as implemented. None substitutes for correcting the origin finding or completing the production evidence checks.
 
 - `npm run lint`, `npm run typecheck`, `npm run build`.
 - `node --experimental-transform-types --import ./scripts/test-register.mjs --test src/**/*.test.mjs src/**/**/*.test.mjs src/**/**/**/*.test.mjs` (73 tests at this checkpoint).

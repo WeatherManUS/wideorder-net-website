@@ -6,7 +6,7 @@ The owner approved optional hardware keys and explicitly enabled, time-limited H
 
 ## Phase 0.3 authentication checkpoint
 
-The [passkey architecture and recovery runbook](PASSKEY_SECURITY.md) supersedes historical password-reset guidance after passkey cutover. Never restore password authentication or a pre-cutover database to recover access. Deployment initially retains transitional password access; physical enrollment and explicit owner cutover remain pending.
+The [passkey architecture and recovery runbook](PASSKEY_SECURITY.md) supersedes historical password-reset guidance after passkey cutover. Never restore password authentication or a pre-cutover database to recover access. The owner reports successful passkey-only authentication; the November 12 closeout review records the remaining production verification gaps and unresolved ordinary-form origin validation finding. Initial transitional deployment descriptions below are historical, not current recovery instructions.
 
 WebAuthn uses pinned `@simplewebauthn/server@14.1.0` and `@simplewebauthn/browser@14.0.0`. The November 11, 2026 production dependency audit (`npm audit --omit=dev`) reported zero vulnerabilities. Historical findings below describe earlier checkpoints.
 
@@ -90,6 +90,8 @@ WebAuthn uses pinned `@simplewebauthn/server@14.1.0` and `@simplewebauthn/browse
 - Hostinger SMTP settings may remain stored temporarily for rollback/reference, but production contact delivery must fail closed rather than silently falling back from Resend.
 
 ## Phase 7B4 administrator credential boundary
+
+Historical pre-passkey behavior only. The password-reset procedure in this section must not be used after cutover; follow PASSKEY_SECURITY.md instead.
 
 - `WIDEORDER_ADMIN_PASSWORD_HASH` is no longer the normal long-term login source; it is the bootstrap and break-glass recovery credential only.
 - If no managed administrator password exists, login may use the bootstrap hash and the administrator can initialize the persistent managed password through `/admin/settings`.

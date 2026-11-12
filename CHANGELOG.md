@@ -141,3 +141,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.3.0002 — published** (2026-11-12T01:37:13.275Z)
   Add transitional passkey administration and controlled recovery for phase 0.3
   Commit: `139547ba66f252d4bcb229317000fbff08262bf9`; previous: 0.3.0001; artifact: cea6249e-c2b3-40cd-9499-cbc462efdb1d; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-12T11:37:11.972Z)
+  Allow independent synced passkeys and restricted Hostinger recovery
+  Commit: `b85a3dc784e53759320a5c5cc7ae5d9f7f4f7819`; previous: 0.3.0002; artifact: not built; rollback: none.

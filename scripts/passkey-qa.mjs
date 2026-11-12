@@ -52,7 +52,7 @@ try {
   assert.equal((await post({ operation: 'options', purpose: 'register', name: 'blocked', recoveryGroup: 'blocked' })).status(), 401);
   const login = await context.request.post(base + '/api/admin/login', { form: { password: fixture.password }, headers: { Origin: base }, maxRedirects: 0 });
   assert.equal(login.status(), 303);
-  await page.goto(base + '/admin/settings');
+  await page.goto(base + '/admin/settings?category=security');
   await page.getByRole('heading', { name: 'Security & Access', exact: true }).waitFor();
   await page.waitForLoadState('networkidle');
   await device('invalid-registration');
@@ -134,7 +134,7 @@ try {
   await context.clearCookies(); await device('replacement'); await verify(); await verify('sessions'); await api({ operation: 'manage', action: 'revoke_sessions' });
   const staleCookie = oldCookies.find(cookie => cookie.name === 'wideorder_admin_session');
   assert.equal((await context.request.get(base + '/api/admin/access', { headers: { Cookie: `wideorder_admin_session=${staleCookie.value}` } })).status(), 401);
-  await page.goto(base + '/admin/settings');
+  await page.goto(base + '/admin/settings?category=communications');
   await page.locator('[name="SMTP_FROM_NAME"]').fill('WideOrder QA');
   await page.getByRole('button', { name: 'Save settings', exact: true }).click();
   await page.waitForURL(/status=saved/);
@@ -142,6 +142,7 @@ try {
   await page.getByRole('button', { name: 'Test connection', exact: true }).click();
   await page.waitForURL(/smtp_not_configured/);
   results.push('Settings save and SMTP controls require and accept fresh passkey verification');
+  await page.goto(base + '/admin/settings?category=security');
   mkdirSync('.release/passkey-qa', { recursive: true });
   await page.locator('#security-access').screenshot({ path: '.release/passkey-qa/security-access.png' });
   const content = await page.content();

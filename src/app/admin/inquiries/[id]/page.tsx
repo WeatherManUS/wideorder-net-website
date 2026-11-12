@@ -18,7 +18,7 @@ export default async function InquiryPage({ params }: { params: Promise<{ id: st
   const diagnostics = await mailDiagnostics(id);
   const inquiry = JSON.parse(decryptSecretValue(row.payload)) as Inquiry;
   return <><main className="admin-shell"><div className="admin-card">
-    <Link href="/admin/settings">Back to settings</Link><h1>Inquiry {inquiry.reference}</h1>
+    <Link href="/admin/settings?category=communications">Back to settings</Link><h1>Inquiry {inquiry.reference}</h1>
     <p>Received <LocalTime value={inquiry.submittedAt} /></p><p>{row.stage}: {row.status}</p>
     <p>Internal SMTP acceptance: <LocalTime value={row.accepted_at} />. Inbox delivery is not confirmed by SMTP acceptance.</p>
     <p>Attempts in current stage: {row.attempts}. {row.status === "pending" ? <>Next attempt: <LocalTime value={row.next_attempt_at} /></> : ""}</p>

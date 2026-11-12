@@ -1,3 +1,4 @@
+import { settingsReturnPath } from "@/lib/settings-navigation";
 import { NextResponse } from "next/server";
 import { boundedAdminForm } from "@/lib/access/request";
 import { consumeSensitiveGrant, auditSecurity } from "@/lib/access/state";
@@ -10,7 +11,7 @@ import { takeRequestSlot } from "@/lib/inquiries/store";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export async function POST(request: Request) {
-  const redirect = (key: string, error = false) => NextResponse.redirect(buildTrustedAdminUrl(request, `/admin/settings?${error ? "error" : "status"}=${key}`), { status: 303, headers: ADMIN_NO_STORE_HEADERS });
+  const redirect = (key: string, error = false) => NextResponse.redirect(buildTrustedAdminUrl(request, settingsReturnPath(request.url, `/admin/settings?${error ? "error" : "status"}=${key}`)), { status: 303, headers: ADMIN_NO_STORE_HEADERS });
   if (!isTrustedAdminOrigin(request)) return NextResponse.json({ error: "csrf" }, { status: 403, headers: ADMIN_NO_STORE_HEADERS });
   try {
     const admin = await getAuthenticatedAdminFromRequest(request);

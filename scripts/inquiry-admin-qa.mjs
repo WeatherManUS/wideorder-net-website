@@ -17,7 +17,7 @@ try {
   const csrf = await post("/api/admin/smtp", { action: "test_connection" }, { Origin: "https://evil.example" }); assert.equal(csrf.status(), 403);
   const login = await post("/api/admin/login", { password }); assert.equal(login.status(), 303); assert.ok(login.headers()["location"].endsWith("/admin/settings"));
   const cookie = login.headers()["set-cookie"]; assert.match(cookie, /HttpOnly/i); assert.match(cookie, /SameSite=strict/i);
-  await page.goto(base + "/admin/settings"); await page.getByRole("heading", { name: "Email / SMTP", exact: true }).waitFor();
+  await page.goto(base + "/admin/settings?category=communications"); await page.getByRole("heading", { name: "Email / SMTP", exact: true }).waitFor();
   assert.equal(await page.locator('[name="SMTP_HOST"]').inputValue(), "smtp.hostinger.com");
   assert.equal(await page.locator('[name="SMTP_PORT"]').inputValue(), "465");
   for (const key of ["SMTP_USER", "SMTP_PASSWORD", "SMTP_FROM_EMAIL", "SMTP_RECIPIENT"]) assert.equal(await page.locator(`[name="${key}"]`).inputValue(), "");
@@ -43,7 +43,7 @@ try {
   const replay = await context.request.post(base + '/api/contact', { data: submitted, headers: { Origin: base } });
   assert.equal(replay.status(), 400);
   assert.equal((await replay.json()).error, 'security_verification_failed');
-  await page.goto(base + "/admin/settings");
+  await page.goto(base + "/admin/settings?category=communications");
   await page.getByRole('heading', { name: 'Mail delivery diagnostics' }).waitFor();
   assert.match(await page.locator('.admin-summary').allTextContents().then(v => v.join(' ')), /Customer acknowledgments\s*Disabled/);
   assert.match(await page.locator('.admin-summary').allTextContents().then(v => v.join(' ')), /smtp_not_configured/);

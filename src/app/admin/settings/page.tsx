@@ -1,3 +1,5 @@
+import { SettingsNavigation } from "@/components/settings-navigation";
+import { settingsCategory, settingsCategories } from "@/lib/settings-navigation";
 import { SecurityAccess, SensitiveAdminForm } from "@/components/admin-access";
 import { accessView } from "@/lib/access/webauthn";
 import { LocalTime } from "@/components/local-time";
@@ -99,6 +101,8 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
   try { smtpReady = validateSmtpConfig(config, false); } catch { /* Invalid saved host remains unavailable. */ }
   const release = await currentRelease();
   const params = (await searchParams) ?? {};
+  const category = settingsCategory(params.category ?? (params.reference ? "communications" : undefined));
+  const categoryLabel = settingsCategories.find(item => item.id === category)!.label;
   const reference = typeof params.reference === "string" ? params.reference.trim() : "";
   const validReference = /^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(reference);
   const selected = validReference ? await inquiryById(reference) : undefined;
@@ -113,56 +117,22 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
     ? "Changing the managed password invalidates every active administrator session and requires a fresh sign-in."
     : "Set the persistent administrator password now so routine admin access no longer depends on the bootstrap environment hash.";
 
-  return (
-    <>
-    <main className="admin-shell">
-      <div className="admin-card">
-        <div className="admin-header-row">
-          <div>
-            <p className="admin-eyebrow">WideOrder internal administration</p>
-            <h1>Operational settings</h1>
-            <p className="admin-copy">Public settings can be reviewed directly. Secret fields only accept replacements and never re-display stored values.</p>
-          </div>
-          <form method="post" action="/api/admin/logout">
-            <button className="button button--secondary admin-button" type="submit">
-              Sign out
-            </button>
-          </form>
-        </div>
 
-        <dl className="admin-summary admin-summary--grid">
-          <div>
+  const panels = {
+    general: <><h2>General</h2><dl className="admin-summary admin-summary--grid">          <div>
             <dt>Signed in as</dt>
             <dd>{admin.email}</dd>
-          </div>
-          <div>
+          </div>          <div>
             <dt>Session expires</dt>
             <dd><LocalTime value={admin.expiresAt} /></dd>
-          </div>
-          <div>
-            <dt>Persistence</dt>
-            <dd>{persistence.engine}</dd>
-          </div>
-          <div>
-            <dt>Storage detail</dt>
-            <dd>{persistence.detail}</dd>
-          </div>
-          <div>
-            <dt>Session authentication</dt>
-            <dd>{admin.method}</dd>
-          </div>
-          <div>
-            <dt>Legacy bootstrap password</dt>
-            <dd>{credentialSummary.bootstrapConfigured ? "Configured — remove after testing passkeys, before cutover" : "Not configured"}</dd>
-          </div>
-        </dl>
-
-        {statusMessage ? <p className="admin-alert admin-alert--success">{statusMessage}</p> : null}
-        {errorMessage ? <p className="admin-alert admin-alert--error">{errorMessage}</p> : null}
-
-        <nav aria-label="Settings sections" className="admin-actions"><a href="#security-access">Security &amp; Access</a><a href="#communications">Communications</a><a href="#general-settings">General</a></nav>
-        <SecurityAccess view={access} />
-        <SensitiveAdminForm className="admin-form admin-form--stacked" action="/api/admin/settings" grant="settings" required={stepUpRequired}>
+          </div></dl>        <section className="admin-section">
+          <h2>Version and deployment information</h2>
+          <p className="admin-copy">Version: {release.version}. Status: {"deploymentStatus" in release ? release.deploymentStatus : "development"}.</p>
+          <p className="admin-copy">Published: <LocalTime value={release.publishedAt} />. Build: {release.buildId}.</p>
+          <p className="admin-copy">Artifact: {release.releaseId}.</p>
+        </section>
+</>,
+    communications: <><h2>Communications</h2><SensitiveAdminForm className="admin-form admin-form--stacked" action="/api/admin/settings?category=communications" grant="settings" required={stepUpRequired}>
           <input type="hidden" name="action" value="save_settings" />
           <section id="communications" className="admin-section">
             <h2>Email / SMTP</h2>
@@ -171,24 +141,14 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
             <p className="admin-copy">Allowed hosts: {allowedSmtpHosts().join(", ")}. Additional hosts require the server-managed WIDEORDER_SMTP_ALLOWED_HOSTS allowlist. Only SSL/TLS on 465 or STARTTLS on 587 is supported.</p>
             {smtpViews.map(view => <SettingField key={view.key} view={view} />)}
           </section>
-          <section className="admin-section">
-            <h2>Website configuration</h2>
-            <p className="admin-copy">Abuse protection for the inquiry form. Uses the saved Turnstile site key and matching secret for server-side validation.</p>
-            {websiteViews.map(view => <SettingField key={view.key} view={view} />)}
-          </section>
 
-          <div className="admin-actions">
-            <button className="button button--primary admin-button" type="submit">
-              Save settings
-            </button>
-          </div>
-        </SensitiveAdminForm>
-
-        <MailDiagnostics data={diagnostics} recipient={config.recipient} sender={config.from} acknowledgment={config.acknowledgment} configured={smtpReady} />
+          <div className="admin-actions"><button className="button button--primary admin-button" type="submit">Save settings</button></div>
+          <p className="admin-copy">Save changes before switching categories.</p>
+        </SensitiveAdminForm>        <MailDiagnostics data={diagnostics} recipient={config.recipient} sender={config.from} acknowledgment={config.acknowledgment} configured={smtpReady} />
         <section className="admin-section">
           <h2>SMTP tests</h2>
           <p className="admin-copy">Tests use saved settings. Test emails go only to the saved notification recipient.</p>
-          <SensitiveAdminForm action="/api/admin/smtp" grant="smtp" required={stepUpRequired} className="admin-actions">
+          <SensitiveAdminForm action="/api/admin/smtp?category=communications" grant="smtp" required={stepUpRequired} className="admin-actions">
             <button className="button button--secondary" name="action" value="test_connection">Test connection</button>
             <button className="button button--secondary" name="action" value="send_test">Send test email</button>
           </SensitiveAdminForm>
@@ -196,9 +156,9 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
         <section className="admin-section">
           <h2>Inquiry delivery queue</h2>
           <p className="admin-copy">Inquiries are encrypted in durable storage. Pending notifications retry every minute when due and configured. Accepted means SMTP acceptance, not confirmed inbox delivery. Uncertain delivery requires mailbox review and is not automatically resent.</p>
-          <form method="get" action="/admin/settings" className="admin-form"><label className="admin-field"><span>Find inquiry by reference</span><input name="reference" defaultValue={reference} maxLength={64} /></label><button className="button button--secondary">Find inquiry</button><Link href="/admin/settings">Show recent inquiries</Link></form>
+          <form method="get" action="/admin/settings" className="admin-form"><input type="hidden" name="category" value="communications" /><label className="admin-field"><span>Find inquiry by reference</span><input name="reference" defaultValue={reference} maxLength={64} /></label><button className="button button--secondary">Find inquiry</button><Link href="/admin/settings?category=communications">Show recent inquiries</Link></form>
           <p className="admin-copy">Without a reference, review the 30 most recent inquiries below by submission time. Times use your browser’s local time zone, which is included. Hover over a time to see UTC.</p>
-          <SensitiveAdminForm action="/api/admin/smtp" grant="smtp" required={stepUpRequired}><button className="button button--secondary" name="action" value="retry_queue">Process due notifications</button></SensitiveAdminForm>
+          <SensitiveAdminForm action="/api/admin/smtp?category=communications" grant="smtp" required={stepUpRequired}><button className="button button--secondary" name="action" value="retry_queue">Process due notifications</button></SensitiveAdminForm>
           <ul className="admin-audit-list">{inquiries.map(row => <li key={String(row.id)}>
             <Link href={`/admin/inquiries/${row.id}`}>{String(row.id)}</Link>
             <span>Received: <LocalTime value={row.created_at} /></span><span>{String(row.stage)}: {String(row.status)}</span>
@@ -206,19 +166,19 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
             <span>Attempts in current stage: {String(row.attempts)}. {row.status === "pending" ? <>Next attempt: <LocalTime value={row.next_attempt_at} /></> : ""}</span>
             {row.last_error ? <span>{String(row.last_error)}</span> : null}
             {row.status === "review" && ["temporary_rejection", "permanent_rejection", "connection_failed"].includes(String(row.last_error)) ?
-              <SensitiveAdminForm action="/api/admin/smtp" grant="smtp" required={stepUpRequired}><input type="hidden" name="reference" value={String(row.id)} /><button className="button button--secondary" name="action" value="retry_inquiry">Retry notification</button></SensitiveAdminForm> : null}
+              <SensitiveAdminForm action="/api/admin/smtp?category=communications" grant="smtp" required={stepUpRequired}><input type="hidden" name="reference" value={String(row.id)} /><button className="button button--secondary" name="action" value="retry_inquiry">Retry notification</button></SensitiveAdminForm> : null}
           </li>)}</ul>
           {!inquiries.length ? <p className="admin-copy">{reference ? "No inquiry found for that reference." : "No inquiries received yet."}</p> : null}
         </section>
-        <section className="admin-section">
-          <h2>Version and deployment information</h2>
-          <p className="admin-copy">Version: {release.version}. Status: {"deploymentStatus" in release ? release.deploymentStatus : "development"}.</p>
-          <p className="admin-copy">Published: <LocalTime value={release.publishedAt} />. Build: {release.buildId}.</p>
-          <p className="admin-copy">Artifact: {release.releaseId}.</p>
-        </section>
-        <section id="general-settings" className="admin-section"><h2>Settings roadmap</h2><p className="admin-copy">General, Communications and Security &amp; Access use the existing settings. Branding &amp; Appearance, Marketing &amp; Social, Integrations and Advanced are reserved for later phases; no publishing controls are enabled here.</p></section>
-
-        {access.mode === "transitional" && access.credentials.length === 0 && <>
+</>,
+    branding: <><h2>Branding &amp; Appearance</h2><p className="admin-copy">Coming in a future release.</p></>,
+    security: <><dl className="admin-summary admin-summary--grid">          <div>
+            <dt>Session authentication</dt>
+            <dd>{admin.method}</dd>
+          </div>          <div>
+            <dt>Legacy bootstrap password</dt>
+            <dd>{credentialSummary.bootstrapConfigured ? "Configured — remove after testing passkeys, before cutover" : "Not configured"}</dd>
+          </div></dl><SecurityAccess view={access} />        {access.mode === "transitional" && access.credentials.length === 0 && <>
         <section className="admin-section">
           <h2>{passwordHeading}</h2>
           <p className="admin-copy">{passwordCopy}</p>
@@ -236,7 +196,7 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
               <dd>{credentialSummary.passwordUpdatedBy ?? "Not yet set"}</dd>
             </div>
           </dl>
-          <form className="admin-form admin-form--stacked" method="post" action="/api/admin/settings">
+          <form className="admin-form admin-form--stacked" method="post" action="/api/admin/settings?category=security">
             <input type="hidden" name="action" value="change_password" />
             <label className="admin-field">
               <span>Current password</span>
@@ -260,7 +220,27 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
         </section>
         </>}
 
-        <section className="admin-section">
+</>,
+    marketing: <><h2>Marketing &amp; Social</h2><p className="admin-copy">Coming in a future release.</p></>,
+    integrations: <><h2>Integrations</h2><SensitiveAdminForm className="admin-form admin-form--stacked" action="/api/admin/settings?category=integrations" grant="settings" required={stepUpRequired}>
+          <input type="hidden" name="action" value="save_settings" />
+          <section className="admin-section">
+            <h3>Contact form protection / Turnstile</h3>
+            <p className="admin-copy">Abuse protection for the inquiry form. Uses the saved Turnstile site key and matching secret for server-side validation.</p>
+            {websiteViews.map(view => <SettingField key={view.key} view={view} />)}
+          </section>
+
+
+          <div className="admin-actions"><button className="button button--primary admin-button" type="submit">Save settings</button></div>
+          <p className="admin-copy">Save changes before switching categories.</p>
+        </SensitiveAdminForm></>,
+    advanced: <><h2>Advanced</h2><dl className="admin-summary admin-summary--grid">          <div>
+            <dt>Persistence</dt>
+            <dd>{persistence.engine}</dd>
+          </div>          <div>
+            <dt>Storage detail</dt>
+            <dd>{persistence.detail}</dd>
+          </div></dl>        <section className="admin-section">
           <h2>Recent audit</h2>
           {auditEntries.length > 0 ? (
             <ul className="admin-audit-list">
@@ -277,6 +257,32 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
             <p className="admin-copy">No settings changes have been recorded yet.</p>
           )}
         </section>
+</>,
+  };
+
+  return (
+    <>
+    <main className="admin-shell">
+      <div className="admin-card settings-workspace">
+        <div className="admin-header-row">
+          <div>
+            <p className="admin-eyebrow">WideOrder internal administration</p>
+            <h1>Settings</h1>
+            <p className="admin-copy">Public settings can be reviewed directly. Secret fields only accept replacements and never re-display stored values.</p>
+          </div>
+          <form method="post" action="/api/admin/logout">
+            <button className="button button--secondary admin-button" type="submit">
+              Sign out
+            </button>
+          </form>
+        </div>
+
+        {statusMessage ? <p role="status" className="admin-alert admin-alert--success">{statusMessage}</p> : null}
+        {errorMessage ? <p role="alert" className="admin-alert admin-alert--error">{errorMessage}</p> : null}
+        <div className="settings-layout">
+          <SettingsNavigation active={category} />
+          <section className="settings-panel" aria-label={categoryLabel}>{panels[category]}</section>
+        </div>
       </div>
     </main>
     <SiteFooter utility />

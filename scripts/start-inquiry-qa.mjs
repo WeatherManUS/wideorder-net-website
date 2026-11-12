@@ -12,5 +12,5 @@ const env = { ...process.env, NODE_ENV: "development", RELEASE_ENVIRONMENT: "dev
  SMTP_HOST: "smtp.hostinger.com", SMTP_PORT: "465", SMTP_SECURE: "true", SMTP_AUTH: "true", SMTP_USER: "", SMTP_PASSWORD: "", SMTP_FROM_EMAIL: "", SMTP_RECIPIENT: "", SMTP_FROM_NAME: "WideOrder", SMTP_ACKNOWLEDGMENT: "false",
  NODE_OPTIONS: `${process.env.NODE_OPTIONS || ""} --import=${new URL("./inquiry-qa-provider.mjs", import.meta.url).href}`,
  NEXT_PUBLIC_TURNSTILE_SITE_KEY: "1x00000000000000000000AA", TURNSTILE_SECRET_KEY: "1x0000000000000000000000000000000AA" };
-const child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "dev", "--port", "3105"], { env, stdio: "inherit" });
+const child = spawn(process.execPath, ["node_modules/next/dist/bin/next", "dev", "--webpack", "--port", "3105"], { env, stdio: "inherit" });
 process.on("SIGINT", () => child.kill());

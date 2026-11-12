@@ -4,6 +4,8 @@
 
 These instructions apply to the entire repository.
 
+Read and follow [.github/copilot-instructions.md](.github/copilot-instructions.md) for the owner's development, security, deployment, and reporting framework in every repository task. Preserve these instructions alongside that framework; explicit user instructions take precedence.
+
 ## Project baseline
 
 - This repo uses `npm`.

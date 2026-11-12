@@ -169,3 +169,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **Unversioned attempt — failed** (2026-11-12T18:17:58.891Z)
   Require exact approved production origins for CSRF validation
   Commit: `5fd0871ce7753da5adc752c139de9afb21766d9b`; previous: 0.3.0003; artifact: not built; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-12T18:18:09.908Z)
+  Security update
+  Commit: `4f21d47b1c2bcbbf0a77b8ab6de9439afa893f91`; previous: 0.3.0003; artifact: not built; rollback: none.

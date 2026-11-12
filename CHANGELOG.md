@@ -137,3 +137,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.3.0002 — verifying** (2026-11-12T01:33:27.029Z)
   Add transitional passkey administration and controlled recovery for phase 0.3
   Commit: `139547ba66f252d4bcb229317000fbff08262bf9`; previous: 0.3.0001; artifact: cea6249e-c2b3-40cd-9499-cbc462efdb1d; rollback: none.
+
+- **v0.3.0002 — published** (2026-11-12T01:37:13.275Z)
+  Add transitional passkey administration and controlled recovery for phase 0.3
+  Commit: `139547ba66f252d4bcb229317000fbff08262bf9`; previous: 0.3.0001; artifact: cea6249e-c2b3-40cd-9499-cbc462efdb1d; rollback: none.

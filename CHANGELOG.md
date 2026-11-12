@@ -117,3 +117,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **Unversioned attempt — failed** (2026-11-11T18:47:47.275Z)
   Add transitional passkey administration and controlled recovery for phase 0.3
   Commit: `139547ba66f252d4bcb229317000fbff08262bf9`; previous: 0.2.0003; artifact: not built; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-12T00:15:03.179Z)
+  Add transitional passkey administration and controlled recovery for phase 0.3
+  Commit: `139547ba66f252d4bcb229317000fbff08262bf9`; previous: 0.2.0003; artifact: not built; rollback: none.

@@ -217,3 +217,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.4.0004 — verifying** (2026-11-13T02:28:06.822Z)
   Add managed social profile links and accessible footer icons
   Commit: `ec46fc655a686a613f362d445cc6b899a98b9256`; previous: 0.4.0003; artifact: 50269cd4-dec3-42c7-a271-1529b4a9102c; rollback: none.
+
+- **v0.4.0004 — published** (2026-11-13T02:36:49.840Z)
+  Add managed social profile links and accessible footer icons
+  Commit: `ec46fc655a686a613f362d445cc6b899a98b9256`; previous: 0.4.0003; artifact: 50269cd4-dec3-42c7-a271-1529b4a9102c; rollback: none.

@@ -6,7 +6,7 @@ The owner approved optional hardware keys and explicitly enabled, time-limited H
 
 ## Phase 0.3 authentication checkpoint
 
-The [passkey architecture and recovery runbook](PASSKEY_SECURITY.md) supersedes historical password-reset guidance after passkey cutover. Never restore password authentication or a pre-cutover database to recover access. The owner reports successful passkey-only authentication; the November 12 closeout review records the remaining production verification gaps and unresolved ordinary-form origin validation finding. Initial transitional deployment descriptions below are historical, not current recovery instructions.
+The [passkey architecture and recovery runbook](PASSKEY_SECURITY.md) supersedes historical password-reset guidance after passkey cutover. Never restore password authentication or a pre-cutover database to recover access. The owner confirms both authenticator tests passed and both temporary Hostinger recovery variables are absent. The origin-port correction is deployed in commit `4f21d47b1c2b`; publication is independently verified as v0.4.0001, and the closeout review records remaining administrative-status verification. Initial transitional deployment descriptions below are historical, not current recovery instructions.
 
 WebAuthn uses pinned `@simplewebauthn/server@14.1.0` and `@simplewebauthn/browser@14.0.0`. The November 11, 2026 production dependency audit (`npm audit --omit=dev`) reported zero vulnerabilities. Historical findings below describe earlier checkpoints.
 

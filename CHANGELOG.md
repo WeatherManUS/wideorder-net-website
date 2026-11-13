@@ -197,3 +197,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.4.0002 — verification-failed-after-publication** (2026-11-13T00:51:46.609Z)
   chaos-clean-clean image update
   Commit: `8ba6d316ccb43a747f6fe8d8a7007dd481df1371`; previous: 0.4.0001; artifact: fa8e4174-efa2-4f61-a2da-2f0437c9aade; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-13T01:09:22.202Z)
+  Loop clarity diagram with five-second interaction pause
+  Commit: `11e95e38967dd7a542c75fdc154738a9b019b5c6`; previous: 0.4.0002; artifact: not built; rollback: none.

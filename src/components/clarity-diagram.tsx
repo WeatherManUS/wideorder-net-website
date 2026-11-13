@@ -18,34 +18,43 @@ export function ClarityDiagram() {
   const [stage, setStage] = useState(0);
   const id = useId();
   const surface = useRef<HTMLDivElement>(null);
-  const interrupted = useRef(false);
-  const played = useRef(false);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-  const stop = () => { timers.current.forEach(clearTimeout); timers.current = []; };
+  const pausePlayback = useRef<() => void>(() => {});
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let visible = false;
+    let pausedUntil = 0;
+    const stop = () => clearTimeout(timer);
+    const schedule = (delay = 1700) => {
+      stop();
+      if (!visible || motion.matches) return;
+      timer = setTimeout(() => {
+        setStage(current => (current + 1) % stages.length);
+        schedule();
+      }, Math.max(delay, pausedUntil - Date.now()));
+    };
+    pausePlayback.current = () => { pausedUntil = Date.now() + 5000; schedule(5000); };
     const observer = new IntersectionObserver(entries => {
-      if (!entries.some(entry => entry.isIntersecting) || played.current || interrupted.current || motion.matches) return;
-      played.current = true;
-      timers.current = [setTimeout(() => setStage(1), 1200), setTimeout(() => setStage(2), 2900)];
+      visible = entries.some(entry => entry.isIntersecting);
+      schedule();
     }, { threshold: .35 });
     const preference = () => {
-      if (motion.matches) { stop(); played.current = true; if (!interrupted.current) setStage(2); }
+      if (motion.matches) { stop(); setStage(2); }
+      else schedule();
     };
     preference();
     if (surface.current) observer.observe(surface.current);
     motion.addEventListener("change", preference);
-    return () => { stop(); observer.disconnect(); motion.removeEventListener("change", preference); };
+    return () => { stop(); pausePlayback.current = () => {}; observer.disconnect(); motion.removeEventListener("change", preference); };
   }, []);
-  const select = (index: number) => { interrupted.current = true; stop(); setStage(index); };
-  return <div className="clarity" ref={surface} data-stage={stage}>
+  return <div className="clarity" ref={surface} data-stage={stage} onClick={() => pausePlayback.current()}>
     <div className="clarity__heading"><span>From friction to flow</span><span aria-hidden="true">0{stage + 1} / 03</span></div>
     <div className="clarity__canvas" role="img" aria-label={`${stages[stage].name}: People, Systems, Processes, Information, Decisions and Outcomes ${stage === 0 ? "are disconnected" : stage === 1 ? "are coming into alignment" : "form a coordinated operation"}.`}>
       <div className="clarity__frame" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <span className="clarity__segment" key={index} style={{ "--piece": index } as React.CSSProperties} />)}</div>
       <div className="clarity__cards" aria-hidden="true">{tasks.map((task, index) => <span className="clarity__node" key={task} style={{ "--node": index } as React.CSSProperties}><svg viewBox="0 0 24 26" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">{icons[index]}</svg><span>{task}</span></span>)}</div>
     </div>
     <div className="clarity__controls" role="group" aria-label="Explore complexity, clarity and order">
-      {stages.map((item, index) => <button type="button" key={item.name} aria-pressed={stage === index} aria-controls={id} onClick={() => select(index)}>{item.name}<span aria-hidden="true">{index < 2 ? " \u2192" : " \u2713"}</span></button>)}
+      {stages.map((item, index) => <button type="button" key={item.name} aria-pressed={stage === index} aria-controls={id} onClick={() => setStage(index)}>{item.name}<span aria-hidden="true">{index < 2 ? " \u2192" : " \u2713"}</span></button>)}
     </div>
     <p id={id} aria-live="polite">{stages[stage].text}</p>
     <span className="clarity__hint">Select a stage to explore the change.</span>

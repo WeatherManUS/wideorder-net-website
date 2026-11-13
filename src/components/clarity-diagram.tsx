@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 const stages = [
   { name: "Complexity", text: "Disconnected tasks. Repeated effort. Too much depends on a workaround." },
   { name: "Clarity", text: "Understand the connections. Find the constraint. Choose what matters." },
@@ -19,33 +19,74 @@ export function ClarityDiagram() {
   const id = useId();
   const surface = useRef<HTMLDivElement>(null);
   const pausePlayback = useRef<() => void>(() => {});
+  const freezeTransitions = useRef<() => void>(() => {});
+  // A manual stage change can create new CSS transitions during the pause.
+  // Freeze them before paint, including their staggered delays.
+  useLayoutEffect(() => { freezeTransitions.current(); }, [stage]);
   useEffect(() => {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const element = surface.current;
     let timer: ReturnType<typeof setTimeout> | undefined;
+    let resumeTimer: ReturnType<typeof setTimeout> | undefined;
     let visible = false;
-    let pausedUntil = 0;
-    const stop = () => clearTimeout(timer);
-    const schedule = (delay = 1700) => {
-      stop();
-      if (!visible || motion.matches) return;
+    let paused = false;
+    let dueAt = 0;
+    let remaining = 1700;
+    const animations = () => element?.querySelector(".clarity__canvas")?.getAnimations({ subtree: true }) || [];
+    const stop = () => {
+      if (timer !== undefined) remaining = Math.max(0, dueAt - performance.now());
+      clearTimeout(timer);
+      timer = undefined;
+    };
+    const schedule = () => {
+      if (timer !== undefined || !visible || paused || motion.matches) return;
+      dueAt = performance.now() + remaining;
       timer = setTimeout(() => {
+        timer = undefined;
+        remaining = 1700;
         setStage(current => (current + 1) % stages.length);
         schedule();
-      }, Math.max(delay, pausedUntil - Date.now()));
+      }, remaining);
     };
-    pausePlayback.current = () => { pausedUntil = Date.now() + 5000; schedule(5000); };
+    freezeTransitions.current = () => {
+      if (paused && !motion.matches) animations().forEach(animation => {
+        if (animation.playState === "running" || animation.pending) animation.pause();
+      });
+    };
+    pausePlayback.current = () => {
+      if (motion.matches) return;
+      stop();
+      paused = true;
+      freezeTransitions.current();
+      clearTimeout(resumeTimer);
+      resumeTimer = setTimeout(() => {
+        resumeTimer = undefined;
+        paused = false;
+        animations().forEach(animation => { if (animation.playState === "paused") animation.play(); });
+        schedule();
+      }, 5000);
+    };
     const observer = new IntersectionObserver(entries => {
       visible = entries.some(entry => entry.isIntersecting);
-      schedule();
+      if (visible) schedule(); else stop();
     }, { threshold: .35 });
     const preference = () => {
-      if (motion.matches) { stop(); setStage(2); }
-      else schedule();
+      if (motion.matches) {
+        stop(); clearTimeout(resumeTimer); resumeTimer = undefined; paused = false;
+        animations().forEach(animation => animation.cancel());
+        remaining = 1700;
+        setStage(2);
+      } else schedule();
     };
     preference();
-    if (surface.current) observer.observe(surface.current);
+    if (element) observer.observe(element);
     motion.addEventListener("change", preference);
-    return () => { stop(); pausePlayback.current = () => {}; observer.disconnect(); motion.removeEventListener("change", preference); };
+    return () => {
+      stop(); clearTimeout(resumeTimer);
+      pausePlayback.current = () => {}; freezeTransitions.current = () => {};
+      observer.disconnect(); motion.removeEventListener("change", preference);
+      animations().forEach(animation => { if (animation.playState === "paused") animation.play(); });
+    };
   }, []);
   return <div className="clarity" ref={surface} data-stage={stage} onClick={() => pausePlayback.current()}>
     <div className="clarity__heading"><span>From friction to flow</span><span aria-hidden="true">0{stage + 1} / 03</span></div>

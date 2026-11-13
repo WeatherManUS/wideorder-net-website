@@ -19,10 +19,16 @@ try {
  }}}
  await scene.locator('button').nth(0).focus();await page.keyboard.press('Enter');assert.equal(await scene.getAttribute('data-stage'),'0');await page.keyboard.press('Tab');await page.keyboard.press('Space');assert.equal(await scene.getAttribute('data-stage'),'1');await scene.locator('button').nth(2).hover();assert.equal(await scene.getAttribute('data-stage'),'1');assert.equal(await scene.locator('.clarity__node').first().evaluate(e=>getComputedStyle(e).transitionDuration),'0s');assert.deepEqual(errors,[]);await context.close();
  const motion=await browser.newContext({hasTouch:true});const p=await motion.newPage();await p.goto(base);const c=p.locator('.clarity');await c.scrollIntoViewIfNeeded();
- await p.waitForTimeout(1900);assert.equal(await c.getAttribute('data-stage'),'1');await p.waitForTimeout(1700);assert.equal(await c.getAttribute('data-stage'),'2');await p.waitForTimeout(1700);assert.equal(await c.getAttribute('data-stage'),'0');
- await c.locator('button').nth(1).click();await p.waitForTimeout(3000);assert.equal(await c.getAttribute('data-stage'),'1');
- await c.locator('.clarity__heading').tap();await p.waitForTimeout(3000);assert.equal(await c.getAttribute('data-stage'),'1');await p.waitForTimeout(2200);assert.equal(await c.getAttribute('data-stage'),'2');
- await c.locator('button').nth(0).focus();await p.keyboard.press('Enter');await p.waitForTimeout(4800);assert.equal(await c.getAttribute('data-stage'),'0');await p.waitForTimeout(400);assert.equal(await c.getAttribute('data-stage'),'1');
- await p.emulateMedia({reducedMotion:'reduce'});await p.waitForTimeout(150);assert.equal(await c.getAttribute('data-stage'),'2');await c.locator('button').nth(0).tap();await p.waitForTimeout(5200);assert.equal(await c.getAttribute('data-stage'),'0');
- console.log(`PASS ${checks} state/theme/viewport checks; persistent elements, labels, touch, keyboard, hover, reduced motion, looping and five-second pause/reset/resume; screenshots in ${out}`);
+ const sample=()=>c.evaluate(el=>({stage:el.dataset.stage,transforms:[...el.querySelectorAll('.clarity__segment,.clarity__node')].map(n=>getComputedStyle(n).transform),animations:el.querySelector('.clarity__canvas').getAnimations({subtree:true}).map(a=>({time:a.currentTime,state:a.playState}))}));
+ await p.waitForFunction(()=>document.querySelector('.clarity').dataset.stage==='1');await p.waitForTimeout(150);
+ await c.locator('.clarity__heading').click();await p.waitForTimeout(50);const frozen=await sample();assert.ok(frozen.animations.length>0);assert.ok(frozen.animations.every(a=>a.state==='paused'));
+ await p.waitForTimeout(2300);assert.deepEqual(await sample(),frozen,'all frame/card positions and progress remain frozen');
+ await c.locator('.clarity__heading').tap();await p.waitForTimeout(2900);assert.deepEqual(await sample(),frozen,'repeat touch extends pause without restarting progress');
+ await p.waitForTimeout(1900);assert.deepEqual(await sample(),frozen,'still frozen 4.8 seconds after last touch');
+ await p.waitForTimeout(300);const resumed=await sample();assert.equal(resumed.stage,frozen.stage);assert.notDeepEqual(resumed.transforms,frozen.transforms);assert.ok(resumed.animations.some(a=>a.state==='running'));assert.ok(resumed.animations.every((a,i)=>a.time>=frozen.animations[i].time&&a.time<frozen.animations[i].time+300),'resume advances from preserved progress');
+ await p.waitForTimeout(750);assert.equal((await sample()).animations.length,0,'transition settles before next stage');
+ await p.waitForFunction(()=>document.querySelector('.clarity').dataset.stage==='2');await p.waitForFunction(()=>document.querySelector('.clarity').dataset.stage==='0');
+ await c.locator('button').nth(2).focus();await p.keyboard.press('Enter');await p.waitForTimeout(50);const manual=await sample();assert.equal(manual.stage,'2');await p.waitForTimeout(700);assert.deepEqual(await sample(),manual,'keyboard selection also freezes new transitions');
+ await p.emulateMedia({reducedMotion:'reduce'});await p.waitForTimeout(150);assert.equal(await c.getAttribute('data-stage'),'2');await c.locator('button').nth(0).tap();await p.waitForTimeout(5200);assert.equal(await c.getAttribute('data-stage'),'0');assert.equal((await sample()).animations.length,0);
+ console.log(`PASS ${checks} state/theme/viewport checks; exact mid-transition frame/card pause and progress resume, repeated touch pause reset, keyboard, continuous loop and reduced motion; screenshots in ${out}`);
 } finally {await browser.close();}

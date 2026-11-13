@@ -185,3 +185,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **Unversioned attempt — waiting-for-hostinger** (2026-11-13T00:43:55.057Z)
   chaos-clean-clean image update
   Commit: `8ba6d316ccb43a747f6fe8d8a7007dd481df1371`; previous: 0.4.0001; artifact: not built; rollback: none.
+
+- **v0.4.0002 — verifying** (2026-11-13T00:43:55.057Z)
+  chaos-clean-clean image update
+  Commit: `8ba6d316ccb43a747f6fe8d8a7007dd481df1371`; previous: 0.4.0001; artifact: fa8e4174-efa2-4f61-a2da-2f0437c9aade; rollback: none.

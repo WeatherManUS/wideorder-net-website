@@ -1,8 +1,9 @@
+import { socialPlatforms, type SocialSettingKey } from "./social.ts";
 export type ManagedSettingCategory = "public" | "secret";
 
-export type ManagedSettingInputKind = "text" | "email" | "number" | "boolean" | "password";
+export type ManagedSettingInputKind = "url" | "text" | "email" | "number" | "boolean" | "password";
 
-export type ManagedSettingKey =
+export type ManagedSettingKey = SocialSettingKey
   | "CONTACT_RECIPIENT_EMAIL"
   | "TRANSACTIONAL_FROM_EMAIL"
   | "RESEND_API_KEY"
@@ -37,6 +38,7 @@ export const LOGIN_FAILURE_LIMIT = 5;
 export const LOGIN_BLOCK_MS = 1000 * 60 * 30;
 
 export const MANAGED_SETTING_DEFINITIONS: readonly ManagedSettingDefinition[] = [
+  ...socialPlatforms.map(({ key, label }) => ({ key, envName: key, category: "public" as const, inputKind: "url" as const, label, description: "HTTPS profile, company or channel URL. Leave blank to hide. Remove tracking parameters.", required: false })),
   ...([
     ["SMTP_FROM_EMAIL", "email", "Sender email", "Verified domain mailbox used as the sender."],
     ["SMTP_RECIPIENT", "email", "Inquiry notification recipient", "Mailbox receiving internal inquiry notifications and test messages."],

@@ -221,7 +221,12 @@ export default async function AdminSettingsPage({ searchParams }: SettingsPagePr
         </>}
 
 </>,
-    marketing: <><h2>Marketing &amp; Social</h2><p className="admin-copy">Coming in a future release.</p></>,
+    marketing: <><h2>Marketing &amp; Social</h2><SensitiveAdminForm className="admin-form admin-form--stacked" action="/api/admin/settings?category=marketing" grant="settings" required={stepUpRequired}>
+      <input type="hidden" name="action" value="save_settings" />
+      <section className="admin-section"><h3>Social Media Links</h3><p className="admin-copy">Add your public profiles. Blank fields hide the corresponding footer icons. No account connection is required.</p>
+      {views.filter(view => view.key.startsWith("SOCIAL_")).map(view => <SettingField key={view.key} view={view} />)}</section>
+      <div className="admin-actions"><button className="button button--primary admin-button" type="submit">Save settings</button></div>
+    </SensitiveAdminForm></>,
     integrations: <><h2>Integrations</h2><SensitiveAdminForm className="admin-form admin-form--stacked" action="/api/admin/settings?category=integrations" grant="settings" required={stepUpRequired}>
           <input type="hidden" name="action" value="save_settings" />
           <section className="admin-section">
@@ -296,7 +301,7 @@ function SettingField({ view }: { view: AdminSettingView }) {
     {view.inputKind === "boolean" ? <select name={view.key} defaultValue={view.value || "false"}>
       <option value="true">{view.key === "SMTP_SECURE" ? "SSL/TLS (465)" : "Enabled"}</option>
       <option value="false">{view.key === "SMTP_SECURE" ? "STARTTLS (587)" : "Disabled"}</option>
-    </select> : <input name={view.key} type={view.inputKind === "password" ? "password" : view.inputKind === "number" ? "number" : view.inputKind === "email" ? "email" : "text"}
+    </select> : <input name={view.key} type={view.inputKind === "url" ? "url" : view.inputKind === "password" ? "password" : view.inputKind === "number" ? "number" : view.inputKind === "email" ? "email" : "text"}
       defaultValue={secret ? "" : view.value || ""} autoComplete={secret ? "new-password" : "off"} maxLength={secret ? 4096 : 512} placeholder={secret ? "Leave blank to retain; enter a replacement" : undefined} />}
     <small>{view.description}</small>{secret ? <small>{view.configured ? "Credential configured" : "Credential not configured"}. Stored values are never displayed.</small> : null}
   </label>;

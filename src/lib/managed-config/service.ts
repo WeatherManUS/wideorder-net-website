@@ -1,3 +1,4 @@
+import { normalizeSocialUrl, socialPlatforms } from "./social.ts";
 import { validateSmtpConfig, type SmtpConfig } from "../smtp/config.ts";
 import type { ManagedSettingDefinition, ManagedSettingKey } from "@/lib/managed-config/definitions";
 import {
@@ -60,6 +61,7 @@ type SettingsUpdateInput = Partial<Record<ManagedSettingKey, string>>;
 
 const defaults: Partial<Record<ManagedSettingKey, string>> = { SMTP_HOST: "smtp.hostinger.com", SMTP_PORT: "465", SMTP_SECURE: "true", SMTP_AUTH: "true", SMTP_FROM_NAME: "WideOrder", SMTP_ACKNOWLEDGMENT: "false" };
 function getBootstrapSettingValue(key: ManagedSettingKey) {
+  if (key.startsWith("SOCIAL_") && process.env[key.replace("_URL", "_VERIFIED")] !== "true") return "";
   return process.env[getManagedSettingDefinition(key).envName] ?? defaults[key] ?? "";
 }
 
@@ -112,6 +114,8 @@ async function resolveSettingValue(key: ManagedSettingKey, storedSettingsMap?: M
 function normalizeManagedSettingInput(definition: ManagedSettingDefinition, value: string) {
   const normalizedValue = definition.category === "secret" ? value : value.trim();
   if (!normalizedValue && ["SMTP_FROM_EMAIL", "SMTP_RECIPIENT", "SMTP_USER", "SMTP_FROM_NAME"].includes(definition.key)) return "";
+
+  if (definition.inputKind === "url") return normalizeSocialUrl(definition.key, value);
 
   switch (definition.inputKind) {
     case "email": {
@@ -287,4 +291,18 @@ export async function getInquirySecurityConfig() {
   const stored = await getStoredSettingsMap();
   return { siteKey: (await resolveSettingValue("NEXT_PUBLIC_TURNSTILE_SITE_KEY", stored)).value,
     secretKey: (await resolveSettingValue("TURNSTILE_SECRET_KEY", stored)).value };
+}
+
+/** Read at request time; explicit blank records hide links, including legacy environment links. */
+export async function getRuntimeSocialProfiles() {
+  try {
+    const stored = await getStoredSettingsMap();
+    const profiles = await Promise.all(socialPlatforms.map(async item => {
+      try {
+        const url = normalizeSocialUrl(item.key, (await resolveSettingValue(item.key, stored)).value);
+        return url ? [{ platform: item.platform, label: item.label, url }] : [];
+      } catch { return []; }
+    }));
+    return profiles.flat();
+  } catch { return []; } // Public footer remains available if configuration storage is unavailable.
 }

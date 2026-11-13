@@ -9,7 +9,8 @@ import { BrandMark } from "@/components/brand-mark";
 import { SiteHeader } from "@/components/site-header";
 import { SectionMotion } from "@/components/section-motion";
 import { MarketingRuntime, TrackingPreferencesButton } from "@/components/marketing-runtime";
-import { getSocialProfiles } from "@/config/marketing";
+import { getRuntimeSocialProfiles } from "@/lib/managed-config/service";
+import { SocialIcon } from "@/components/social-icon";
 import { releaseIdentity } from "@/lib/release/metadata";
 import { currentRelease } from "@/lib/release/server";
 import { copyrightYear, footerVersionEnabled, formatPublicationTime } from "@/lib/release/footer";
@@ -20,6 +21,7 @@ export function SectionLabel({ children }: { children: React.ReactNode }) {
 
 export async function SiteFooter({ utility = false }: { utility?: boolean } = {}) {
   await connection();
+  const profiles = await getRuntimeSocialProfiles();
   const year = copyrightYear();
   const showVersion = footerVersionEnabled();
   let release: Awaited<ReturnType<typeof currentRelease>> | null = null;
@@ -50,8 +52,8 @@ export async function SiteFooter({ utility = false }: { utility?: boolean } = {}
           </p>
           <p><Link href="/privacy">Privacy information</Link></p>
           {utility ? null : <TrackingPreferencesButton />}
-          {getSocialProfiles().length ? <nav aria-label="WideOrder social profiles" className="social-links">
-            {getSocialProfiles().map((profile) => <a key={profile.platform} href={profile.url} data-social-platform={profile.platform} target="_blank" rel="noopener noreferrer">{({ linkedin: "LinkedIn", youtube: "YouTube", facebook: "Facebook", instagram: "Instagram", x: "X" })[profile.platform]}</a>)}
+          {profiles.length ? <nav aria-label="WideOrder social profiles" className="social-links">
+            {profiles.map(profile => <a key={profile.platform} href={profile.url} aria-label={`WideOrder on ${profile.label} (opens in a new tab)`} title={profile.label} data-social-platform={profile.platform} target="_blank" rel="noopener noreferrer"><SocialIcon platform={profile.platform} /></a>)}
           </nav> : null}
         </div>
         <nav className="site-footer__nav" aria-label="Footer navigation">

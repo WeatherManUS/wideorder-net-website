@@ -201,3 +201,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **Unversioned attempt — waiting-for-hostinger** (2026-11-13T01:09:22.202Z)
   Loop clarity diagram with five-second interaction pause
   Commit: `11e95e38967dd7a542c75fdc154738a9b019b5c6`; previous: 0.4.0002; artifact: not built; rollback: none.
+
+- **v0.4.0003 — verifying** (2026-11-13T01:09:22.202Z)
+  Loop clarity diagram with five-second interaction pause
+  Commit: `11e95e38967dd7a542c75fdc154738a9b019b5c6`; previous: 0.4.0002; artifact: 4bfdeab8-c26d-4f9f-9850-998c99b15b26; rollback: none.

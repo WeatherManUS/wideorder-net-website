@@ -10,7 +10,7 @@ import { SiteHeader } from "@/components/site-header";
 import { SectionMotion } from "@/components/section-motion";
 import { MarketingRuntime, TrackingPreferencesButton } from "@/components/marketing-runtime";
 import { getRuntimeSocialProfiles } from "@/lib/managed-config/service";
-import { SocialIcon } from "@/components/social-icon";
+import { SocialLinks } from "@/components/social-links";
 import { releaseIdentity } from "@/lib/release/metadata";
 import { currentRelease } from "@/lib/release/server";
 import { copyrightYear, footerVersionEnabled, formatPublicationTime } from "@/lib/release/footer";
@@ -39,6 +39,11 @@ export async function SiteFooter({ utility = false }: { utility?: boolean } = {}
           <p className="site-footer__philosophy">
             <a href={getContactMailtoHref("WideOrder enquiry")}>{siteConfig.contact.publicMailbox}</a>
           </p>
+        </div>
+        <div className="site-footer__legal">
+          <SocialLinks profiles={profiles} label="Footer social profiles" />
+          {utility ? null : <TrackingPreferencesButton />}
+          <p><Link href="/privacy">Privacy information</Link></p>
           <p className="site-footer__copyright" data-footer-version-enabled={showVersion ? "true" : "false"}>
             <Link href="/admin/login" aria-label="Administrator sign in">
               ©
@@ -50,27 +55,15 @@ export async function SiteFooter({ utility = false }: { utility?: boolean } = {}
             </span> : null}
             {" "}<span className="site-footer__rights">All rights reserved.</span>
           </p>
-          <p><Link href="/privacy">Privacy information</Link></p>
-          {utility ? null : <TrackingPreferencesButton />}
-          {profiles.length ? <nav aria-label="WideOrder social profiles" className="social-links">
-            {profiles.map(profile => <a key={profile.platform} href={profile.url} aria-label={`WideOrder on ${profile.label} (opens in a new tab)`} title={profile.label} data-social-platform={profile.platform} target="_blank" rel="noopener noreferrer"><SocialIcon platform={profile.platform} /></a>)}
-          </nav> : null}
         </div>
-        <nav className="site-footer__nav" aria-label="Footer navigation">
-          <ul>
-            {siteContent.shared.footer.navItems.map((item) => (
-              <li key={item.href}>
-                <Link href={item.href}>{item.label}</Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
       </div>
     </footer>
   );
 }
 
-export function PageShell({ children }: { children: React.ReactNode }) {
+export async function PageShell({ children }: { children: React.ReactNode }) {
+  await connection();
+  const profiles = await getRuntimeSocialProfiles();
   const headerCta = {
     ...siteContent.shared.primaryCta,
     href: INQUIRY_HREF,
@@ -81,7 +74,7 @@ export function PageShell({ children }: { children: React.ReactNode }) {
       <a className="skip-link" href="#main-content">
         Skip to main content
       </a>
-      <SiteHeader navItems={siteContent.shared.navItems} cta={headerCta} />
+      <SiteHeader navItems={siteContent.shared.navItems} cta={headerCta} profiles={profiles} />
       <main id="main-content" className="site-main" tabIndex={-1}>
         {children}
       </main>

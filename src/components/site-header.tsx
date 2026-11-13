@@ -1,5 +1,6 @@
 "use client";
 
+import { SocialLinks, type SocialProfile } from "@/components/social-links";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -12,13 +13,14 @@ import { ThemeToggle } from "@/components/theme-toggle";
 type SiteHeaderProps = {
   navItems: readonly NavItem[];
   cta: NavItem;
+  profiles: readonly SocialProfile[];
 };
 
-export function SiteHeader({ navItems, cta }: SiteHeaderProps) {
+export function SiteHeader({ navItems, cta, profiles }: SiteHeaderProps) {
   const pathname = usePathname();
 
   return (
-    <header className="site-header">
+    <header className={`site-header${profiles.length ? " site-header--social" : ""}`}>
       <div className="container container--wide">
         <div className="site-header__bar">
           <BrandMark href="/" priority />
@@ -33,12 +35,13 @@ export function SiteHeader({ navItems, cta }: SiteHeaderProps) {
               ))}
             </ul>
           </nav>
+          <SocialLinks profiles={profiles} className="site-header__social" label="Header social profiles" />
           <div className="site-header__actions">
             <a className="button button--primary site-header__cta" href={cta.href}>
               {cta.label}
             </a>
             <ThemeToggle />
-            <MobileNavigation navItems={navItems} cta={cta} />
+            <MobileNavigation navItems={navItems} cta={cta} profiles={profiles} />
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { getRuntimeSocialProfiles } from "@/lib/managed-config/service";
+import { SocialLinks } from "@/components/social-links";
 import Link from "next/link";
 import { InquiryLink } from "@/components/inquiry-link";
 import { siteConfig, getContactMailtoHref } from "@/config/site";
@@ -82,10 +84,11 @@ export function OurApproachPage() {
     <Section surface><SectionLabel>Designed for real use</SectionLabel><h2 className="experience-heading">Simple. Integrated. Trusted. Used.</h2><div className="principle-grid">{content.insitu.principles.map(p => <article key={p.title}><h3>{p.title}</h3><p>{p.body}</p></article>)}</div><Detail title="Commercial value and practical adoption"><p>{content.insitu.calloutBody}</p><p>{content.value.introduction}</p><ul>{content.value.points.map(p => <li key={p}>{p}</li>)}</ul></Detail></Section><Invitation /></PageShell>;
 }
 
-export function ContactPage() {
+export async function ContactPage() {
+  const profiles = await getRuntimeSocialProfiles();
   const c = siteContent.contact;
   return <PageShell><PageHero label="Contact" title="What should be easier?" copy="A few lines about the challenge are enough to start." />
-    <Section><div className="contact-experience"><div className="contact-experience__form"><ContactForm fields={c.fields} messageLabel={c.messageLabel} helperText={c.helperText} exampleText={c.exampleText} privacyText={c.privacyText} submitLabel={c.submitLabel} /></div><aside><SectionLabel>Prefer email?</SectionLabel><a className="text-link" href={getContactMailtoHref("WideOrder enquiry")}>{siteConfig.contact.publicMailbox}</a><p>Tell us what is happening, what keeps consuming time, or what should already be working.</p></aside></div></Section>
+    <Section><div className="contact-experience"><div className="contact-experience__form"><ContactForm fields={c.fields} messageLabel={c.messageLabel} helperText={c.helperText} exampleText={c.exampleText} privacyText={c.privacyText} submitLabel={c.submitLabel} /></div><aside><SectionLabel>Prefer email?</SectionLabel><a className="text-link" href={getContactMailtoHref("WideOrder enquiry")}>{siteConfig.contact.publicMailbox}</a><p>Tell us what is happening, what keeps consuming time, or what should already be working.</p><SocialLinks profiles={profiles} label="Contact social profiles" /></aside></div></Section>
   </PageShell>;
 }
 

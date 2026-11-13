@@ -1,5 +1,6 @@
 "use client";
 
+import { SocialLinks, type SocialProfile } from "@/components/social-links";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
@@ -9,9 +10,10 @@ import type { NavItem } from "@/content/home";
 type MobileNavigationProps = {
   navItems: readonly NavItem[];
   cta: NavItem;
+  profiles: readonly SocialProfile[];
 };
 
-export function MobileNavigation({ navItems, cta }: MobileNavigationProps) {
+export function MobileNavigation({ navItems, cta, profiles }: MobileNavigationProps) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -33,13 +35,13 @@ export function MobileNavigation({ navItems, cta }: MobileNavigationProps) {
 
     const frame = window.requestAnimationFrame(() => panelRef.current?.querySelector<HTMLAnchorElement>("a")?.focus());
     const outside = (event: PointerEvent) => { if (!rootRef.current?.contains(event.target as Node)) setIsOpen(false); };
-    const media = window.matchMedia("(min-width: 1200px)");
+    const media = window.matchMedia(`(min-width: ${profiles.length ? 1440 : 1200}px)`);
     const resize = () => { if (media.matches) { setIsOpen(false); document.querySelector<HTMLAnchorElement>(".primary-nav a")?.focus(); } };
     document.addEventListener("keydown", handleKeyDown);
     document.addEventListener("pointerdown", outside);
     media.addEventListener("change", resize);
     return () => { window.cancelAnimationFrame(frame); document.removeEventListener("keydown", handleKeyDown); document.removeEventListener("pointerdown", outside); media.removeEventListener("change", resize); };
-  }, [isOpen]);
+  }, [isOpen, profiles.length]);
 
   const closeMenu = () => setIsOpen(false);
 
@@ -71,6 +73,7 @@ export function MobileNavigation({ navItems, cta }: MobileNavigationProps) {
             ))}
           </ul>
         </nav>
+        <SocialLinks profiles={profiles} label="Mobile social profiles" onNavigate={closeMenu} />
         <a className="button button--primary mobile-navigation__cta" href={cta.href} onClick={closeMenu}>
           {cta.label}
         </a>

@@ -5,8 +5,7 @@ import { buildPageMetadata } from "@/config/site";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "How We Work",
-  description:
-    "Understand WideOrder's Discovery-led process, commercial decision-making, and engagement models from diagnosis through delivery.",
+  description: "Start with a conversation, then paid Discovery where appropriate. Agree practical options and the right engagement without a predetermined solution.",
   path: "/how-we-work",
 });
 

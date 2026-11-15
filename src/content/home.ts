@@ -72,9 +72,9 @@ export const siteContent = {
       serviceName: "WideOrder Resolve",
       brandPromise: "There is a better way.",
       headline: "Your business shouldn't have to work this hard.",
-      statement: "WideOrder solves problems for businesses.",
+      statement: "WideOrder solves operational problems that don't fit neatly into one department, system or supplier.",
       supportingCopy:
-        "We find what is slowing you down, work out what needs to change, and help make it happen.",
+        "We connect the dots between people, processes and technology to identify what's getting in the way and help deliver a practical solution.",
       secondaryCopy:
         "Sometimes the problem is clear. Sometimes it is only clear that something is not working as it should. WideOrder investigates, works out a sensible path, and helps get the right work done.",
       primaryCtaLabel: "Discuss a Challenge",
@@ -163,24 +163,24 @@ export const siteContent = {
     deliveryModes: [
       {
         title: "Direct execution",
-        body: "Where it makes sense, WideOrder can implement or perform the work directly rather than merely advising what should happen.",
+        body: "Where WideOrder has the required capability, it performs the work.",
       },
       {
         title: "Managed implementation",
-        body: "Where specialist capabilities are required, WideOrder can define what needs to be achieved, engage appropriate specialists, and manage the process through completion.",
+        body: "Where specialist expertise is necessary, WideOrder helps define, coordinate and manage the solution.",
       },
       {
         title: "Ongoing service",
-        body: "Where the work itself is recurring, WideOrder can remain involved with the expertise, systems, personnel or management needed to handle it properly over time.",
+        body: "Where the need is recurring, WideOrder can remain responsible for agreed operational work.",
       },
     ] as const satisfies readonly DeliveryMode[],
     positioning: {
       statement: "WideOrder is broader than a single service category.",
-      body: "Do not think of WideOrder exclusively as a consultant, software developer, automation provider, staffing agency, or administrative outsourcing company. Those activities may form part of a solution, but none of them alone defines the business.",
+      body: "Business problems do not necessarily follow departmental or supplier boundaries. WideOrder brings specialist expertise and broader operational understanding together.",
     },
     boundaryTitle: "Specialist boundaries remain clear.",
     boundaryBody:
-      "Where licensed, regulated, medical, engineering, legal, or other specialist expertise is required, WideOrder does not pretend to possess it. Instead, it identifies the requirement, engages the appropriate specialist where needed, and manages the broader process where appropriate.",
+      "Regulated work requires appropriately qualified and authorized specialists. WideOrder can help identify and coordinate that expertise within an agreed scope.",
     valuePoints: [
       "Reduced operating costs",
       "Increased revenue or capacity",
@@ -210,19 +210,16 @@ export const siteContent = {
       {
         title: "Discovery",
         paragraphs: [
-          "Before recommending a solution, we do the work required to understand the challenge properly. We look at the process, the systems, the people, the workarounds and the existing environment.",
-          "Discovery is a paid professional engagement.",
-          "You are paying for the expertise and time required to properly understand the challenge - not for a guaranteed solution. The outcome is clarity: what is happening, what is creating the constraint, what it is costing the business, whether it is worth addressing, and what practical options exist.",
-          "Discovery does not guarantee that a new system, software product or implementation will be recommended.",
+          "Paid Discovery establishes what is happening, what creates the constraint, what it costs or disrupts, whether change makes commercial sense, and which practical options exist.",
+          "It does not guarantee a solution or further implementation work. Recommending no further engagement is a valid professional judgment.",
         ],
         outcomes: [
-          "the current process is acceptable",
-          "improvement is not economically justified",
-          "something small should change",
-          "an existing capability should be used differently",
-          "a commercial product is appropriate",
-          "a custom solution is appropriate",
-          "or no further work is justified",
+          "Nothing needs changing.",
+          "An internal adjustment is sufficient.",
+          "An existing supplier should resolve the issue.",
+          "A specialist is required.",
+          "A broader implementation is justified.",
+          "No further engagement is economically worthwhile.",
         ],
       },
       {
@@ -233,10 +230,7 @@ export const siteContent = {
       },
       {
         title: "Find a better way",
-        paragraphs: [
-          "There is no predetermined answer.",
-          "The answer depends on the challenge. It may mean changing a workflow, connecting existing systems, improving reporting, retaining and improving an existing system, building something new, replacing something that no longer serves the business, automation, training, staffing changes, a specialist implementation partner, or something much simpler.",
-        ],
+        paragraphs: ["Choose the practical option that fits the business, its constraints and the agreed outcome."],
       },
       {
         title: "Put it to work",
@@ -251,15 +245,15 @@ export const siteContent = {
     engagementModels: [
       {
         title: "Project Engagement",
-        body: "A defined solution is designed, implemented, tested and delivered within an agreed scope. Once the engagement is complete, the customer has the solution. Additional work can be undertaken later if required.",
+        body: "Deliver a defined solution within an agreed scope, from implementation through testing and handover.",
       },
       {
         title: "Continuous Improvement",
-        body: "The solution is still properly designed and implemented. The difference is that WideOrder Resolve remains engaged where an ongoing relationship can continue creating genuine value as the business changes and the effect of the solution becomes visible.",
+        body: "Continue improving an implemented solution as the business changes and further opportunities become clear.",
       },
       {
         title: "Ongoing Service Delivery",
-        body: "Where the underlying need is recurring rather than removable, WideOrder can remain responsible for the recurring work itself through the people, systems, management or specialist coordination needed to keep it handled properly.",
+        body: "Remain responsible for agreed recurring operational work, rather than a one-time implementation.",
       },
     ] as const satisfies readonly EngagementModel[],
     supportLead: "This is not primarily technical support or maintenance.",
@@ -283,9 +277,9 @@ export const siteContent = {
       {
         id: "retail-pricing",
         title: "Retail Pricing",
-        summary: "A pricing process that had effectively consumed a full-time role could be completed across the business in approximately 20 minutes.",
+        summary: "Retail pricing: an ongoing full-time burden reduced to approximately 20 minutes across the business, within the existing ERP.",
         challenge:
-          "A large South African hardware retailer effectively required a full-time employee to manage complex pricing across its inventory. Different products, margins, customer categories and commercial rules created significant complexity and opportunities for error.",
+          "A hardware retailer effectively required a full-time employee to manage complex pricing across its inventory. Different products, margins, customer categories and commercial rules created significant complexity and opportunities for error.",
         betterWay:
           "A dynamic pricing solution was developed inside the company's existing ERP environment rather than replacing the ERP. Business rules, margin protection, customer-specific pricing, exceptions, validation and variance reporting were incorporated into the process.",
         result: "~20 minutes",
@@ -295,9 +289,9 @@ export const siteContent = {
       {
         id: "technology-deployment",
         title: "Technology Deployment",
-        summary: "Using infrastructure already available to the business, a deployment environment was created that could prepare up to 16 machines simultaneously.",
+        summary: "Existing infrastructure enabled preparation of up to 16 machines simultaneously, reducing a computer-deployment backlog.",
         challenge:
-          "A global consumer-goods company experienced long-running help-desk tickets because preparing replacement computers was slow, inconsistent and technician-intensive. The backlog also affected the team's ability to demonstrate service efficiency to international management.",
+          "A consumer-goods company experienced long-running help-desk tickets because preparing replacement computers was slow, inconsistent and technician-intensive. The backlog also affected the team's ability to demonstrate service efficiency to international management.",
         betterWay:
           "Using infrastructure and equipment already available to the business, a standardized deployment environment was created that could prepare up to 16 machines simultaneously.",
         result: "up to 16 machines simultaneously",
@@ -307,7 +301,7 @@ export const siteContent = {
       {
         id: "remote-infrastructure-printing",
         title: "Remote Infrastructure & Printing",
-        summary: "The remote working environment was reconfigured so that connectivity interruptions no longer translated into the previous downtime burden.",
+        summary: "Reconfigured remote infrastructure removed the previous connectivity-related downtime burden and supported printing.",
         challenge:
           "The previous remote working environment was vulnerable to connectivity interruptions. When connectivity was interrupted, users could experience up to approximately 30 minutes of downtime before they could return to productive work.",
         betterWay:
@@ -318,14 +312,14 @@ export const siteContent = {
       {
         id: "month-end-reporting",
         title: "Month-End Reporting",
-        summary: "Repetitive monthly preparation work that previously consumed multiple skilled days was reduced to approximately 10 minutes.",
+        summary: "Month-end reporting: approximately 20 hours to approximately 10 minutes of active human preparation, recovering skilled capacity.",
         challenge:
-          "The existing month-end process required significant skilled human effort because of the volume and repetitive preparation involved. The previous process could require approximately two additional skilled people for two and a half to three days each month.",
+          "Month-end preparation required approximately 20 hours of active work, equivalent to 2.5 standard eight-hour working days. Because this effort competed with everyday responsibilities, completion could extend across a longer calendar period.",
         betterWay:
-          "A purpose-built solution now performs the repetitive preparation and processing, reducing the human involvement to approximately 10 minutes.",
+          "A purpose-built solution performs repetitive preparation and processing. Active human preparation takes approximately 10 minutes; background computer processing is separate.",
         result: "~1,200 minutes -> ~10 minutes",
         interpretation:
-          "Skilled people no longer need to spend days performing repetitive work that can be handled more effectively another way.",
+          "The recovered capacity lets skilled staff focus on more valuable work. The comparison measures active preparation, not total elapsed processing time.",
       },
     ] as const satisfies readonly ProofStory[],
   },
@@ -349,9 +343,9 @@ export const siteContent = {
       ],
       principles: [
         { title: "Simple", body: "Make the work simpler, not more complicated." },
-        { title: "Integrated", body: "Work intelligently with existing systems, information, infrastructure and processes where that makes sense." },
-        { title: "Trusted", body: "People need confidence in the outcome and need to understand that it works consistently." },
-        { title: "Used", body: "A technically excellent solution has no value if the people it was designed for do not actually use it." },
+        { title: "Integrated", body: "Connect existing systems and processes where practical." },
+        { title: "Trusted", body: "Make outcomes understandable and dependable." },
+        { title: "Used", body: "A solution has little value if people cannot or do not use it." },
       ] as const satisfies readonly PrincipleCard[],
       callout: "Simple and Used are non-negotiable.",
       calloutBody:
@@ -405,7 +399,7 @@ export const siteContent = {
     ] as const satisfies readonly ContactField[],
     formTitle: "Send a short description of the challenge.",
     messageLabel: "Business challenge",
-    helperText: "A few clear sentences are enough to explain what is happening and where the friction is.",
+    helperText: "A few sentences are enough. Do not include credentials, confidential operational records or sensitive datasets.",
     exampleText: "What is taking too long, what keeps going wrong, or what should already be working?",
     privacyText: "Your submission is checked for abuse before delivery. We save it securely to handle your enquiry, including when its email notification is pending.",
     submitLabel: "Send enquiry",
@@ -417,4 +411,21 @@ export const siteContent = {
       "What should be easier, more reliable, or simply done already?",
     ],
   },
+} as const;
+
+// Approved v0.4.0006 editorial refinement.
+export const positioning = {
+  symptomTitle: "The problem isn't always where the symptoms appear.",
+  symptomCopy: "Reporting trouble may begin with disconnected systems; stalled work with unclear responsibilities. WideOrder looks beyond the symptom to understand the wider operation.",
+  insituTagline: "Understand it where it happens. Solve it where it matters.",
+  insituIntro: "We understand the people, processes, systems and constraints already in place before deciding what should change.",
+  insituCore: "inSITU is a founding principle of WideOrder: understand the people, systems, processes and constraints shaping a problem before deciding what should change.",
+  dimensions: [
+    { title: "Operational understanding", body: "Understand how people, systems and processes work together." },
+    { title: "Commercial judgment", body: "Use existing resources. Replace or build when the outcome justifies it." },
+    { title: "Information control", body: "Client information remains under client control by default. Work within client environments; minimize transfer, duplication and exposure. Exceptions require explicit authorization, safeguards and agreed engagement limits." },
+  ],
+  confidentiality: "Real engagements, with client identities and identifying operational details withheld. We share challenges, approaches and outcomes while protecting confidentiality.",
+  personnel: "WideOrder limits unnecessary public exposure of operational personnel to reduce avoidable security risks. Clients receive the identity, authorization and accountability information appropriate to their engagement.",
+  experience: "WideOrder draws on decades of practical experience across operations, technology, financial processes and implementation, helping recognize problems beyond a single discipline.",
 } as const;

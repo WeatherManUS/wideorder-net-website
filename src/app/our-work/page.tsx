@@ -5,8 +5,7 @@ import { buildPageMetadata } from "@/config/site";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Our Work",
-  description:
-    "Review WideOrder case studies covering retail pricing, technology deployment, remote infrastructure, and month-end reporting.",
+  description: "Real engagements and case-specific outcomes, with client identities protected. Explore four operational case studies.",
   path: "/our-work",
 });
 

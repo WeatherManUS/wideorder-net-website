@@ -10,11 +10,27 @@
 - Primary contact CTAs navigate to `/contact#inquiry-form`. Direct email remains a secondary method. Valid inquiries are encrypted and durably captured before SMTP delivery; show receipt separately from SMTP acceptance.
 - Keep indexing disabled unless `SITE_INDEXABLE=true` is explicitly set for an approved launch.
 
+## Approved positioning refinement - target v0.4.0006
+
+This section supersedes conflicting historical copy below. Runtime content is maintained in `src/content/home.ts` and `src/components/site-pages.tsx`.
+
+- Preserve "Your business shouldn't have to work this hard." Lead immediately with "WideOrder solves operational problems that don't fit neatly into one department, system or supplier." Connect people, processes and technology to practical outcomes.
+- Homepage: explain symptoms with recognizable examples; introduce inSITU openly and link Our Approach. Preserve the flagship comparison and animation behavior.
+- What We Do: lead with cross-boundary operational problems, direct execution, managed implementation and ongoing service. Acknowledge specialist limits and required qualifications.
+- How We Work: initial conversation, then paid Discovery where appropriate; five stages remain. Discovery may recommend no change, an internal adjustment, an existing supplier, a specialist, broader implementation or no economically worthwhile engagement. No guarantee of a solution or further implementation.
+- Our Approach: inSITU is a founding principle. "Understand it where it happens. Solve it where it matters." Explain operational understanding, commercial judgment and information control. Preserve Simple / Integrated / Trusted / Used and the better-outcome principle.
+- Client information remains under client control by default. Exceptions require explicit authorization, safeguards and engagement limits. Personnel discretion does not conceal accountability from clients.
+- Experience is collective cross-disciplinary experience, not a claim about each employee. Do not invent credentials, endorsements or certifications.
+- Our Work: real engagements, confidential clients. Preserve case-specific qualifications and existing comparison interactions.
+- Month-end: approximately 20 hours active work = 2.5 eight-hour days of effort, reduced to approximately 10 minutes active human preparation. Calendar duration is not measured; background processing is separate. Historical "two additional skilled people for 2.5-3 days" wording is not an equivalent baseline and is excluded from current public copy pending owner evidence. Do not multiply or combine those figures.
+- Retail: ongoing full-time-role baseline, not hours per run; existing ERP and margin controls. Deployment: up to 16 machines simultaneously, no invented previous throughput. Remote: previous interruption-related downtime only, no universal uptime guarantee.
+- Contact: describe the challenge without sensitive records, datasets or credentials. Initial inquiry is distinct from agreed paid Discovery.
+
 ## Brand hierarchy
 
 - `WideOrder` - primary company-facing brand
 - `WideOrder Resolve` - current problem-solving service offering
-- `inSITU` - established methodology
+- `inSITU` - founding principle
 - `There is a better way.` - brand promise
 - `GreenLangton` - parent company
 

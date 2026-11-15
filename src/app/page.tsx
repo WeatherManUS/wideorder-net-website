@@ -4,7 +4,7 @@ import { HomePage } from "@/components/homepage";
 import { buildPageMetadata, siteConfig } from "@/config/site";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "WideOrder solves problems for businesses.",
+  title: "Cross-functional operational problem-solving",
   description: siteConfig.description,
   path: "/",
 });

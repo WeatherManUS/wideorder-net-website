@@ -5,8 +5,7 @@ import { buildPageMetadata } from "@/config/site";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "What We Do",
-  description:
-    "See the kinds of business problems WideOrder addresses, how delivery can happen, and where practical value is created.",
+  description: "Resolve recurring work, disconnected systems, stalled implementations and operational tasks without clear ownership.",
   path: "/what-we-do",
 });
 

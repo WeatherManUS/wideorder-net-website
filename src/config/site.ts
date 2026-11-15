@@ -14,13 +14,13 @@ export const siteConfig = {
   domain: "https://wideorder.net",
   repositoryPath: "C:/GitHub/wideorder-net-website",
   phase: "Phase 9 multi-page redesign",
-  title: "WideOrder | WideOrder solves problems for businesses.",
+  title: "WideOrder | Cross-functional operational problem-solving",
   description:
-    "WideOrder helps businesses investigate problems, determine practical solutions, and get the right work delivered.",
+    "WideOrder solves operational problems that cross departments, systems and suppliers, connecting people, processes and technology to deliver practical outcomes.",
   openGraph: {
-    title: "WideOrder | WideOrder solves problems for businesses.",
+    title: "WideOrder | Cross-functional operational problem-solving",
     description:
-      "WideOrder helps businesses investigate problems, determine practical solutions, and get the right work delivered.",
+      "WideOrder solves operational problems that cross departments, systems and suppliers, connecting people, processes and technology to deliver practical outcomes.",
     url: "https://wideorder.net",
     siteName: "WideOrder",
   },

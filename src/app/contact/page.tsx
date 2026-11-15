@@ -5,8 +5,7 @@ import { buildPageMetadata } from "@/config/site";
 
 export const metadata: Metadata = buildPageMetadata({
   title: "Contact",
-  description:
-    "Contact WideOrder with a short description of the problem, stalled work, or recurring operational burden using the website form or direct email.",
+  description: "Tell WideOrder what is getting in the way. Start with a short inquiry; any subsequent paid Discovery is agreed separately.",
   path: "/contact",
 });
 

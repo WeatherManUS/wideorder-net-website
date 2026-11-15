@@ -233,3 +233,7 @@ Generated from append-only history.jsonl. Times are UTC. Failed attempts do not 
 - **v0.4.0005 — published** (2026-11-13T05:00:32.810Z)
   Refine social link placement and simplify public footer
   Commit: `e402b5f8846e5c3a4c575cef5f79c0cc2786735b`; previous: 0.4.0004; artifact: 16823836-2c43-4815-9527-64a6bd8abb28; rollback: none.
+
+- **Unversioned attempt — waiting-for-hostinger** (2026-11-15T23:24:04.610Z)
+  Refine positioning and content for v0.4.0006
+  Commit: `6915e917fb493e8f4acaaaadf5ac3cd6276d9fcf`; previous: 0.4.0005; artifact: not built; rollback: none.
